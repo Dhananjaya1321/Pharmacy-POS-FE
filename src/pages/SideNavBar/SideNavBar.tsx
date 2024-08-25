@@ -1,4 +1,4 @@
-import {SideNavBarButton} from "../../component/SideNavBarButton";
+import {SideNavBarButton} from "../../component/SideNavBarButton/SideNavBarButton";
 import dashboard from "../../assets/icons/menu.png"
 import order from "../../assets/icons/shopping-bag.png"
 import stock from "../../assets/icons/in-stock.png"

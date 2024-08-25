@@ -1,11 +1,11 @@
 import {TextField} from "../../component/TextField/TextFild";
 import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
-import {Button} from "../../component/Button";
+import {Button} from "../../component/Button/Button";
 
 export const Customer = () => {
     return (
-        <section className='h-max flex w-[90%] flex-col justify-center'>
+        <section className='h-max flex w-[95%] flex-col justify-center'>
             <section className='flex flex-row justify-start mt-5'>
                 <h3>Customer</h3>
             </section>

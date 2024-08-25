@@ -1,20 +1,22 @@
-import {TextField} from "../../component/TextField/TextFild";
-import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
-import {TextArea} from "../../component/TextArea/TextArea";
-import {Button} from "../../component/Button";
-import {Link, Outlet} from "react-router-dom";
+import items from "../../assets/icons/new-product.png";
+import stock from "../../assets/icons/in-stock.png";
+import brands from "../../assets/icons/brand-image.png";
+import units from "../../assets/icons/puzzle-piece.png";
+import categories from "../../assets/icons/category.png";
+import {Outlet} from "react-router-dom";
+import {SideNavBarButton} from "../../component/SubTopNavBarButton/SubTopNavBarButton";
 
 export const StockAndItems = () => {
     return (
-        <section className='h-max flex w-[90%] flex-col justify-center'>
-            <nav className='flex gap-4 p-4'>
-                <Link to="items"><button className='nav-button'>Items</button></Link>
-                <Link to="stock"><button className='nav-button'>Stock</button></Link>
-                <Link to="brands"><button className='nav-button'>Brands</button></Link>
-                <Link to="units"><button className='nav-button'>Units</button></Link>
-                <Link to="categories"><button className='nav-button'>Categories</button></Link>
+        <section className='h-max flex w-[95%] flex-col justify-center'>
+            <nav className='flex gap-2 pt-4 pr-4'>
+                <SideNavBarButton path={'items'} name={"Items"} image={items}/>
+                <SideNavBarButton path={'stock'} name={"Stock"} image={stock}/>
+                <SideNavBarButton path={'brands'} name={"Brands"} image={brands}/>
+                <SideNavBarButton path={'units'} name={"Units"} image={units}/>
+                <SideNavBarButton path={'categories'} name={"Categories"} image={categories}/>
             </nav>
-            <section>
+            <section className='flex flex-row justify-center rounded-xl border-[1px] border-solid border-black mt-2'>
                 <Outlet/>
             </section>
 

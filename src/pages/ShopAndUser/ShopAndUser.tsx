@@ -1,7 +1,7 @@
 import {TextField} from "../../component/TextField/TextFild";
 import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
-import {Button} from "../../component/Button";
+import {Button} from "../../component/Button/Button";
 
 export const ShopAndUser = () => {
     return (
