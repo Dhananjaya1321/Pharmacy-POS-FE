@@ -28,9 +28,6 @@ export const Customer = () => {
                     <Button name={'Save'} color={'bg-[#2FEB00]'}/>
                 </div>
             </section>
-            <section className='flex flex-row items-center justify-center mt-5'>
-                <h3>Customer</h3>
-            </section>
         </section>
     );
 };

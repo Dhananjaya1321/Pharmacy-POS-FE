@@ -10,7 +10,7 @@ export const SideNavBar = () => {
         <nav className='bg-white h-screen w-[10%] top-0 left-0 right-0 fixed shadow z-50 flex flex-col'>
             <SideNavBarButton path={''} name={'Dashboard'} image={dashboard}/>
             <SideNavBarButton path={'/order'} name={'Order'} image={order}/>
-            <SideNavBarButton path={'/order'} name={'Manage Stock and Items'} image={stock}/>
+            <SideNavBarButton path={'/stock-and-items'} name={'Manage Stock and Items'} image={stock}/>
             <SideNavBarButton path={'/customer'} name={'Customer'} image={customer}/>
             <SideNavBarButton path={'/supplier'} name={'Supplier'} image={supplier}/>
             <SideNavBarButton path={'/shop-and-user'} name={'Manage Shop and Users'} image={shop}/>
