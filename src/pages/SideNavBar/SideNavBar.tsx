@@ -12,8 +12,8 @@ export const SideNavBar = () => {
             <SideNavBarButton path={'/order'} name={'Order'} image={order}/>
             <SideNavBarButton path={'/order'} name={'Manage Stock and Items'} image={stock}/>
             <SideNavBarButton path={'/customer'} name={'Customer'} image={customer}/>
-            <SideNavBarButton path={'/order'} name={'Supplier'} image={supplier}/>
-            <SideNavBarButton path={'/order'} name={'Manage Shop and Users'} image={shop}/>
+            <SideNavBarButton path={'/supplier'} name={'Supplier'} image={supplier}/>
+            <SideNavBarButton path={'/shop-and-user'} name={'Manage Shop and Users'} image={shop}/>
         </nav>
     );
 };
