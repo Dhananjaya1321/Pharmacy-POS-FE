@@ -2,6 +2,7 @@ import {TextField} from "../../component/TextField/TextFild";
 import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
+import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 
 export const Items = () => {
     return (
@@ -13,12 +14,12 @@ export const Items = () => {
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField placeholder={'Item name'} label={'Item name'}/>
-                    <TextField placeholder={''} label={'Unit'}/>
+                    <TextFieldWithButton label={'Unit'}/>
                     <TextField placeholder={''} label={'Re-order level'}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={''} label={'Brand'}/>
-                    <TextField placeholder={''} label={'Category'}/>
+                    <TextFieldWithButton label={'Brand'}/>
+                    <TextFieldWithButton label={'Category'}/>
                     <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>

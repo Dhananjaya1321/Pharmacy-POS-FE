@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
     font-family: "Poppins", sans-serif;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: relative;
+    right: 10px;
+    z-index: 1;
 }
 
 .poppins-thin {

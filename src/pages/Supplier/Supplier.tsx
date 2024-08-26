@@ -5,7 +5,7 @@ import {Button} from "../../component/Button/Button";
 
 export const Supplier = () => {
     return (
-        <section className='h-max flex w-[90%] flex-col justify-center'>
+        <section className='h-max flex w-[95%] flex-col justify-center'>
             <section className='flex flex-row justify-start mt-5'>
                 <h3>Suppliers</h3>
             </section>
