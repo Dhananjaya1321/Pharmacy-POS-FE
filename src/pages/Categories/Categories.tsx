@@ -11,7 +11,7 @@ export const Categories = () => {
             {/*url display section*/}
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'Category name'} label={'Category name'}/>
+                    <TextField placeholder={'Category name'} label={'Category name'} important={"*"}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextArea placeholder={'Description'} label={'Description'}/>

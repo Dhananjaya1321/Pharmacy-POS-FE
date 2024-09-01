@@ -11,8 +11,8 @@ export const Brands = () => {
             {/*url display section*/}
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'Brand name'} label={'Brand name'}/>
-                    <TextField placeholder={'077 752 0000'} label={'Contact'}/>
+                    <TextField placeholder={'Brand name'} label={'Brand name'} important={"*"}/>
+                    <TextField placeholder={'077 752 0000'} label={'Contact'} important={"*"}/>
                     <TextField placeholder={'brand.com'} label={'Website'}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>

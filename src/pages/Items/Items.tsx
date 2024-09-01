@@ -13,13 +13,13 @@ export const Items = () => {
             {/*url display section*/}
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'Item name'} label={'Item name'}/>
-                    <TextFieldWithButton label={'Unit'}/>
-                    <TextField placeholder={''} label={'Re-order level'}/>
+                    <TextField placeholder={'Item name'} label={'Item name'} important={"*"}/>
+                    <TextFieldWithButton label={'Unit'} important={"*"}/>
+                    <TextField placeholder={'0.00'} label={'Re-order level'} important={"*"}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextFieldWithButton label={'Brand'}/>
-                    <TextFieldWithButton label={'Category'}/>
+                    <TextFieldWithButton label={'Brand'} important={"*"}/>
+                    <TextFieldWithButton label={'Category'} important={"*"}/>
                     <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>

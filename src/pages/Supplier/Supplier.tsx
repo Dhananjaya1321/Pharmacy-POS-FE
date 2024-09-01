@@ -12,13 +12,13 @@ export const Supplier = () => {
             {/*url display section*/}
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'Isuru Dhananjaya'} label={'Supplier name'}/>
-                    <TextField placeholder={'076 715 1321'} label={'Contact'}/>
+                    <TextField placeholder={'Isuru Dhananjaya'} label={'Supplier name'} important={"*"}/>
+                    <TextField placeholder={'076 715 1321'} label={'Contact'} important={"*"}/>
                     <TextField placeholder={'supplier.com'} label={'Website'}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'20021010025'} label={'NIC'}/>
-                    <TextField placeholder={'supplier@gmail.com'} label={'Email'}/>
+                    <TextField placeholder={'20021010025'} label={'NIC'} important={"*"}/>
+                    <TextField placeholder={'supplier@gmail.com'} label={'Email'} important={"*"}/>
                     <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>

@@ -11,8 +11,8 @@ export const Units = () => {
             {/*url display section*/}
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'Unit name'} label={'Unit name'}/>
-                    <TextField placeholder={'Unit symbology'} label={'Unit symbology'}/>
+                    <TextField placeholder={'Kilogram'} label={'Unit name'} important={"*"}/>
+                    <TextField placeholder={'kg'} label={'Unit symbology'} important={"*"}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextArea placeholder={'Description'} label={'Description'}/>

@@ -12,8 +12,8 @@ export const Customer = () => {
             {/*url display section*/}
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextField placeholder={'Isuru Dhananjaya'} label={'Customer name'}/>
-                    <TextField placeholder={'076 715 1321'} label={'Contact'}/>
+                    <TextField placeholder={'Isuru Dhananjaya'} label={'Customer name'} important={"*"}/>
+                    <TextField placeholder={'076 715 1321'} label={'Contact'} important={"*"}/>
                     <TextField placeholder={'isuru@gmail.com'} label={'Email'}/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
