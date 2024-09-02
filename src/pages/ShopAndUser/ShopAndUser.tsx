@@ -6,7 +6,7 @@ import {Button} from "../../component/Button/Button";
 import BasicTable from "../../component/BasicTable/BasicTable";
 import React, {useState} from 'react';
 // @ts-ignore
-import axios from "axios";
+import api from "./api";
 
 export const ShopAndUser = () => {
     // State to manage form data
@@ -25,17 +25,18 @@ export const ShopAndUser = () => {
     });
 
     const [userData, setUserData] = useState({
-        name: "Isuru Dhananjaya",
-        contact: "076 715 1321",
-        role: "Admin",
-        nic: "20021010025",
-        email: "supplier@gmail.com",
-        password: "",
-        username: "user123",
-        address: "No - 181, ABC Road, Galle",
+        name: '',
+        contact: '',
+        role: '',
+        nic: '',
+        email: '',
+        password: '',
+        username: '',
+        address: '',
     });
 
     type ShopDataKey = keyof typeof shopData;
+    type UsersDataKey = keyof typeof userData;
 
 
     // Handle input changes for shop form
@@ -66,6 +67,26 @@ export const ShopAndUser = () => {
         });
     };
 
+    const handleUsersChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const {name, value} = e.target;
+        const typedName = name as UsersDataKey;
+
+        setUserData({
+            ...userData,
+            [typedName]: value,
+        });
+
+
+        // Validation logic
+        let error = '';
+
+        // Set error state
+        setErrors({
+            ...errors,
+            [name]: error,
+        });
+    };
+
 
     // Handle form submission
     const handleSubmit = async () => {
@@ -87,17 +108,10 @@ export const ShopAndUser = () => {
             return;
         }
 
-        try {
-            // API call to save the data
-            const response = await axios.post(
-                "http://localhost:8080/api/v1/pharmacy/shop",
-                shopData
-            );
-            if (response.status === 200) {
-                alert("Data saved successfully!");
-            }
-        } catch (error) {
-            console.error("There was an error saving the data!", error);
+        const isSuccess = await api.updateShopData(shopData);
+        if (isSuccess) {
+            alert("Data saved successfully!");
+        } else {
             alert("Failed to save data.");
         }
     };
@@ -163,16 +177,22 @@ export const ShopAndUser = () => {
                         placeholder={'Isuru Dhananjaya'}
                         label={'User\'s name'}
                         important={"*"}
+                        value={userData.name}
+                        onChange={handleUsersChange}
                     />
                     <TextField
                         placeholder={'076 715 1321'}
                         label={'Contact'}
                         important={"*"}
+                        value={userData.contact}
+                        onChange={handleUsersChange}
                     />
                     <TextField
                         placeholder={'Admin'}
                         label={'Role'}
                         important={"*"}
+                        value={userData.role}
+                        onChange={handleUsersChange}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -180,11 +200,15 @@ export const ShopAndUser = () => {
                         placeholder={'20021010025'}
                         label={'NIC'}
                         important={"*"}
+                        value={userData.nic}
+                        onChange={handleUsersChange}
                     />
                     <TextField
                         placeholder={'supplier@gmail.com'}
                         label={'Email'}
                         important={"*"}
+                        value={userData.email}
+                        onChange={handleUsersChange}
                     />
                     <HiddenTextField/>
                 </div>
@@ -194,11 +218,15 @@ export const ShopAndUser = () => {
                         label={'Password'}
                         type={'password'}
                         important={"*"}
+                        value={userData.password}
+                        onChange={handleUsersChange}
                     />
                     <TextField
                         placeholder={'user123'}
                         label={'Username'}
                         important={"*"}
+                        value={userData.username}
+                        onChange={handleUsersChange}
                     />
                     <HiddenTextField/>
                 </div>
