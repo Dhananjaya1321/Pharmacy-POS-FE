@@ -1,6 +1,23 @@
 import plus from "../../assets/icons/Plus.png";
+import {useEffect, useState} from "react";
 
-export const TextFieldWithButton = ({label, msg, important}: props) => {
+type OptionType = {
+    id: number;
+    name: string;
+};
+export const TextFieldWithButton = ({label, msg, important, name, value, fetchOptions, onChange}: props) => {
+    const [options, setOptions] = useState<OptionType[]>([]); // Explicitly define the type
+
+    useEffect(() => {
+        const fetchAndSetOptions = async () => {
+            if (fetchOptions) {
+                const fetchedOptions = await fetchOptions();
+                setOptions(fetchedOptions);
+            }
+        };
+
+        fetchAndSetOptions();
+    }, [fetchOptions]);
     return (
         <>
             <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
@@ -8,12 +25,16 @@ export const TextFieldWithButton = ({label, msg, important}: props) => {
                     <label className='text-black flex justify-start'>{label}</label>
                     <small className={`text-red-600 text-[16px] ${important == null ? 'hidden' : 'block'}`}>*</small>
                 </div>
-                <select defaultValue={10}
-                        className='min-w-[220px] border-[1px] border-[#9F9F9F]  border-solid rounded-lg w-[100%] h-[46px] pl-3'>
-                    <option value={0} disabled>Select an option</option>
-                    <option value={10}>Documentation</option>
-                    <option value={20}>Components</option>
-                    <option value={30}>Features</option>
+                <select
+                    value={value}
+                    name={name}
+                    defaultValue={10}
+                    onChange={onChange}
+                    className='min-w-[220px] border-[1px] border-[#9F9F9F]  border-solid rounded-lg w-[100%] h-[46px] pl-3'>
+                    <option value="-1">Select a {name}</option>
+                    {options.map((option, index) => (
+                        <option key={index} value={option.id}>{option.name}</option>
+                    ))}
                 </select>
                 <div className={`h-[5px]`}>
                     <small
@@ -21,10 +42,6 @@ export const TextFieldWithButton = ({label, msg, important}: props) => {
                         {msg}
                     </small>
                 </div>
-                {/*</div>*/}
-                {/*<button className='rounded-md bg-green-500 w-[50px] h-[46px] flex items-center justify-center'>*/}
-                {/*    <img src={plus}/>*/}
-                {/*</button>*/}
             </div>
         </>
     );
@@ -33,6 +50,9 @@ type props = {
     label: string,
     msg?: string,
     important?: string,
+    value?: string;
+    name?: string;
+    fetchOptions?: () => Promise<OptionType[]>, // Function to fetch the options
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
-
 

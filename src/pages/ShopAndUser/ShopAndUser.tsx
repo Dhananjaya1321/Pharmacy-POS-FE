@@ -4,9 +4,10 @@ import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 // @ts-ignore
 import BasicTable from "../../component/BasicTable/BasicTable";
-import React, {useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 // @ts-ignore
 import api from "./api";
+import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 
 export const ShopAndUser = () => {
     // State to manage form data
@@ -35,9 +36,11 @@ export const ShopAndUser = () => {
         address: '',
     });
 
+    // State for managing the selected role
+    const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
+
     type ShopDataKey = keyof typeof shopData;
     type UsersDataKey = keyof typeof userData;
-
 
     // Handle input changes for shop form
     const handleShopChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -67,26 +70,23 @@ export const ShopAndUser = () => {
         });
     };
 
-    const handleUsersChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        const typedName = name as UsersDataKey;
-
-        setUserData({
-            ...userData,
-            [typedName]: value,
-        });
-
-
-        // Validation logic
-        let error = '';
-
-        // Set error state
-        setErrors({
-            ...errors,
-            [name]: error,
-        });
+    // Function to handle role changes
+    const handleRoleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const role = event.target.value;
+        setSelectedRole(role);
+        setUserData(prevData => ({
+            ...prevData,
+            role: role,  // Update userData with the selected role
+        }));
     };
 
+    const handleUsersChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const {name, value} = e.target;
+        setUserData(prevData => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
     // Handle form submission
     const handleSubmit = async () => {
@@ -115,6 +115,33 @@ export const ShopAndUser = () => {
             alert("Failed to save data.");
         }
     };
+    const handleUserSave = async () => {
+        console.log(userData.role)
+        const isSuccess = await api.saveUser(userData);
+        if (isSuccess) {
+            alert("Data saved successfully!");
+        } else {
+            alert("Failed to save data.");
+        }
+    };
+
+    interface Role {
+        id: number;
+        name: string;
+    }
+
+    const fetchUserRoles = async () => {
+        const response = await api.getAllUserRoles();
+
+        const roles = response.data.map((role: { id: number; name: string }) => ({
+            id: role.id,
+            name: role.name,
+        }));
+
+        return roles;
+    };
+
+
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
             <section className='flex flex-row justify-start mt-5'>
@@ -174,6 +201,7 @@ export const ShopAndUser = () => {
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
+                        name="name"
                         placeholder={'Isuru Dhananjaya'}
                         label={'User\'s name'}
                         important={"*"}
@@ -181,22 +209,25 @@ export const ShopAndUser = () => {
                         onChange={handleUsersChange}
                     />
                     <TextField
+                        name="contact"
                         placeholder={'076 715 1321'}
                         label={'Contact'}
                         important={"*"}
                         value={userData.contact}
                         onChange={handleUsersChange}
                     />
-                    <TextField
-                        placeholder={'Admin'}
+                    <TextFieldWithButton
+                        name="role"
                         label={'Role'}
                         important={"*"}
-                        value={userData.role}
-                        onChange={handleUsersChange}
+                        value={selectedRole}  // Add this line if you're managing the selected role value in state
+                        onChange={handleRoleChange}  // Add this line for handling role changes
+                        fetchOptions={fetchUserRoles}  // Fetch options dynamically
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
+                        name={'nic'}
                         placeholder={'20021010025'}
                         label={'NIC'}
                         important={"*"}
@@ -204,6 +235,7 @@ export const ShopAndUser = () => {
                         onChange={handleUsersChange}
                     />
                     <TextField
+                        name={'email'}
                         placeholder={'supplier@gmail.com'}
                         label={'Email'}
                         important={"*"}
@@ -214,6 +246,7 @@ export const ShopAndUser = () => {
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
+                        name={'password'}
                         placeholder={'20021010025'}
                         label={'Password'}
                         type={'password'}
@@ -222,6 +255,7 @@ export const ShopAndUser = () => {
                         onChange={handleUsersChange}
                     />
                     <TextField
+                        name={'username'}
                         placeholder={'user123'}
                         label={'Username'}
                         important={"*"}
@@ -232,13 +266,16 @@ export const ShopAndUser = () => {
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextArea
+                        name={'address'}
                         placeholder={'No - 181, ABC Road, Galle'}
                         label={'Address'}
                         important={"*"}
+                        value={userData.address}
+                        onChange={handleUsersChange}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
-                    <Button name={'Save'} color={'bg-[#2FEB00]'}/>
+                    <Button name={'Save'} color={'bg-[#2FEB00]'} onClick={handleUserSave}/>
                 </div>
             </section>
             <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
