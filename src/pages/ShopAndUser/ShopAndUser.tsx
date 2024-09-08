@@ -9,6 +9,7 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import api from "./api";
 import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
+import {Footer} from "../Footer/Footer";
 
 export const ShopAndUser = () => {
     // State to manage form data
@@ -288,6 +289,7 @@ export const ShopAndUser = () => {
                 <BasicTable/>
             </section>
             <FooterSpace/>
+            <Footer/>
         </section>
     );
 };

@@ -6,6 +6,7 @@ import {Button} from "../../component/Button/Button";
 import api from "./api";
 import React, {useState} from "react";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
+import {Footer} from "../Footer/Footer";
 
 export const Customer = () => {
     const [customerData, setCustomerData] = useState({
@@ -98,6 +99,7 @@ export const Customer = () => {
                 </div>
             </section>
             <FooterSpace/>
+            <Footer/>
         </section>
     );
 };

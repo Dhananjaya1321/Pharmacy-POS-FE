@@ -3,6 +3,8 @@ import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
+import {Footer} from "../Footer/Footer";
+import React from "react";
 
 export const Supplier = () => {
     return (
@@ -30,6 +32,7 @@ export const Supplier = () => {
                 </div>
             </section>
             <FooterSpace/>
+            <Footer/>
         </section>
     );
 };

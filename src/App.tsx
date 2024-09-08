@@ -23,6 +23,7 @@ function App() {
                         <Route index element={<Dashboard/>}/>
                         <Route  path="order" element={<Order/>}/>
                         <Route path="stock-and-items" element={<StockAndItems />}>
+                            <Route index element={<Items />} />
                             <Route path="items" element={<Items />} />
                             <Route path="stock" element={<Stock />} />
                             <Route path="brands" element={<Brands />} />
