@@ -5,6 +5,7 @@ import units from "../../assets/icons/puzzle-piece.png";
 import categories from "../../assets/icons/category.png";
 import {Outlet} from "react-router-dom";
 import {SideNavBarButton} from "../../component/SubTopNavBarButton/SubTopNavBarButton";
+import {Footer} from "../Footer/Footer";
 
 export const StockAndItems = () => {
     return (
@@ -16,10 +17,10 @@ export const StockAndItems = () => {
                 <SideNavBarButton path={'units'} name={"Units"} image={units}/>
                 <SideNavBarButton path={'categories'} name={"Categories"} image={categories}/>
             </nav>
-            <section className='flex flex-row justify-center rounded-xl border-[1px] border-solid border-black mt-2'>
+            <section className='flex flex-row justify-center rounded-xl border-[1px] border-solid border-[#cecece] mt-2'>
                 <Outlet/>
             </section>
-
+            <Footer/>
         </section>
     );
 };

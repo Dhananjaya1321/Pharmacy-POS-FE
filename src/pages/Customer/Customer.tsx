@@ -5,6 +5,7 @@ import {Button} from "../../component/Button/Button";
 // @ts-ignore
 import api from "./api";
 import React, {useState} from "react";
+import {FooterSpace} from "../FooterSpace/FooterSpace";
 
 export const Customer = () => {
     const [customerData, setCustomerData] = useState({
@@ -38,11 +39,11 @@ export const Customer = () => {
 
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
-            <section className='flex flex-row justify-start mt-5'>
+            <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
                 <h3>Customer</h3>
             </section>
             {/*url display section*/}
-            <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="name"
@@ -96,6 +97,7 @@ export const Customer = () => {
                     />
                 </div>
             </section>
+            <FooterSpace/>
         </section>
     );
 };

@@ -8,6 +8,7 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 // @ts-ignore
 import api from "./api";
 import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
+import {FooterSpace} from "../FooterSpace/FooterSpace";
 
 export const ShopAndUser = () => {
     // State to manage form data
@@ -144,11 +145,11 @@ export const ShopAndUser = () => {
 
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
-            <section className='flex flex-row justify-start mt-5'>
+            <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
                 <h3>Manage Shop</h3>
             </section>
             {/*url display section*/}
-            <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="pharmacyName"
@@ -195,10 +196,10 @@ export const ShopAndUser = () => {
                     />
                 </div>
             </section>
-            <section className='flex flex-row justify-start mt-5'>
+            <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
                 <h3>Manage Users </h3>
             </section>
-            <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="name"
@@ -278,7 +279,7 @@ export const ShopAndUser = () => {
                     <Button name={'Save'} color={'bg-[#2FEB00]'} onClick={handleUserSave}/>
                 </div>
             </section>
-            <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField placeholder={'Isuru Dhananjaya'} label={'User\'s name'}/>
                     <TextField placeholder={'076 715 1321'} label={'Contact'}/>
@@ -286,6 +287,7 @@ export const ShopAndUser = () => {
                 </div>
                 <BasicTable/>
             </section>
+            <FooterSpace/>
         </section>
     );
 };

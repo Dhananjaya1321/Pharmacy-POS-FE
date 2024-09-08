@@ -2,15 +2,16 @@ import {TextField} from "../../component/TextField/TextFild";
 import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
+import {FooterSpace} from "../FooterSpace/FooterSpace";
 
 export const Supplier = () => {
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
-            <section className='flex flex-row justify-start mt-5'>
+            <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
                 <h3>Suppliers</h3>
             </section>
             {/*url display section*/}
-            <section className='flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField placeholder={'Isuru Dhananjaya'} label={'Supplier name'} important={"*"}/>
                     <TextField placeholder={'076 715 1321'} label={'Contact'} important={"*"}/>
@@ -28,6 +29,7 @@ export const Supplier = () => {
                     <Button name={'Save'} color={'bg-[#2FEB00]'}/>
                 </div>
             </section>
+            <FooterSpace/>
         </section>
     );
 };
