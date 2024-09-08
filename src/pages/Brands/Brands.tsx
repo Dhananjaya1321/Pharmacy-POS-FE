@@ -46,14 +46,16 @@ export const Brands = () => {
                     <TextField
                         name="name"
                         placeholder={'Brand name'}
-                        label={'Brand name'} important={"*"}
+                        label={'Brand name'}
+                        important={"*"}
                         value={brandData.name}
                         onChange={handleBrandChange}
                     />
                     <TextField
                         name="contact"
                         placeholder={'077 752 0000'}
-                        label={'Contact'} important={"*"}
+                        label={'Contact'}
+                        important={"*"}
                         value={brandData.contact}
                         onChange={handleBrandChange}
                     />
