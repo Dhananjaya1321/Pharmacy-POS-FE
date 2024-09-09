@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {base_url} from "../../config/apiConfig";
+import {base_url} from "../config/apiConfig";
 
-const api = {
-    saveCustomer: async (customer: any) => {
+const unitAPIController = {
+    saveUnit: async (unit: any) => {
         try {
             const response = await axios.post(
-                `${base_url}/customer`,
-                customer
+                `${base_url}/unit`,
+                unit
             );
             return response.status === 200;
         } catch (error) {
@@ -16,4 +16,4 @@ const api = {
     },
 };
 
-export default api;
+export default unitAPIController;

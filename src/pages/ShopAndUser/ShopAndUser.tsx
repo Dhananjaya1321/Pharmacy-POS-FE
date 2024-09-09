@@ -6,7 +6,8 @@ import {Button} from "../../component/Button/Button";
 import BasicTable from "../../component/BasicTable/BasicTable";
 import React, {ChangeEvent, useEffect, useState} from 'react';
 // @ts-ignore
-import api from "./api";
+import shopAPIController from "../../controller/ShopAPIController";
+import userAPIController from "../../controller/UserAPIController";
 import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {Footer} from "../Footer/Footer";
@@ -110,7 +111,7 @@ export const ShopAndUser = () => {
             return;
         }
 
-        const isSuccess = await api.updateShopData(shopData);
+        const isSuccess = await shopAPIController.updateShopData(shopData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {
@@ -119,7 +120,7 @@ export const ShopAndUser = () => {
     };
     const handleUserSave = async () => {
         console.log(userData.role)
-        const isSuccess = await api.saveUser(userData);
+        const isSuccess = await userAPIController.saveUser(userData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {
@@ -133,7 +134,7 @@ export const ShopAndUser = () => {
     }
 
     const fetchUserRoles = async () => {
-        const response = await api.getAllUserRoles();
+        const response = await userAPIController.getAllUserRoles();
 
         const roles = response.data.map((role: { id: number; name: string }) => ({
             id: role.id,

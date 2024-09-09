@@ -3,7 +3,7 @@ import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 // @ts-ignore
-import api from "./api";
+import customerAPIController from "../../controller/CustomerAPIController";
 import React, {useState} from "react";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {Footer} from "../Footer/Footer";
@@ -29,7 +29,7 @@ export const Customer = () => {
     };
 
     const handleCustomerSaveEvent = async () => {
-        const isSuccess = await api.saveCustomer(customerData);
+        const isSuccess = await customerAPIController.saveCustomer(customerData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {

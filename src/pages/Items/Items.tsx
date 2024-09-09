@@ -5,7 +5,7 @@ import {Button} from "../../component/Button/Button";
 import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import api from "./api";
+import itemAPIController from "../../controller/ItemAPIController";
 
 interface Unit {
     id: number;
@@ -31,7 +31,7 @@ export const Items = () => {
 
     useEffect(() => {
         const loadUnits = async () => {
-            const response = await api.getAllUnits();
+            const response = await itemAPIController.getAllUnits();
             const units = response.data.map((unit: {
                 id: number;
                 unitName: string;
@@ -66,7 +66,7 @@ export const Items = () => {
     };
 
     const fetchBrands = async () => {
-        const response = await api.getAllBrands();
+        const response = await itemAPIController.getAllBrands();
 
         const brands = response.data.map((brand: { id: number; name: string }) => ({
             id: brand.id,
@@ -76,7 +76,7 @@ export const Items = () => {
         return brands;
     };
     const fetchCategories = async () => {
-        const response = await api.getAllCategories();
+        const response = await itemAPIController.getAllCategories();
 
         const categories = response.data.map((category: { id: number; name: string }) => ({
             id: category.id,
@@ -105,7 +105,7 @@ export const Items = () => {
     };
 
     const handleItemSaveEvent = async () => {
-        const isSuccess = await api.saveItem(itemData);
+        const isSuccess = await itemAPIController.saveItem(itemData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {

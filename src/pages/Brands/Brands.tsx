@@ -2,7 +2,7 @@ import {TextField} from "../../component/TextField/TextFild";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 import React, {useState} from "react";
-import api from "./api";
+import brandAPIController from "../../controller/BrandAPIController";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 
 export const Brands = () => {
@@ -26,7 +26,7 @@ export const Brands = () => {
     };
 
     const handleBrandSaveEvent = async () => {
-        const isSuccess = await api.saveUnit(
+        const isSuccess = await brandAPIController.saveUnit(
             brandData);
         if (isSuccess) {
             alert("Data saved successfully!");

@@ -3,7 +3,7 @@ import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import api from "./api";
+import stockAPIController from "../../controller/StockAPIController";
 
 // Define the type for item objects
 interface Item {
@@ -32,7 +32,7 @@ export const Stock = () => {
     // Fetch items on component mount
     useEffect(() => {
         const loadItems = async () => {
-            const response = await api.getAllItems();
+            const response = await stockAPIController.getAllItems();
             const items = response.data.map((item: {
                 id: number;
                 name: string;
@@ -72,7 +72,7 @@ export const Stock = () => {
     };
 
     const handleStockSaveEvent = async () => {
-        const isSuccess = await api.saveStock(stockData);
+        const isSuccess = await stockAPIController.saveStock(stockData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {

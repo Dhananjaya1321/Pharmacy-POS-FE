@@ -2,7 +2,7 @@ import {TextField} from "../../component/TextField/TextFild";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 import React, {useState} from "react";
-import api from "./api";
+import unitAPIController from "../../controller/UnitAPIController";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 
 export const Units = () => {
@@ -24,7 +24,7 @@ export const Units = () => {
     };
 
     const handleUnitSaveEvent = async () => {
-        const isSuccess = await api.saveUnit(
+        const isSuccess = await unitAPIController.saveUnit(
             unitData);
         if (isSuccess) {
             alert("Data saved successfully!");

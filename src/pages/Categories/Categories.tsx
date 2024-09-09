@@ -2,7 +2,7 @@ import {TextField} from "../../component/TextField/TextFild";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 import React, {useState} from "react";
-import api from "./api";
+import categoryAPIController from "../../controller/CategoryAPIController";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 
 export const Categories = () => {
@@ -23,7 +23,7 @@ export const Categories = () => {
     };
 
     const handleCategorySaveEvent = async () => {
-        const isSuccess = await api.saveCategory(categoryData);
+        const isSuccess = await categoryAPIController.saveCategory(categoryData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {

@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {base_url} from "../../config/apiConfig";
+import {base_url} from "../config/apiConfig";
 
-const api = {
+const itemAPIController = {
     saveItem: async (stock: any) => {
         try {
             const response = await axios.post(
@@ -55,4 +55,4 @@ const api = {
     },
 };
 
-export default api;
+export default itemAPIController;
