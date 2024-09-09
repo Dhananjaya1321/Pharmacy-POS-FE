@@ -1,11 +1,19 @@
 import {TextField} from "../../component/TextField/TextFild";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
-import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
-import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import api from "./api";
+
+// Define the type for item objects
+interface Item {
+    id: number;
+    name: string;
+    categoryName: string;
+    brandName: string;
+    unitName: string;
+    unitSymbology: string;
+}
 
 export const Stock = () => {
     const [stockData, setStockData] = useState({
@@ -16,29 +24,42 @@ export const Stock = () => {
         description: '',
         item: '',
     });
-    const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
 
-    type StockDataKey = keyof typeof stockData;
+    const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
+    // Set the correct type for items
+    const [items, setItems] = useState<Item[]>([]);  // <--- Typed the items state
+
+    // Fetch items on component mount
+    useEffect(() => {
+        const loadItems = async () => {
+            const response = await api.getAllItems();
+            const items = response.data.map((item: {
+                id: number;
+                name: string;
+                category: { name: string };
+                brand: { name: string };
+                unit: { unitName: string; unitSymbology:string };
+            }) => ({
+                id: item.id,
+                name: item.name,
+                categoryName: item.category.name,
+                brandName: item.brand.name,
+                unitName: item.unit.unitName,
+                unitSymbology: item.unit.unitSymbology,
+            }));
+
+            setItems(items); // Set fetched items to state
+        };
+
+        loadItems();
+    }, []);
 
     const handleStockChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
-        const typedName = name as StockDataKey;
-
         setStockData({
             ...stockData,
-            [typedName]: value,
+            [name]: value,
         });
-    };
-
-    const fetchItems = async () => {
-        const response = await api.getAllItems();
-
-        const items = response.data.map((item: { id: number; name: string }) => ({
-            id: item.id,
-            name: item.name,
-        }));
-
-        return items;
     };
 
     const handleItemChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -51,8 +72,7 @@ export const Stock = () => {
     };
 
     const handleStockSaveEvent = async () => {
-        const isSuccess = await api.saveStock(
-            stockData);
+        const isSuccess = await api.saveStock(stockData);
         if (isSuccess) {
             alert("Data saved successfully!");
         } else {
@@ -65,7 +85,7 @@ export const Stock = () => {
             <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
                 <h3>Manage Stock and Items &gt; Stock</h3>
             </section>
-            {/*url display section*/}
+            {/* Form section */}
             <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
@@ -97,14 +117,28 @@ export const Stock = () => {
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextFieldWithButton
-                        name="item"
-                        label={'Item'}
-                        important={"*"}
-                        value={selectedItem}
-                        onChange={handleItemChange}
-                        fetchOptions={fetchItems}  // Fetch options dynamically
-                    />
+                    <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
+                        <div className='flex flex-row'>
+                            <label className='text-black flex justify-start'>Item</label>
+                            <small className={`text-red-600 text-[16px]`}>*</small>
+                        </div>
+                        <select
+                            value={selectedItem}
+                            name={"item"}
+                            onChange={handleItemChange}
+                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
+                        >
+                            <option value="-1">Select an item</option>
+                            {items.map((option) => (
+                                <option key={option.id} value={option.id}>
+                                    {option.name+'-'+option.brandName+'-'+option.categoryName+'-'+option.unitSymbology+'('+option.unitName+')'}
+                                </option>
+                            ))}
+                        </select>
+                        <div className={`h-[5px]`}>
+                            <small className={`text-start text-red-600 block`}></small>
+                        </div>
+                    </div>
                     <TextField
                         name="expiryDate"
                         label={'Expiry date'}
@@ -113,7 +147,6 @@ export const Stock = () => {
                         value={stockData.expiryDate}
                         onChange={handleStockChange}
                     />
-                    <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextArea
