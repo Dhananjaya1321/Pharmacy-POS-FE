@@ -15,6 +15,7 @@ import {Footer} from "../Footer/Footer";
 export const ShopAndUser = () => {
     // State to manage form data
     const [shopData, setShopData] = useState({
+        pharmacyId: '',
         pharmacyName: '',
         contact: '',
         website: '',
@@ -22,6 +23,7 @@ export const ShopAndUser = () => {
     });
 
     const [errors, setErrors] = useState({
+        pharmacyId: '',
         pharmacyName: '',
         contact: '',
         website: '',
@@ -93,24 +95,6 @@ export const ShopAndUser = () => {
 
     // Handle form submission
     const handleSubmit = async () => {
-        let hasErrors = false;
-        const newErrors = {...errors};
-
-        Object.keys(shopData).forEach(key => {
-            const typedKey = key as ShopDataKey;
-            if (shopData[typedKey].trim() === '') {
-                newErrors[typedKey] = `${typedKey} is required`;
-                hasErrors = true;
-            }
-        });
-
-        setErrors(newErrors);
-
-        if (hasErrors) {
-            alert("Please correct the errors before submitting.");
-            return;
-        }
-
         const isSuccess = await shopAPIController.updateShopData(shopData);
         if (isSuccess) {
             alert("Data saved successfully!");
@@ -128,11 +112,6 @@ export const ShopAndUser = () => {
         }
     };
 
-    interface Role {
-        id: number;
-        name: string;
-    }
-
     const fetchUserRoles = async () => {
         const response = await userAPIController.getAllUserRoles();
 
@@ -144,6 +123,27 @@ export const ShopAndUser = () => {
         return roles;
     };
 
+    useEffect(() => {
+        const fetchShopData = async () => {
+            try {
+                const response = await shopAPIController.getShopData();  // API call to get shop data
+                if (response) {
+                    // Map response.name to pharmacyName
+                    setShopData({
+                        pharmacyId: response.data.pharmacyId,
+                        pharmacyName: response.data.pharmacyName,
+                        contact: response.data.contact,
+                        website: response.data.website,
+                        address: response.data.address,
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching shop data:", error);
+            }
+        };
+
+        fetchShopData();
+    }, []);
 
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
