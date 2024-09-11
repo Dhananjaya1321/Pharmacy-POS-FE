@@ -6,6 +6,64 @@ import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextField
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import itemAPIController from "../../controller/ItemAPIController";
+import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
+import userAPIController from "../../controller/UserAPIController";
+import brandAPIController from "../../controller/BrandAPIController";
+import customerAPIController from "../../controller/CustomerAPIController";
+import unitAPIController from "../../controller/UnitAPIController";
+import categoryAPIController from "../../controller/CategoryAPIController";
+
+
+const columns: GridColDef[] = [
+    {field: 'name', headerName: 'Name', width: 200},
+    {field: 'reOrderLevel', headerName: 'Re-Order Level', width: 200},
+    {field: 'description', headerName: 'Description', width: 200,},
+    {field: 'category', headerName: 'Category', width: 200,},
+    {field: 'unit', headerName: 'Unit', width: 200,},
+    {field: 'brand', headerName: 'Brand', width: 200,},
+    {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 400,
+        renderCell: (params) => (
+            <>
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleUpdate}
+                />
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleDelete}
+                />
+            </>
+        ),
+    },
+];
+
+const handleUpdate = async () => {
+    console.log("update")
+};
+const handleDelete = async () => {
+    console.log("delete")
+};
+
+
+interface Item {
+    id: number;
+    name: string;
+    description: string;
+    reOrderLevel: number;
+    category: { name:string };
+    brand: { name:string };
+    unit: {
+        unitName: string;
+        unitSymbology: string;
+    };
+    actions: string;
+}
 
 interface Unit {
     id: number;
@@ -29,9 +87,25 @@ export const Items = () => {
     const [selectedBrand, setSelectedBrand] = useState<string | undefined>(undefined);
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
 
+    const [items, setItems] = useState<Item[]>([]);
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [totalElements, setTotalElements] = useState(0);
+
+    const fetchAllItems = async (page: number, pageSize: number) => {
+        try {
+            const response = await itemAPIController.getAllItems(page, pageSize);
+            if (response) {
+                setItems(response.data.content || []);
+                setTotalElements(response.data.page.totalElements);
+            }
+        } catch (error) {
+            console.error("Error fetching supplier data:", error);
+        }
+    };
+
     useEffect(() => {
         const loadUnits = async () => {
-            const response = await itemAPIController.getAllUnits();
+            const response = await unitAPIController.getAllUnits();
             const units = response.data.map((unit: {
                 id: number;
                 unitName: string;
@@ -45,7 +119,8 @@ export const Items = () => {
             setUnit(units);
         };
 
-        loadUnits();
+        loadUnits().then(r => {});
+        fetchAllItems(0, 5).then(r => {});
     }, []);
 
     const handleItemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -66,7 +141,7 @@ export const Items = () => {
     };
 
     const fetchBrands = async () => {
-        const response = await itemAPIController.getAllBrands();
+        const response = await brandAPIController.getAllBrands();
 
         const brands = response.data.map((brand: { id: number; name: string }) => ({
             id: brand.id,
@@ -75,8 +150,9 @@ export const Items = () => {
         console.log(brands)
         return brands;
     };
+
     const fetchCategories = async () => {
-        const response = await itemAPIController.getAllCategories();
+        const response = await categoryAPIController.getAllCategories();
 
         const categories = response.data.map((category: { id: number; name: string }) => ({
             id: category.id,
@@ -95,6 +171,7 @@ export const Items = () => {
             brand: brand,
         }));
     };
+
     const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const category = event.target.value;
         setSelectedCategory(category);
@@ -196,6 +273,30 @@ export const Items = () => {
                         onClick={handleItemSaveEvent}
                     />
                 </div>
+            </section>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+                <div className='flex flex-row flex-wrap items-center justify-center w-full'>
+                    <TextField placeholder={'Isuru Dhananjaya'} label={'User\'s name'}/>
+                </div>
+                <Paper sx={{height: 400, width: '100%'}}>
+                    <DataGrid
+                        rows={items}
+                        columns={columns}
+                        pagination
+                        pageSizeOptions={[5, 10]}
+                        // checkboxSelection
+                        sx={{border: 0}}
+                        getRowId={(row) => row.id}
+                        paginationModel={paginationModel}
+                        rowCount={totalElements} // Total number of rows
+                        paginationMode="server" // Use server-side pagination
+                        onPaginationModelChange={(newPagination) => {
+                            setPaginationModel(newPagination);
+                            fetchAllItems(newPagination.page, newPagination.pageSize).then(r =>  {});
+                        }}
+                    />
+                </Paper>
             </section>
             <FooterSpace/>
         </section>
