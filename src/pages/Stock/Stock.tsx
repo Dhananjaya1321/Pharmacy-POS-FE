@@ -4,8 +4,66 @@ import {Button} from "../../component/Button/Button";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import stockAPIController from "../../controller/StockAPIController";
+import Paper from "@mui/material/Paper";
+import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
+import itemAPIController from "../../controller/ItemAPIController";
 
-// Define the type for item objects
+
+const columns: GridColDef[] = [
+    {
+        field: 'item',
+        headerName: 'Item',
+        width: 200,
+        valueGetter: (params) => params.row.item?.name || 'N/A'
+    },
+    {field: 'purchasedAmount', headerName: 'Purchased Amount',type:"number", width: 200},
+    {field: 'purchasedQty', headerName: 'Purchased Qty',type:"number", width: 200},
+    {field: 'availableQty', headerName: 'Available Qty',type:"number", width: 200,},
+    {field: 'purchasedDiscount', headerName: 'Purchased Discount',type:"number", width: 200,},
+    {field: 'expiryDate', headerName: 'Expiry Date', width: 200,},
+    {field: 'description', headerName: 'Description', width: 200,},
+    {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 400,
+        renderCell: (params) => (
+            <>
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleUpdate}
+                />
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleDelete}
+                />
+            </>
+        ),
+    },
+];
+
+const handleUpdate = async () => {
+    console.log("update")
+};
+const handleDelete = async () => {
+    console.log("delete")
+};
+
+interface Stock {
+    id: number;
+    purchasedAmount: number;
+    purchasedQty: number;
+    purchasedDiscount: number;
+    availableQty: number;
+    expiryDate: string;
+    description: string;
+    item: {
+        id:number;
+        name:string
+    };
+}
+
 interface Item {
     id: number;
     name: string;
@@ -24,16 +82,28 @@ export const Stock = () => {
         description: '',
         item: '',
     });
-
     const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
-    // Set the correct type for items
     const [items, setItems] = useState<Item[]>([]);  // <--- Typed the items state
+    const [stocks, setStocks] = useState<Stock[]>([]);
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [totalElements, setTotalElements] = useState(0);
 
-    // Fetch items on component mount
+    const fetchAllSuppliers = async (page: number, pageSize: number) => {
+        try {
+            const response = await stockAPIController.getAllStocks(page, pageSize);
+            if (response) {
+                setStocks(response.data.content);
+                setTotalElements(response.data.page.totalElements);
+            }
+        } catch (error) {
+            console.error("Error fetching supplier data:", error);
+        }
+    };
+
     useEffect(() => {
         const loadItems = async () => {
-            const response = await stockAPIController.getAllItems();
-            const items = response.data.map((item: {
+            const response = await itemAPIController.getAllItems();
+            const items = response.data.content.map((item: {
                 id: number;
                 name: string;
                 category: { name: string };
@@ -51,7 +121,8 @@ export const Stock = () => {
             setItems(items); // Set fetched items to state
         };
 
-        loadItems();
+        loadItems().then(r => {});
+        fetchAllSuppliers(0, 5).then(r => {});
     }, []);
 
     const handleStockChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -164,6 +235,30 @@ export const Stock = () => {
                         onClick={handleStockSaveEvent}
                     />
                 </div>
+            </section>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+                <div className='flex flex-row flex-wrap items-center justify-center w-full'>
+                    <TextField placeholder={'Isuru Dhananjaya'} label={'User\'s name'}/>
+                </div>
+                <Paper sx={{height: 400, width: '100%'}}>
+                    <DataGrid
+                        rows={stocks}
+                        columns={columns}
+                        pagination
+                        pageSizeOptions={[5, 10]}
+                        // checkboxSelection
+                        sx={{border: 0}}
+                        getRowId={(row) => row.id}
+                        paginationModel={paginationModel}
+                        rowCount={totalElements} // Total number of rows
+                        paginationMode="server" // Use server-side pagination
+                        onPaginationModelChange={(newPagination) => {
+                            setPaginationModel(newPagination);
+                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r =>  {});
+                        }}
+                    />
+                </Paper>
             </section>
             <FooterSpace/>
         </section>

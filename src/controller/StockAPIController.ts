@@ -14,9 +14,14 @@ const stockAPIController = {
             return false;
         }
     },
-    getAllItems: async () => {
+    getAllStocks: async (page?: number, size?: number) => {
         try {
-            const response = await axios.get(`${base_url}/item`);
+            const response = await axios.get(`${base_url}/stock`,{
+                params: {
+                    page: page,
+                    size: size,
+                },
+            });
             if (response.status === 200) {
                 return response.data;
             } else {
