@@ -15,10 +15,9 @@ import supplierAPIController from "../../controller/SupplierAPIController";
 const columns: GridColDef[] = [
     {field: 'name', headerName: 'Name', width: 200},
     {field: 'contact', headerName: 'Contact', width: 200},
-    {field: 'website', headerName: 'Website', width: 200},
     {field: 'nic', headerName: 'NIC', width: 200,},
     {field: 'email', headerName: 'Email', width: 200,},
-    {field: 'description', headerName: 'Description', width: 200,},
+    {field: 'address', headerName: 'Address', width: 200,},
     {
         field: 'actions',
         headerName: 'Actions',
@@ -52,10 +51,9 @@ interface Customer {
     id: number;
     name: string;
     contact: string;
-    website: string;
-    nic: string;
     email: string;
-    description: string;
+    nic: string;
+    address: string;
     actions: string;
 }
 
