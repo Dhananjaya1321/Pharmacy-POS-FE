@@ -14,6 +14,24 @@ const supplierAPIController = {
             return false;
         }
     },
+    getAllSuppliers: async (page?: number, size?: number) => {
+        try {
+            const response = await axios.get(`${base_url}/supplier`,{
+                params: {
+                    page: page,
+                    size: size,
+                },
+            });
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.error("There was an error fetching user roles!", error);
+            return [];
+        }
+    },
 };
 
 export default supplierAPIController;
