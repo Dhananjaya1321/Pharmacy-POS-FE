@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {base_url} from "../config/apiConfig";
 
-const shopAPIController = {
+const userAPIController = {
     getAllUserRoles: async () => {
         try {
             const response = await axios.get(`${base_url}/role`);
@@ -42,4 +42,4 @@ const shopAPIController = {
     },
 };
 
-export default shopAPIController;
+export default userAPIController;
