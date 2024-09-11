@@ -15,8 +15,19 @@ const shopAPIController = {
             return [];
         }
     },
-
-    // Function to update shop data
+    getAllUsers: async () => {
+        try {
+            const response = await axios.get(`${base_url}/user`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.error("There was an error fetching user roles!", error);
+            return [];
+        }
+    },
     saveUser: async (userData: any) => {
         try {
             const response = await axios.post(

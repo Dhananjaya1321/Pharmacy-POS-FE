@@ -11,6 +11,65 @@ import userAPIController from "../../controller/UserAPIController";
 import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {Footer} from "../Footer/Footer";
+import Paper from "@mui/material/Paper";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
+import {Checkbox} from "@mui/material";
+import TableContainer from "@mui/material/TableContainer";
+
+
+/*
+
+const rows = [
+    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+];
+
+
+const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'firstName', headerName: 'First name', width: 130 },
+    { field: 'lastName', headerName: 'Last name', width: 130 },
+    {
+        field: 'age',
+        headerName: 'Age',
+        type: 'number',
+        width: 90,
+    },
+    {
+        field: 'fullName',
+        headerName: 'Full name',
+        description: 'This column has a value getter and is not sortable.',
+        sortable: false,
+        width: 160,
+    },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
+
+*/
+
+interface User {
+    id: number;
+    name: string;
+    contact: string;
+    role: { name: string };
+    nic: string;
+    email: string;
+    username: string;
+    address: string;
+}
 
 export const ShopAndUser = () => {
     // State to manage form data
@@ -40,6 +99,8 @@ export const ShopAndUser = () => {
         username: '',
         address: '',
     });
+
+    const [users, setUsers] = useState<User[]>([]);
 
     // State for managing the selected role
     const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
@@ -102,6 +163,7 @@ export const ShopAndUser = () => {
             alert("Failed to save data.");
         }
     };
+
     const handleUserSave = async () => {
         console.log(userData.role)
         const isSuccess = await userAPIController.saveUser(userData);
@@ -142,8 +204,21 @@ export const ShopAndUser = () => {
             }
         };
 
+        const fetchAllUsers = async () => {
+            try {
+                const response = await userAPIController.getAllUsers();
+                if (response) {
+                    setUsers(response.data);
+                }
+            } catch (error) {
+                console.error("Error fetching shop data:", error);
+            }
+        };
+
         fetchShopData();
+        fetchAllUsers();
     }, []);
+
 
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
@@ -151,7 +226,8 @@ export const ShopAndUser = () => {
                 <h3>Manage Shop</h3>
             </section>
             {/*url display section*/}
-            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="pharmacyName"
@@ -201,7 +277,8 @@ export const ShopAndUser = () => {
             <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
                 <h3>Manage Users </h3>
             </section>
-            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="name"
@@ -281,13 +358,57 @@ export const ShopAndUser = () => {
                     <Button name={'Save'} color={'bg-[#2FEB00]'} onClick={handleUserSave}/>
                 </div>
             </section>
-            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField placeholder={'Isuru Dhananjaya'} label={'User\'s name'}/>
-                    <TextField placeholder={'076 715 1321'} label={'Contact'}/>
-                    <TextField placeholder={'Admin'} label={'Role'}/>
                 </div>
-                <BasicTable/>
+                {/*<Paper sx={{ height: 400, width: '100%' }}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        initialState={{ pagination: { paginationModel } }}
+                        pageSizeOptions={[5, 10]}
+                        checkboxSelection
+                        sx={{ border: 0 }}
+                    />
+                </Paper>*/}
+                <TableContainer component={Paper}>
+                    <Table sx={{minWidth: 650}} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Username</TableCell>
+                                <TableCell>NIC</TableCell>
+                                <TableCell>Email</TableCell>
+                                <TableCell>Address</TableCell>
+                                <TableCell>Contact</TableCell>
+                                <TableCell>Role</TableCell>
+                                <TableCell>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {users.length > 0 ? (
+                                users.map((row) => (
+                                    <TableRow key={row.id} sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                        <TableCell component="th" scope="row">{row.name || '-'}</TableCell>
+                                        <TableCell>{row.username || '-'}</TableCell>
+                                        <TableCell>{row.nic || '-'}</TableCell>
+                                        <TableCell>{row.email || '-'}</TableCell>
+                                        <TableCell>{row.address || '-'}</TableCell>
+                                        <TableCell>{row.contact || '-'}</TableCell>
+                                        <TableCell>{row.role.name || '-'}</TableCell>
+                                        <TableCell><Checkbox /></TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell>No users found.</TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </section>
             <FooterSpace/>
             <Footer/>
