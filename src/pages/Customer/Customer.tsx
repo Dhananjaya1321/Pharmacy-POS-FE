@@ -4,9 +4,60 @@ import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
 // @ts-ignore
 import customerAPIController from "../../controller/CustomerAPIController";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {Footer} from "../Footer/Footer";
+import Paper from "@mui/material/Paper";
+import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
+import supplierAPIController from "../../controller/SupplierAPIController";
+
+
+const columns: GridColDef[] = [
+    {field: 'name', headerName: 'Name', width: 200},
+    {field: 'contact', headerName: 'Contact', width: 200},
+    {field: 'website', headerName: 'Website', width: 200},
+    {field: 'nic', headerName: 'NIC', width: 200,},
+    {field: 'email', headerName: 'Email', width: 200,},
+    {field: 'description', headerName: 'Description', width: 200,},
+    {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 400,
+        renderCell: (params) => (
+            <>
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleUpdate}
+                />
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleDelete}
+                />
+            </>
+        ),
+    },
+];
+
+const handleUpdate = async () => {
+    console.log("update")
+};
+const handleDelete = async () => {
+    console.log("delete")
+};
+
+
+interface Customer {
+    id: number;
+    name: string;
+    contact: string;
+    website: string;
+    nic: string;
+    email: string;
+    description: string;
+    actions: string;
+}
 
 export const Customer = () => {
     const [customerData, setCustomerData] = useState({
@@ -16,6 +67,10 @@ export const Customer = () => {
         nic: '',
         address: '',
     });
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [totalElements, setTotalElements] = useState(0);
+
     type CustomerDataKey = keyof typeof customerData;
 
     const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -36,6 +91,23 @@ export const Customer = () => {
             alert("Failed to save data.");
         }
     };
+
+    const fetchAllSuppliers = async (page: number, pageSize: number) => {
+        try {
+            const response = await customerAPIController.getAllCustomers(page, pageSize);
+            if (response) {
+                setCustomers(response.data.content);
+                setTotalElements(response.data.page.totalElements);
+            }
+        } catch (error) {
+            console.error("Error fetching supplier data:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchAllSuppliers(0, 5);
+    }, []);
 
 
     return (
@@ -97,6 +169,30 @@ export const Customer = () => {
                         onClick={handleCustomerSaveEvent}
                     />
                 </div>
+            </section>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+                <div className='flex flex-row flex-wrap items-center justify-center w-full'>
+                    <TextField placeholder={'Isuru Dhananjaya'} label={'User\'s name'}/>
+                </div>
+                <Paper sx={{height: 400, width: '100%'}}>
+                    <DataGrid
+                        rows={customers}
+                        columns={columns}
+                        pagination
+                        pageSizeOptions={[5, 10]}
+                        // checkboxSelection
+                        sx={{border: 0}}
+                        getRowId={(row) => row.id}
+                        paginationModel={paginationModel}
+                        rowCount={totalElements} // Total number of rows
+                        paginationMode="server" // Use server-side pagination
+                        onPaginationModelChange={(newPagination) => {
+                            setPaginationModel(newPagination);
+                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r =>  {});
+                        }}
+                    />
+                </Paper>
             </section>
             <FooterSpace/>
             <Footer/>

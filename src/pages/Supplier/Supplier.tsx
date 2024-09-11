@@ -16,7 +16,33 @@ const columns: GridColDef[] = [
     {field: 'nic', headerName: 'NIC', width: 200,},
     {field: 'email', headerName: 'Email', width: 200,},
     {field: 'description', headerName: 'Description', width: 200,},
+    {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 400,
+        renderCell: (params) => (
+            <>
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleUpdate}
+                />
+                <Button
+                    name={'Save'}
+                    color={'bg-[#2FEB00]'}
+                    onClick={handleDelete}
+                />
+            </>
+        ),
+    },
 ];
+
+const handleUpdate = async () => {
+    console.log("update")
+};
+const handleDelete = async () => {
+    console.log("delete")
+};
 
 interface Supplier {
     id: number;
@@ -26,6 +52,7 @@ interface Supplier {
     nic: string;
     email: string;
     description: string;
+    actions: string;
 }
 
 export const Supplier = () => {
@@ -68,7 +95,7 @@ export const Supplier = () => {
             const response = await supplierAPIController.getAllSuppliers(page, pageSize);
             if (response) {
                 setSuppliers(response.data.content);
-                setTotalElements(response.data.totalElements);
+                setTotalElements(response.data.page.totalElements);
             }
         } catch (error) {
             console.error("Error fetching supplier data:", error);
@@ -160,7 +187,7 @@ export const Supplier = () => {
                         columns={columns}
                         pagination
                         pageSizeOptions={[5, 10]}
-                        checkboxSelection
+                        // checkboxSelection
                         sx={{border: 0}}
                         getRowId={(row) => row.id}
                         paginationModel={paginationModel}
