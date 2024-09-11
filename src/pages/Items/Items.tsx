@@ -8,20 +8,33 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import itemAPIController from "../../controller/ItemAPIController";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import userAPIController from "../../controller/UserAPIController";
 import brandAPIController from "../../controller/BrandAPIController";
-import customerAPIController from "../../controller/CustomerAPIController";
 import unitAPIController from "../../controller/UnitAPIController";
 import categoryAPIController from "../../controller/CategoryAPIController";
 
 
 const columns: GridColDef[] = [
     {field: 'name', headerName: 'Name', width: 200},
-    {field: 'reOrderLevel', headerName: 'Re-Order Level', width: 200},
+    {
+        field: 'unit',
+        headerName: 'Unit',
+        width: 200,
+        valueGetter: (params) => params.row.unit?.unitSymbology+' ('+params.row.unit?.unitName+')' || 'N/A'
+    },
+    {field: 'reOrderLevel', headerName: 'Re-order Level',type:"number", width: 200},
     {field: 'description', headerName: 'Description', width: 200,},
-    {field: 'category', headerName: 'Category', width: 200,},
-    {field: 'unit', headerName: 'Unit', width: 200,},
-    {field: 'brand', headerName: 'Brand', width: 200,},
+    {
+        field: 'category',
+        headerName: 'Category',
+        width: 200,
+        valueGetter: (params) => params.row.category?.name || 'N/A'
+    },
+    {
+        field: 'brand',
+        headerName: 'Brand',
+        width: 200,
+        valueGetter: (params) => params.row.brand?.name || 'N/A'
+    },
     {
         field: 'actions',
         headerName: 'Actions',
