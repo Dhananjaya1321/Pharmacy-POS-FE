@@ -14,9 +14,14 @@ const unitAPIController = {
             return false;
         }
     },
-    getAllUnits: async () => {
+    getAllUnits: async (page?: number, size?: number) => {
         try {
-            const response = await axios.get(`${base_url}/unit`);
+            const response = await axios.get(`${base_url}/unit`,{
+                params: {
+                    page: page,
+                    size: size,
+                },
+            });
             if (response.status === 200) {
                 return response.data;
             } else {
