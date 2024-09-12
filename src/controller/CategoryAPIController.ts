@@ -14,9 +14,14 @@ const categoryAPIController = {
             return false;
         }
     },
-    getAllCategories: async () => {
+    getAllCategories:  async (page?: number, size?: number) => {
         try {
-            const response = await axios.get(`${base_url}/category`);
+            const response = await axios.get(`${base_url}/category`,{
+                params: {
+                    page: page,
+                    size: size,
+                },
+            });
             if (response.status === 200) {
                 return response.data;
             } else {
