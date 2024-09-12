@@ -14,9 +14,10 @@ const columns: GridColDef[] = [
             <Tooltip title={params.value}>
                 <div
                     style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                         textAlign:'start',
-                        whiteSpace: 'normal',
-                        wordWrap: 'break-word',
                     }}
                 >
                     {params.value}
@@ -27,9 +28,10 @@ const columns: GridColDef[] = [
             <Tooltip title={params.value}>
                 <div
                     style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                         textAlign:'start',
-                        whiteSpace: 'normal',
-                        wordWrap: 'break-word',
                     }}
                 >
                     {params.value}
@@ -40,36 +42,39 @@ const columns: GridColDef[] = [
             <Tooltip title={params.value}>
                 <div
                     style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                         textAlign:'start',
-                        whiteSpace: 'normal',
-                        wordWrap: 'break-word',
                     }}
                 >
                     {params.value}
                 </div>
             </Tooltip>
         ),},
-    {field: 'address', headerName: 'Address', width: 200,renderCell: (params) => (
+    {field: 'address', headerName: 'Address', width: 300,renderCell: (params) => (
             <Tooltip title={params.value}>
                 <div
                     style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                         textAlign:'start',
-                        whiteSpace: 'normal',
-                        wordWrap: 'break-word',
                     }}
                 >
                     {params.value}
                 </div>
             </Tooltip>
         ),},
-    {field: 'description', headerName: 'Description', width: 400,
+    {field: 'description', headerName: 'Description', width: 300,
         renderCell: (params) => (
             <Tooltip title={params.value}>
                 <div
                     style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                         textAlign:'start',
-                        whiteSpace: 'normal',
-                        wordWrap: 'break-word',
                     }}
                 >
                     {params.value}
