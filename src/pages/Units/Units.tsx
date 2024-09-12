@@ -138,7 +138,7 @@ export const Units = () => {
 
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
-            <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
+            <section className='text-[#00609C] flex flex-row justify-start mt-5'>
                 <h3>Manage Stock and Items &gt; Units</h3>
             </section>
             {/*url display section*/}

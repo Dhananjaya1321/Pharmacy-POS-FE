@@ -86,20 +86,32 @@ const columns: GridColDef[] = [
                 </div>
             </Tooltip>
         ),},
-    {field: 'expiryDate', headerName: 'Expiry Date', width: 200,renderCell: (params) => (
+    {
+        field: 'expiryDate',
+        headerName: 'Expiry Date',
+        width: 200,
+        valueGetter: (params) => {
+            const date = new Date(params.value);
+            const year = date.getFullYear();
+            const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adds leading zero if necessary
+            const day = ('0' + date.getDate()).slice(-2); // Adds leading zero if necessary
+            return `${year}-${month}-${day}`;
+        },
+        renderCell: (params) => (
             <Tooltip title={params.value}>
                 <div
                     style={{
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
-                        textAlign:'start',
+                        textAlign: 'start',
                     }}
                 >
                     {params.value}
                 </div>
             </Tooltip>
-        ),},
+        ),
+    },
     {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
             <Tooltip title={params.value}>
                 <div

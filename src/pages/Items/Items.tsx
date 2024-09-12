@@ -188,7 +188,7 @@ export const Items = () => {
     useEffect(() => {
         const loadUnits = async () => {
             const response = await unitAPIController.getAllUnits();
-            const units = response.data.map((unit: {
+            const units = response.data.content.map((unit: {
                 id: number;
                 unitName: string;
                 unitSymbology:string;
@@ -225,7 +225,7 @@ export const Items = () => {
     const fetchBrands = async () => {
         const response = await brandAPIController.getAllBrands();
 
-        const brands = response.data.map((brand: { id: number; name: string }) => ({
+        const brands = response.data.content.map((brand: { id: number; name: string }) => ({
             id: brand.id,
             name: brand.name,
         }));
@@ -236,7 +236,7 @@ export const Items = () => {
     const fetchCategories = async () => {
         const response = await categoryAPIController.getAllCategories();
 
-        const categories = response.data.map((category: { id: number; name: string }) => ({
+        const categories = response.data.content.map((category: { id: number; name: string }) => ({
             id: category.id,
             name: category.name,
         }));
