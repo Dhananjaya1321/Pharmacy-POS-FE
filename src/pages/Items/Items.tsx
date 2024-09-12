@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import brandAPIController from "../../controller/BrandAPIController";
 import unitAPIController from "../../controller/UnitAPIController";
 import categoryAPIController from "../../controller/CategoryAPIController";
+import {Tooltip} from "@mui/material";
 
 
 const columns: GridColDef[] = [
@@ -19,21 +20,89 @@ const columns: GridColDef[] = [
         field: 'unit',
         headerName: 'Unit',
         width: 200,
-        valueGetter: (params) => params.row.unit?.unitSymbology+' ('+params.row.unit?.unitName+')' || 'N/A'
+        valueGetter: (params) => params.row.unit?.unitSymbology+' ('+params.row.unit?.unitName+')' || 'N/A',
+        renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),
     },
-    {field: 'reOrderLevel', headerName: 'Re-order Level',type:"number", width: 200},
-    {field: 'description', headerName: 'Description', width: 200,},
+    {field: 'reOrderLevel', headerName: 'Re-order Level',type:"number", width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'description', headerName: 'Description', width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
     {
         field: 'category',
         headerName: 'Category',
         width: 200,
-        valueGetter: (params) => params.row.category?.name || 'N/A'
+        valueGetter: (params) => params.row.category?.name || 'N/A',
+        renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),
     },
     {
         field: 'brand',
         headerName: 'Brand',
         width: 200,
-        valueGetter: (params) => params.row.brand?.name || 'N/A'
+        valueGetter: (params) => params.row.brand?.name || 'N/A',
+        renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),
     },
     {
         field: 'actions',

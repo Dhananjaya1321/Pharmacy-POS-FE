@@ -6,7 +6,6 @@ import categoryAPIController from "../../controller/CategoryAPIController";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
-import unitAPIController from "../../controller/UnitAPIController";
 import Paper from "@mui/material/Paper";
 
 const columns: GridColDef[] = [

@@ -7,6 +7,7 @@ import stockAPIController from "../../controller/StockAPIController";
 import Paper from "@mui/material/Paper";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import itemAPIController from "../../controller/ItemAPIController";
+import {Tooltip} from "@mui/material";
 
 
 const columns: GridColDef[] = [
@@ -14,14 +15,105 @@ const columns: GridColDef[] = [
         field: 'item',
         headerName: 'Item',
         width: 200,
-        valueGetter: (params) => params.row.item?.name || 'N/A'
+        valueGetter: (params) => params.row.item?.name || 'N/A',renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),
     },
-    {field: 'purchasedAmount', headerName: 'Purchased Amount',type:"number", width: 200},
-    {field: 'purchasedQty', headerName: 'Purchased Qty',type:"number", width: 200},
-    {field: 'availableQty', headerName: 'Available Qty',type:"number", width: 200,},
-    {field: 'purchasedDiscount', headerName: 'Purchased Discount',type:"number", width: 200,},
-    {field: 'expiryDate', headerName: 'Expiry Date', width: 200,},
-    {field: 'description', headerName: 'Description', width: 200,},
+    {field: 'purchasedAmount', headerName: 'Purchased Amount',type:"number", width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'purchasedQty', headerName: 'Purchased Qty',type:"number", width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'availableQty', headerName: 'Available Qty',type:"number", width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'purchasedDiscount', headerName: 'Purchased Discount',type:"number", width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'expiryDate', headerName: 'Expiry Date', width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
     {
         field: 'actions',
         headerName: 'Actions',

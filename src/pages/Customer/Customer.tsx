@@ -10,14 +10,80 @@ import {Footer} from "../Footer/Footer";
 import Paper from "@mui/material/Paper";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import supplierAPIController from "../../controller/SupplierAPIController";
+import {Tooltip} from "@mui/material";
 
 
 const columns: GridColDef[] = [
-    {field: 'name', headerName: 'Name', width: 200},
-    {field: 'contact', headerName: 'Contact', width: 200},
-    {field: 'nic', headerName: 'NIC', width: 200,},
-    {field: 'email', headerName: 'Email', width: 200,},
-    {field: 'address', headerName: 'Address', width: 200,},
+    {field: 'name', headerName: 'Name', width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'contact', headerName: 'Contact', width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'nic', headerName: 'NIC', width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'email', headerName: 'Email', width: 200,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
+    {field: 'address', headerName: 'Address', width: 400,renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign:'start',
+                    }}
+                >
+                    {params.value}
+                </div>
+            </Tooltip>
+        ),},
     {
         field: 'actions',
         headerName: 'Actions',
