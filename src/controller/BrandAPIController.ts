@@ -14,9 +14,14 @@ const brandAPIController = {
             return false;
         }
     },
-    getAllBrands: async () => {
+    getAllBrands: async (page?: number, size?: number) => {
         try {
-            const response = await axios.get(`${base_url}/brand`);
+            const response = await axios.get(`${base_url}/brand`,{
+                params: {
+                    page: page,
+                    size: size,
+                },
+            });
             if (response.status === 200) {
                 return response.data;
             } else {
