@@ -66,7 +66,7 @@ export const StockAndItems = () => {
             </nav>
 
             <section className={`flex flex-row justify-center border-[1px] border-solid 
-            border-[#cecece] mt-2 rounded ${getSectionClass()}`}>
+            border-[#005285] mt-2 rounded ${getSectionClass()}`}>
                 <Outlet />
             </section>
 

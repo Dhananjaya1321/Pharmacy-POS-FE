@@ -120,7 +120,7 @@ export const Categories = () => {
     }, []);
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
-            <section className='text-[#bebebe] flex flex-row justify-start mt-5'>
+            <section className='text-[#005285] flex flex-row justify-start mt-5'>
                 <h3>Manage Stock and Items &gt; Categories</h3>
             </section>
             {/*url display section*/}
