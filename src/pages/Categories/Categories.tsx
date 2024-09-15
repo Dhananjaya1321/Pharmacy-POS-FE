@@ -7,58 +7,10 @@ import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import brandAPIController from "../../controller/BrandAPIController";
 
-const columns: GridColDef[] = [
-    {field: 'name', headerName: 'Category Name', width: 300,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'description', headerName: 'Description', width: 300,
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 400,
-        renderCell: (params) => (
-            <>
-                <Button
-                    name={'Save'}
-                    color={'bg-[#2FEB00]'}
-                    onClick={handleUpdate}
-                />
-                <Button
-                    name={'Save'}
-                    color={'bg-[#2FEB00]'}
-                    onClick={handleDelete}
-                />
-            </>
-        ),
-    },
-];
 
 const handleUpdate = async () => {
     console.log("update")
@@ -74,6 +26,59 @@ interface Unit {
 }
 
 export const Categories = () => {
+    const columns: GridColDef[] = [
+        {field: 'name', headerName: 'Category Name', width: 300,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'description', headerName: 'Description', width: 300,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <Button
+                        name={'Save'}
+                        color={'bg-[#2FEB00]'}
+                        onClick={handleUpdate}
+                    />
+                    <button
+                        className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </button>
+                </>
+            ),
+        },
+    ];
+
     const [categoryData, setCategoryData] = useState({
         name: '',
         description: '',
@@ -112,6 +117,25 @@ export const Categories = () => {
             }
         } catch (error) {
             console.error("Error fetching supplier data:", error);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this brand?");
+        if (!confirmed) return;
+
+        try {
+            const response = await categoryAPIController.deleteCategory(id);
+            if (response.state === "OK") {
+                setCategories(prevCategories => prevCategories.filter(category => category.id !== id));
+                setTotalElements(prevTotal => prevTotal - 1);
+                alert("Category deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                alert(response.message || "Failed to delete category.");
+            } else {
+                alert("Failed to delete category.");
+            }
+        } catch (e) {
         }
     };
 
