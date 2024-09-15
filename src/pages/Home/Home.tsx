@@ -7,7 +7,7 @@ export const Home = () => {
         <main className='h-screen relative'>
             <TopNavBar/>
             <SideNavBar/>
-            <main className='bg-[#fbfbfb] w-[90%] h-max flex justify-center absolute right-0 top-[60px] m-auto'>
+            <main className='bg-[#fbfbfb] w-[90%] h-max flex justify-center absolute right-0 top-[50px] m-auto'>
                 <Outlet/>
             </main>
         </main>

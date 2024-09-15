@@ -13,6 +13,7 @@ import shop from "../../assets/icons/shop.png"
 import activeShop from "../../assets/icons/shop (1).png"
 import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
+
 export const SideNavBar = () => {
     const location = useLocation(); // Current location
     const [activeButton, setActiveButton] = useState<string>("");
@@ -25,6 +26,21 @@ export const SideNavBar = () => {
                 setActiveButton("Order");
                 break;
             case "/stock-and-items":
+                setActiveButton("Manage Stock and Items");
+                break;
+            case "/stock-and-items/items":
+                setActiveButton("Manage Stock and Items");
+                break;
+            case "/stock-and-items/stock":
+                setActiveButton("Manage Stock and Items");
+                break;
+            case "/stock-and-items/brands":
+                setActiveButton("Manage Stock and Items");
+                break;
+            case "/stock-and-items/units":
+                setActiveButton("Manage Stock and Items");
+                break;
+            case "/stock-and-items/categories":
                 setActiveButton("Manage Stock and Items");
                 break;
             case "/customer":
