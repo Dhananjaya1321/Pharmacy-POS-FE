@@ -32,6 +32,20 @@ const brandAPIController = {
             return [];
         }
     },
+    deleteBrand:async (id: number) => {
+        try {
+            const response = await axios.delete(`${base_url}/brand/${id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('Error deleting brand');
+                return null;
+            }
+        } catch (error) {
+            console.error("There was an error deleting the brand!", error);
+            return null;
+        }
+    },
 };
 
 export default brandAPIController;

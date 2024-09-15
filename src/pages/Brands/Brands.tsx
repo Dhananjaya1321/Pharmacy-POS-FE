@@ -7,108 +7,12 @@ import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import {Tooltip} from "@mui/material";
+import BasicModal from "../../component/Modal/Modal";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
-const columns: GridColDef[] = [
-    {field: 'name', headerName: 'Brand Name', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'contact', headerName: 'Contact', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'website', headerName: 'Website', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'address', headerName: 'Address', width: 300,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'description', headerName: 'Description', width: 300,
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 400,
-        renderCell: (params) => (
-            <>
-                <Button
-                    name={'Save'}
-                    color={'bg-[#2FEB00]'}
-                    onClick={handleUpdate}
-                />
-                <Button
-                    name={'Save'}
-                    color={'bg-[#2FEB00]'}
-                    onClick={handleDelete}
-                />
-            </>
-        ),
-    },
-];
 
-const handleUpdate = async () => {
-    console.log("update")
-};
-const handleDelete = async () => {
-    console.log("delete")
-};
 
 interface Brand {
     id: number;
@@ -120,6 +24,106 @@ interface Brand {
 }
 
 export const Brands = () => {
+    const columns: GridColDef[] = [
+        {
+            field: 'name', headerName: 'Brand Name', width: 200, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'contact', headerName: 'Contact', width: 200, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'website', headerName: 'Website', width: 200, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'address', headerName: 'Address', width: 300, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'description', headerName: 'Description', width: 300,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <BasicModal/>
+                    <button
+                        className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                </>
+            ),
+        },
+    ];
+
     const [brandData, setBrandData] = useState({
         name: '',
         contact: '',
@@ -128,7 +132,7 @@ export const Brands = () => {
         description: '',
     });
     const [brands, setBrands] = useState<Brand[]>([]);
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
     type BrandDataKey = keyof typeof brandData;
@@ -165,8 +169,34 @@ export const Brands = () => {
         }
     };
 
+    const handleUpdate = async () => {
+        console.log("update")
+    };
+
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this brand?");
+        if (!confirmed) return;
+
+        try {
+            const response = await brandAPIController.deleteBrand(id);
+            if (response.state === "OK") {
+                // Remove the deleted brand from the table without hitting the backend again
+                setBrands(prevBrands => prevBrands.filter(brand => brand.id !== id));
+                setTotalElements(prevTotal => prevTotal - 1); // Adjust total elements count
+                alert("Brand deleted successfully!");
+            } else {
+                alert("Failed to delete brand.");
+            }
+        } catch (error) {
+            console.error("Error deleting brand:", error);
+            alert("An error occurred while deleting the brand.");
+        }
+    };
+
+
     useEffect(() => {
-        fetchAllBrands(0, 5).then(r => {});
+        fetchAllBrands(0, 5).then(r => {
+        });
     }, []);
 
     return (
