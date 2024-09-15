@@ -7,78 +7,12 @@ import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
-
-const columns: GridColDef[] = [
-    {field: 'unitName', headerName: 'Unit Name', width: 300,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'unitSymbology', headerName: 'UnitSymbology', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'description', headerName: 'Description', width: 300,
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 400,
-        renderCell: (params) => (
-            <>
-                <Button
-                    name={'Save'}
-                    color={'bg-[#2FEB00]'}
-                    onClick={handleUpdate}
-                />
-                <Button
-                    name={'Save'}
-                    color={'bg-[#2FEB00]'}
-                    onClick={handleDelete}
-                />
-            </>
-        ),
-    },
-];
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import categoryAPIController from "../../controller/CategoryAPIController";
 
 const handleUpdate = async () => {
     console.log("update")
-};
-const handleDelete = async () => {
-    console.log("delete")
 };
 
 interface Unit {
@@ -89,6 +23,73 @@ interface Unit {
 }
 
 export const Units = () => {
+    const columns: GridColDef[] = [
+        {field: 'unitName', headerName: 'Unit Name', width: 300,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'unitSymbology', headerName: 'UnitSymbology', width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'description', headerName: 'Description', width: 300,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <Button
+                        name={'Save'}
+                        color={'bg-[#2FEB00]'}
+                        onClick={handleUpdate}
+                    />
+                    <button
+                        className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </button>
+                </>
+            ),
+        },
+    ];
+
     const [unitData, setUnitData] = useState({
         unitName: '',
         unitSymbology: '',
@@ -129,6 +130,25 @@ export const Units = () => {
             }
         } catch (error) {
             console.error("Error fetching supplier data:", error);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this unit?");
+        if (!confirmed) return;
+
+        try {
+            const response = await unitAPIController.deleteUnit(id);
+            if (response.state === "OK") {
+                setUnits(prevUnits => prevUnits.filter(unit => unit.id !== id));
+                setTotalElements(prevTotal => prevTotal - 1);
+                alert("Unit deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                alert(response.message || "Failed to delete unit.");
+            } else {
+                alert("Failed to delete unit.");
+            }
+        } catch (e) {
         }
     };
 

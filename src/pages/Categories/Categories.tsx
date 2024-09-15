@@ -121,7 +121,7 @@ export const Categories = () => {
     };
 
     const handleDelete = async (id: number) => {
-        const confirmed = window.confirm("Are you sure you want to delete this brand?");
+        const confirmed = window.confirm("Are you sure you want to delete this category?");
         if (!confirmed) return;
 
         try {
