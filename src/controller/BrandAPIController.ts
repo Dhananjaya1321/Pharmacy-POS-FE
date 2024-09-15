@@ -37,13 +37,19 @@ const brandAPIController = {
             const response = await axios.delete(`${base_url}/brand/${id}`);
             if (response.status === 200) {
                 return response.data;
-            } else {
-                console.error('Error deleting brand');
+            } else  {
                 return null;
             }
         } catch (error) {
-            console.error("There was an error deleting the brand!", error);
-            return null;
+            if (axios.isAxiosError(error) && error.response) {
+                const backendMessage = error.response?.data?.message;
+                return {
+                    state: "BAD_REQUEST",
+                    message: backendMessage || "An error occurred while deleting the brand.",
+                };
+            }
+            console.error("Error deleting brand:", error);
+            return null; // Return null if some other error occurs
         }
     },
 };

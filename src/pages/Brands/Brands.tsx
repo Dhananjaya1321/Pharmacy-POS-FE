@@ -9,9 +9,8 @@ import Paper from "@mui/material/Paper";
 import {Tooltip} from "@mui/material";
 import BasicModal from "../../component/Modal/Modal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-
-
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import axios from "axios";
 
 
 interface Brand {
@@ -117,7 +116,7 @@ export const Brands = () => {
                         className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
                     >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faTrash}/>
                     </button>
                 </>
             ),
@@ -184,12 +183,15 @@ export const Brands = () => {
                 setBrands(prevBrands => prevBrands.filter(brand => brand.id !== id));
                 setTotalElements(prevTotal => prevTotal - 1); // Adjust total elements count
                 alert("Brand deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                // Show the error message from the backend if available
+                alert(response.message || "Failed to delete brand.");
             } else {
+                // Handle the case where response is null or doesn't match expected format
                 alert("Failed to delete brand.");
             }
-        } catch (error) {
-            console.error("Error deleting brand:", error);
-            alert("An error occurred while deleting the brand.");
+        } catch (e) {
+
         }
     };
 
