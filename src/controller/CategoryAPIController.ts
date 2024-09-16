@@ -10,7 +10,6 @@ const categoryAPIController = {
             );
             return response.status === 200;
         } catch (error) {
-            console.error("There was an error saving the data!", error);
             return false;
         }
     },
@@ -28,7 +27,6 @@ const categoryAPIController = {
                 return [];
             }
         } catch (error) {
-            console.error("There was an error fetching user roles!", error);
             return [];
         }
     },
@@ -45,10 +43,9 @@ const categoryAPIController = {
                 const backendMessage = error.response?.data?.message;
                 return {
                     state: "BAD_REQUEST",
-                    message: backendMessage || "An error occurred while deleting the brand.",
+                    message: backendMessage || "An error occurred while deleting the category.",
                 };
             }
-            console.error("Error deleting brand:", error);
             return null;
         }
     },

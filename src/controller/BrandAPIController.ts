@@ -10,7 +10,6 @@ const brandAPIController = {
             );
             return response.status === 200;
         } catch (error) {
-            console.error("There was an error saving the data!", error);
             return false;
         }
     },
@@ -28,7 +27,6 @@ const brandAPIController = {
                 return [];
             }
         } catch (error) {
-            console.error("There was an error fetching user roles!", error);
             return [];
         }
     },
@@ -48,7 +46,6 @@ const brandAPIController = {
                     message: backendMessage || "An error occurred while deleting the brand.",
                 };
             }
-            console.error("Error deleting brand:", error);
             return null; // Return null if some other error occurs
         }
     },

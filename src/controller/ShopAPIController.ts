@@ -10,7 +10,6 @@ const shopAPIController = {
             );
             return response.status === 200;
         } catch (error) {
-            console.error("There was an error saving the data!", error);
             return false;
         }
     },
@@ -23,7 +22,6 @@ const shopAPIController = {
                 return [];
             }
         } catch (error) {
-            console.error("There was an error saving the data!", error);
             return false;
         }
     },
