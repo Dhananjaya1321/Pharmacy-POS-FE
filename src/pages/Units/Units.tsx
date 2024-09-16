@@ -8,8 +8,7 @@ import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash} from "@fortawesome/free-solid-svg-icons";
-import categoryAPIController from "../../controller/CategoryAPIController";
+import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 const handleUpdate = async () => {
     console.log("update")
@@ -74,13 +73,14 @@ export const Units = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <Button
-                        name={'Save'}
-                        color={'bg-[#2FEB00]'}
-                        onClick={handleUpdate}
-                    />
                     <button
-                        className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faPen}/>
+                    </button>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
                     >
                         <FontAwesomeIcon icon={faTrash}/>
@@ -211,7 +211,17 @@ export const Units = () => {
                         pagination
                         pageSizeOptions={[5, 10]}
                         // checkboxSelection
-                        sx={{border: 0}}
+                        sx={{
+                            border: 0,
+                            '& .MuiDataGrid-row:hover': {
+                                backgroundColor: 'inherit' // Removes hover effect
+                            },
+                            '& .MuiDataGrid-cell:focus-within': {
+                                outline: 'none', // Removes focus outline on edit mode
+                            }
+                        }}
+                        disableRowSelectionOnClick
+                        disableColumnMenu
                         getRowId={(row) => row.id}
                         paginationModel={paginationModel}
                         rowCount={totalElements} // Total number of rows

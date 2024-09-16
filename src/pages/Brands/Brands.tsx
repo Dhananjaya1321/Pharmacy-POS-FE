@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import {Tooltip} from "@mui/material";
 import BasicModal from "../../component/Modal/Modal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 
 
@@ -111,9 +111,14 @@ export const Brands = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <BasicModal/>
                     <button
-                        className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faPen}/>
+                    </button>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
                     >
                         <FontAwesomeIcon icon={faTrash}/>
@@ -270,7 +275,17 @@ export const Brands = () => {
                         pagination
                         pageSizeOptions={[5, 10]}
                         // checkboxSelection
-                        sx={{border: 0}}
+                        sx={{
+                            border: 0,
+                            '& .MuiDataGrid-row:hover': {
+                                backgroundColor: 'inherit' // Removes hover effect
+                            },
+                            '& .MuiDataGrid-cell:focus-within': {
+                                outline: 'none', // Removes focus outline on edit mode
+                            }
+                        }}
+                        disableRowSelectionOnClick
+                        disableColumnMenu
                         getRowId={(row) => row.id}
                         paginationModel={paginationModel}
                         rowCount={totalElements} // Total number of rows

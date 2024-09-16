@@ -8,7 +8,7 @@ import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import brandAPIController from "../../controller/BrandAPIController";
 
 
@@ -63,13 +63,14 @@ export const Categories = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <Button
-                        name={'Save'}
-                        color={'bg-[#2FEB00]'}
-                        onClick={handleUpdate}
-                    />
                     <button
-                        className="w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faPen}/>
+                    </button>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
                     >
                         <FontAwesomeIcon icon={faTrash}/>
@@ -84,7 +85,7 @@ export const Categories = () => {
         description: '',
     });
     const [categories, setCategories] = useState<Unit[]>([]);
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
     type CategoryDataKey = keyof typeof categoryData;
@@ -189,7 +190,17 @@ export const Categories = () => {
                         pagination
                         pageSizeOptions={[5, 10]}
                         // checkboxSelection
-                        sx={{border: 0}}
+                        sx={{
+                            border: 0,
+                            '& .MuiDataGrid-row:hover': {
+                                backgroundColor: 'inherit' // Removes hover effect
+                            },
+                            '& .MuiDataGrid-cell:focus-within': {
+                                outline: 'none', // Removes focus outline on edit mode
+                            }
+                        }}
+                        disableRowSelectionOnClick
+                        disableColumnMenu
                         getRowId={(row) => row.id}
                         paginationModel={paginationModel}
                         rowCount={totalElements} // Total number of rows
