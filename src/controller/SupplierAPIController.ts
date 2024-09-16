@@ -30,6 +30,25 @@ const supplierAPIController = {
             return [];
         }
     },
+    deleteSupplier:async (id: number) => {
+        try {
+            const response = await axios.delete(`${base_url}/supplier/${id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else  {
+                return null;
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const backendMessage = error.response?.data?.message;
+                return {
+                    state: "BAD_REQUEST",
+                    message: backendMessage || "An error occurred while deleting the supplier.",
+                };
+            }
+            return null;
+        }
+    },
 };
 
 export default supplierAPIController;

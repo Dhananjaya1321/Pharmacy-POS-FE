@@ -11,121 +11,7 @@ import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
-
-const columns: GridColDef[] = [
-    {field: 'name', headerName: 'Name', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'contact', headerName: 'Contact', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'website', headerName: 'Website', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'nic', headerName: 'NIC', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'email', headerName: 'Email', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 400,
-        renderCell: (params) => (
-            <>
-                <button
-                    className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                    onClick={() => handleDelete()}
-                >
-                    <FontAwesomeIcon icon={faPen}/>
-                </button>
-                <button
-                    className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
-                    onClick={() => handleDelete()}
-                >
-                    <FontAwesomeIcon icon={faTrash}/>
-                </button>
-            </>
-        ),
-    },
-];
-
-const handleUpdate = async () => {
-    console.log("update")
-};
-const handleDelete = async () => {
-    console.log("delete")
-};
+    
 
 interface Supplier {
     id: number;
@@ -139,6 +25,112 @@ interface Supplier {
 }
 
 export const Supplier = () => {
+
+    const columns: GridColDef[] = [
+        {field: 'name', headerName: 'Name', width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'contact', headerName: 'Contact', width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'website', headerName: 'Website', width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'nic', headerName: 'NIC', width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'email', headerName: 'Email', width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                        onClick={() => handleDelete(params.row.id)}>
+                        <FontAwesomeIcon icon={faPen}/>
+                    </button>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        onClick={() => handleDelete(params.row.id)}>
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </button>
+                </>
+            ),
+        },
+    ];
     const [supplierData, setSupplierData] = useState({
         name: '',
         contact: '',
@@ -148,7 +140,7 @@ export const Supplier = () => {
         description: '',
     });
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
 
@@ -185,6 +177,24 @@ export const Supplier = () => {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this supplier?");
+        if (!confirmed) return;
+
+        try {
+            const response = await supplierAPIController.deleteSupplier(id);
+            if (response.state === "OK") {
+                setSuppliers(prevSuppliers => prevSuppliers.filter(supplier => supplier.id !== id));
+                setTotalElements(prevTotal => prevTotal - 1);
+                alert("Supplier deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                alert(response.message || "Failed to delete supplier.");
+            } else {
+                alert("Failed to delete supplier.");
+            }
+        } catch (e) {
+        }
+    };
 
     useEffect(() => {
         fetchAllSuppliers(0, 5);
