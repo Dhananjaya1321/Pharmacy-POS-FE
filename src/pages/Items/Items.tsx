@@ -15,128 +15,6 @@ import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 
-
-const columns: GridColDef[] = [
-    {field: 'name', headerName: 'Name', width: 200},
-    {
-        field: 'unit',
-        headerName: 'Unit',
-        width: 200,
-        valueGetter: (params) => params.row.unit?.unitSymbology+' ('+params.row.unit?.unitName+')' || 'N/A',
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {field: 'reOrderLevel', headerName: 'Re-order Level',type:"number", width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'description', headerName: 'Description', width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {
-        field: 'category',
-        headerName: 'Category',
-        width: 200,
-        valueGetter: (params) => params.row.category?.name || 'N/A',
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {
-        field: 'brand',
-        headerName: 'Brand',
-        width: 200,
-        valueGetter: (params) => params.row.brand?.name || 'N/A',
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 400,
-        renderCell: (params) => (
-            <>
-                <button
-                    className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                    onClick={() => handleDelete()}
-                >
-                    <FontAwesomeIcon icon={faPen}/>
-                </button>
-                <button
-                    className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
-                    onClick={() => handleDelete()}
-                >
-                    <FontAwesomeIcon icon={faTrash}/>
-                </button>
-            </>
-        ),
-    },
-];
-
-const handleUpdate = async () => {
-    console.log("update")
-};
-const handleDelete = async () => {
-    console.log("delete")
-};
-
-
 interface Item {
     id: number;
     name: string;
@@ -158,6 +36,120 @@ interface Unit {
 }
 
 export const Items = () => {
+    const columns: GridColDef[] = [
+        {field: 'name', headerName: 'Name', width: 200},
+        {
+            field: 'unit',
+            headerName: 'Unit',
+            width: 200,
+            valueGetter: (params) => params.row.unit?.unitSymbology + ' (' + params.row.unit?.unitName + ')' || 'N/A',
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'reOrderLevel', headerName: 'Re-order Level', type: "number", width: 200, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'description', headerName: 'Description', width: 200, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'category',
+            headerName: 'Category',
+            width: 200,
+            valueGetter: (params) => params.row.category?.name || 'N/A',
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'brand',
+            headerName: 'Brand',
+            width: 200,
+            valueGetter: (params) => params.row.brand?.name || 'N/A',
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                        onClick={() => handleDelete(params.row.id)}>
+                        <FontAwesomeIcon icon={faPen}/>
+                    </button>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        onClick={() => handleDelete(params.row.id)}>
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </button>
+                </>
+            ),
+        },
+    ];
     const [itemData, setItemData] = useState({
         name: '',
         description: '',
@@ -172,9 +164,8 @@ export const Items = () => {
     const [units, setUnit] = useState<Unit[]>([]);
     const [selectedBrand, setSelectedBrand] = useState<string | undefined>(undefined);
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
-
     const [items, setItems] = useState<Item[]>([]);
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
     const fetchAllItems = async (page: number, pageSize: number) => {
@@ -195,9 +186,9 @@ export const Items = () => {
             const units = response.data.content.map((unit: {
                 id: number;
                 unitName: string;
-                unitSymbology:string;
+                unitSymbology: string;
             }) => ({
-                id:unit.id,
+                id: unit.id,
                 unitName: unit.unitName,
                 unitSymbology: unit.unitSymbology,
             }));
@@ -205,8 +196,10 @@ export const Items = () => {
             setUnit(units);
         };
 
-        loadUnits().then(r => {});
-        fetchAllItems(0, 5).then(r => {});
+        loadUnits().then(r => {
+        });
+        fetchAllItems(0, 5).then(r => {
+        });
     }, []);
 
     const handleItemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -276,13 +269,33 @@ export const Items = () => {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this item?");
+        if (!confirmed) return;
+
+        try {
+            const response = await itemAPIController.deleteItem(id);
+            if (response.state === "OK") {
+                setItems(prevItems => prevItems.filter(item => item.id !== id));
+                setTotalElements(prevTotal => prevTotal - 1);
+                alert("Item deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                alert(response.message || "Failed to delete item.");
+            } else {
+                alert("Failed to delete item.");
+            }
+        } catch (e) {
+        }
+    };
+
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
             <section className='text-[#005285] flex flex-row justify-start mt-5'>
                 <h3>Manage Stock and Items &gt; Items</h3>
             </section>
             {/*url display section*/}
-            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="name"
@@ -389,7 +402,8 @@ export const Items = () => {
                         paginationMode="server" // Use server-side pagination
                         onPaginationModelChange={(newPagination) => {
                             setPaginationModel(newPagination);
-                            fetchAllItems(newPagination.page, newPagination.pageSize).then(r =>  {});
+                            fetchAllItems(newPagination.page, newPagination.pageSize).then(r => {
+                            });
                         }}
                     />
                 </Paper>
