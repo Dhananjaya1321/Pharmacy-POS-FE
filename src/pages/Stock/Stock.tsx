@@ -10,153 +10,14 @@ import itemAPIController from "../../controller/ItemAPIController";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
+import unitAPIController from "../../controller/UnitAPIController";
 
 
-const columns: GridColDef[] = [
-    {
-        field: 'item',
-        headerName: 'Item',
-        width: 200,
-        valueGetter: (params) => params.row.item?.name || 'N/A',renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {field: 'purchasedAmount', headerName: 'Purchased Amount',type:"number", width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'purchasedQty', headerName: 'Purchased Qty',type:"number", width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'availableQty', headerName: 'Available Qty',type:"number", width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {field: 'purchasedDiscount', headerName: 'Purchased Discount',type:"number", width: 200,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {
-        field: 'expiryDate',
-        headerName: 'Expiry Date',
-        width: 200,
-        valueGetter: (params) => {
-            const date = new Date(params.value);
-            const year = date.getFullYear();
-            const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adds leading zero if necessary
-            const day = ('0' + date.getDate()).slice(-2); // Adds leading zero if necessary
-            return `${year}-${month}-${day}`;
-        },
-        renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign: 'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),
-    },
-    {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
-            <Tooltip title={params.value}>
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        textAlign:'start',
-                    }}
-                >
-                    {params.value}
-                </div>
-            </Tooltip>
-        ),},
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 400,
-        renderCell: (params) => (
-            <>
-                <button
-                    className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                    onClick={() => handleDelete()}
-                >
-                    <FontAwesomeIcon icon={faPen}/>
-                </button>
-                <button
-                    className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
-                    onClick={() => handleDelete()}
-                >
-                    <FontAwesomeIcon icon={faTrash}/>
-                </button>
-            </>
-        ),
-    },
-];
+
 
 const handleUpdate = async () => {
     console.log("update")
-};
-const handleDelete = async () => {
-    console.log("delete")
-};
+}
 
 interface Stock {
     id: number;
@@ -182,6 +43,145 @@ interface Item {
 }
 
 export const Stock = () => {
+    const columns: GridColDef[] = [
+        {
+            field: 'item',
+            headerName: 'Item',
+            width: 200,
+            valueGetter: (params) => params.row.item?.name || 'N/A',renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {field: 'purchasedAmount', headerName: 'Purchased Amount',type:"number", width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'purchasedQty', headerName: 'Purchased Qty',type:"number", width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'availableQty', headerName: 'Available Qty',type:"number", width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {field: 'purchasedDiscount', headerName: 'Purchased Discount',type:"number", width: 200,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {
+            field: 'expiryDate',
+            headerName: 'Expiry Date',
+            width: 200,
+            valueGetter: (params) => {
+                const date = new Date(params.value);
+                const year = date.getFullYear();
+                const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adds leading zero if necessary
+                const day = ('0' + date.getDate()).slice(-2); // Adds leading zero if necessary
+                return `${year}-${month}-${day}`;
+            },
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign:'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),},
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faPen}/>
+                    </button>
+                    <button
+                        className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                        onClick={() => handleDelete(params.row.id)}
+                    >
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </button>
+                </>
+            ),
+        },
+    ];
+
     const [stockData, setStockData] = useState({
         purchasedAmount: '',
         purchasedQty: '',
@@ -256,6 +256,25 @@ export const Stock = () => {
             alert("Data saved successfully!");
         } else {
             alert("Failed to save data.");
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this stock?");
+        if (!confirmed) return;
+
+        try {
+            const response = await stockAPIController.deleteStock(id);
+            if (response.state === "OK") {
+                setStocks(prevStocks => prevStocks.filter(stock => stock.id !== id));
+                setTotalElements(prevTotal => prevTotal - 1);
+                alert("Stock deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                alert(response.message || "Failed to delete stock.");
+            } else {
+                alert("Failed to delete stock.");
+            }
+        } catch (e) {
         }
     };
 
