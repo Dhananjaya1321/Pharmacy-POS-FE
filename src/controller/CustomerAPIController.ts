@@ -32,6 +32,26 @@ const customerAPIController = {
             return [];
         }
     },
+    deleteCustomer:async (id: number) => {
+        try {
+            const response = await axios.delete(`${base_url}/customer/${id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else  {
+                return null;
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const backendMessage = error.response?.data?.message;
+                return {
+                    state: "BAD_REQUEST",
+                    message: backendMessage || "An error occurred while deleting the brand.",
+                };
+            }
+            console.error("Error deleting brand:", error);
+            return null;
+        }
+    },
 };
 
 export default customerAPIController;
