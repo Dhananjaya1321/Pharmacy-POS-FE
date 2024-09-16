@@ -18,6 +18,9 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import {Checkbox} from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
+import itemAPIController from "../../controller/ItemAPIController";
 
 interface User {
     id: number;
@@ -39,7 +42,6 @@ export const ShopAndUser = () => {
         website: '',
         address: '',
     });
-
     const [errors, setErrors] = useState({
         pharmacyId: '',
         pharmacyName: '',
@@ -47,7 +49,6 @@ export const ShopAndUser = () => {
         website: '',
         address: '',
     });
-
     const [userData, setUserData] = useState({
         name: '',
         contact: '',
@@ -58,7 +59,6 @@ export const ShopAndUser = () => {
         username: '',
         address: '',
     });
-
     const [users, setUsers] = useState<User[]>([]);
 
     // State for managing the selected role
@@ -178,6 +178,23 @@ export const ShopAndUser = () => {
         fetchAllUsers();
     }, []);
 
+    const handleDelete = async (id: number) => {
+        const confirmed = window.confirm("Are you sure you want to delete this user?");
+        if (!confirmed) return;
+
+        try {
+            const response = await userAPIController.deleteUser(id);
+            if (response.state === "OK") {
+                setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+                alert("User deleted successfully!");
+            } else if (response && response.state === "BAD_REQUEST") {
+                alert(response.message || "Failed to delete user.");
+            } else {
+                alert("Failed to delete user.");
+            }
+        } catch (e) {
+        }
+    };
 
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
@@ -322,16 +339,6 @@ export const ShopAndUser = () => {
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField placeholder={'Isuru Dhananjaya'} label={'User\'s name'}/>
                 </div>
-                {/*<Paper sx={{ height: 400, width: '100%' }}>
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        initialState={{ pagination: { paginationModel } }}
-                        pageSizeOptions={[5, 10]}
-                        checkboxSelection
-                        sx={{ border: 0 }}
-                    />
-                </Paper>*/}
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
@@ -357,7 +364,18 @@ export const ShopAndUser = () => {
                                         <TableCell>{row.address || '-'}</TableCell>
                                         <TableCell>{row.contact || '-'}</TableCell>
                                         <TableCell>{row.role.name || '-'}</TableCell>
-                                        <TableCell><Checkbox /></TableCell>
+                                        <TableCell>
+                                            <button
+                                                className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
+                                                onClick={() => handleDelete(row.id)}>
+                                                <FontAwesomeIcon icon={faPen}/>
+                                            </button>
+                                            <button
+                                                className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
+                                                onClick={() => handleDelete(row.id)}>
+                                                <FontAwesomeIcon icon={faTrash}/>
+                                            </button>
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             ) : (
