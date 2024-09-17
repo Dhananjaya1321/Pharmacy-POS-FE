@@ -21,6 +21,8 @@ import TableContainer from "@mui/material/TableContainer";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import itemAPIController from "../../controller/ItemAPIController";
+import SupplierModal from "../../modals/SupplierModal/SupplierModal";
+import UserModal from "../../modals/UserModal/UserModal";
 
 interface User {
     id: number;
@@ -65,7 +67,6 @@ export const ShopAndUser = () => {
     const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
 
     type ShopDataKey = keyof typeof shopData;
-    type UsersDataKey = keyof typeof userData;
 
     // Handle input changes for shop form
     const handleShopChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -123,8 +124,24 @@ export const ShopAndUser = () => {
         }
     };
 
+    const handleUpdateUser = (updatedUser: {
+        id: number;
+        name: string;
+        contact: string;
+        role: { name: string };
+        nic: string;
+        email: string;
+        username: string;
+        address: string;
+    }) => {
+        setUsers(prevUsers =>
+            prevUsers.map(user =>
+                user.id === updatedUser.id ? updatedUser : user
+            )
+        );
+    };
+
     const handleUserSave = async () => {
-        console.log(userData.role)
         const isSuccess = await userAPIController.saveUser(userData);
         if (isSuccess) {
             alert("Data saved successfully!");
@@ -365,11 +382,7 @@ export const ShopAndUser = () => {
                                         <TableCell>{row.contact || '-'}</TableCell>
                                         <TableCell>{row.role.name || '-'}</TableCell>
                                         <TableCell>
-                                            <button
-                                                className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                                                onClick={() => handleDelete(row.id)}>
-                                                <FontAwesomeIcon icon={faPen}/>
-                                            </button>
+                                            <UserModal rowData={row} onUpdateUser={handleUpdateUser}/>
                                             <button
                                                 className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                                                 onClick={() => handleDelete(row.id)}>
