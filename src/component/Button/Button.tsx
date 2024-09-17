@@ -9,6 +9,6 @@ export const Button = ({name,color, onClick }:props) => {
 
 type props={
     name:string,
-    color:string,
+    color:any,
     onClick?: () => void; // Add the onClick prop as optional
 }

@@ -8,16 +8,9 @@ import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
-import brandAPIController from "../../controller/BrandAPIController";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import CategoryModal from "../../component/CategoryModal/CategoryModal";
 
-
-const handleUpdate = async () => {
-    console.log("update")
-};
-const handleDelete = async () => {
-    console.log("delete")
-};
 
 interface Unit {
     id: number;
@@ -63,12 +56,7 @@ export const Categories = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}
-                    >
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                   <CategoryModal rowData={params.row} onUpdateCategory={handleUpdateCategory}/>
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
@@ -98,6 +86,14 @@ export const Categories = () => {
             ...categoryData,
             [typedName]: value,
         });
+    };
+
+    const handleUpdateCategory = (updatedCategory: { id: number; name: string; description: string }) => {
+        setCategories(prevCategories =>
+            prevCategories.map(category =>
+                category.id === updatedCategory.id ? updatedCategory : category
+            )
+        );
     };
 
     const handleCategorySaveEvent = async () => {
@@ -143,6 +139,7 @@ export const Categories = () => {
     useEffect(() => {
         fetchAllUnits(0, 5).then(r => {});
     }, []);
+
     return (
         <section className='h-max flex w-[95%] flex-col justify-center'>
             <section className='text-[#005285] flex flex-row justify-start mt-5'>
