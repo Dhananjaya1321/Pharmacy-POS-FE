@@ -1,5 +1,5 @@
 import {Footer} from "../Footer/Footer";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import expiredWarning from "../../assets/icons/expired-worning.png";
 import expired from "../../assets/icons/expired.png";
 import outOfStock from "../../assets/icons/out-of-stock.png";
@@ -11,8 +11,28 @@ import customer from "../../assets/icons/customer-service.png";
 import user from "../../assets/icons/profile.png";
 import categories from "../../assets/icons/categories.png";
 import {DashboardSummeryBox} from "../../component/DashboardSummeryBox/DashboardSummeryBox";
+import userAPIController from "../../controller/UserAPIController";
 
 export const Dashboard = () => {
+    const [userCount, setUserCount] = useState(0);
+
+    useEffect(() => {
+        fetchUserCount();
+    }, []);
+
+    const fetchUserCount = async () => {
+        try {
+            const response = await userAPIController.getUserCount();
+            if (response) {
+                setUserCount(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching shop data:", error);
+        }
+    };
+
+
+
     return (
         <section className='w-full h-max flex items-center flex-col'>
             <section className="relative flex flex-wrap w-[98%] items-center justify-center gap-4 mt-5">
@@ -25,7 +45,7 @@ export const Dashboard = () => {
                 <DashboardSummeryBox image={supplier} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Suppliers"}/>
                 <DashboardSummeryBox image={brand} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Brands"}/>
                 <DashboardSummeryBox image={categories} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Categories"}/>
-                <DashboardSummeryBox image={user} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Users"}/>
+                <DashboardSummeryBox image={user} count={userCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Users"}/>
             </section>
             <Footer/>
         </section>

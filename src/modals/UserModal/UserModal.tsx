@@ -216,7 +216,7 @@ export default function UserModal({rowData, onUpdateUser}: UserModalProps) {
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-end w-full'>
-                            <Button name={'Save'} color={'bg-[#2FEB00]'} onClick={handleUserSave}/>
+                            <Button name={'Update'} color={'bg-[#2FEB00]'} onClick={handleUserSave}/>
                         </div>
                     </section>
                 </Box>

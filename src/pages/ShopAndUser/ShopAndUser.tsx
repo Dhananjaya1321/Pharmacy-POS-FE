@@ -381,7 +381,7 @@ export const ShopAndUser = () => {
                                         <TableCell>{row.address || '-'}</TableCell>
                                         <TableCell>{row.contact || '-'}</TableCell>
                                         <TableCell>{row.role.name || '-'}</TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ display: 'flex', flexDirection: 'row' }}>
                                             <UserModal rowData={row} onUpdateUser={handleUpdateUser}/>
                                             <button
                                                 className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
