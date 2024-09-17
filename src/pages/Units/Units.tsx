@@ -9,10 +9,7 @@ import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
-
-const handleUpdate = async () => {
-    console.log("update")
-};
+import UnitModal from "../../component/UnitModal/UnitModal";
 
 interface Unit {
     id: number;
@@ -73,12 +70,7 @@ export const Units = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}
-                    >
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                    <UnitModal rowData={params.row} onUpdateUnit={handleUpdateUnit}/>
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
@@ -109,6 +101,14 @@ export const Units = () => {
             ...unitData,
             [typedName]: value,
         });
+    };
+
+    const handleUpdateUnit = (updatedUnit: { id: number; unitName: string; unitSymbology: string; description: string; }) => {
+        setUnits(prevUnits =>
+            prevUnits.map(unit =>
+                unit.id === updatedUnit.id ? updatedUnit : unit
+            )
+        );
     };
 
     const handleUnitSaveEvent = async () => {
