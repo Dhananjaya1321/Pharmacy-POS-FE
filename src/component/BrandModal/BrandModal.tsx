@@ -7,7 +7,7 @@ import { TextArea } from "../TextArea/TextArea";
 import { Button } from "../Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons";
-import unitAPIController from "../../controller/UnitAPIController";  // Adjust this based on your API controller
+import brandAPIController from "../../controller/BrandAPIController";  // Adjust this based on your API controller
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -22,30 +22,36 @@ const style = {
     p: 4,
 };
 
-interface UnitModalProps {
+interface BrandModalProps {
     rowData: {
         id: number;
-        unitName: string;
-        unitSymbology: string;
+        name: string;
+        contact: string;
+        website: string;
+        address: string;
         description: string;
     };
-    onUpdateUnit: (updatedUnit: { id: number; unitName: string; unitSymbology: string; description: string }) => void;
+    onUpdateBrand: (updatedBrand: { id: number; name: string; contact: string; website: string; address: string; description: string }) => void;
 }
 
-export default function UnitModal({ rowData, onUpdateUnit }: UnitModalProps) {
+export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) {
     const [open, setOpen] = React.useState(false);
-    const [unitData, setUnitData] = React.useState({
+    const [brandData, setBrandData] = React.useState({
         id: rowData?.id || 0,
-        unitName: rowData?.unitName || '',
-        unitSymbology: rowData?.unitSymbology || '',
+        name: rowData?.name || '',
+        contact: rowData?.contact || '',
+        website: rowData?.website || '',
+        address: rowData?.address || '',
         description: rowData?.description || ''
     });
 
     const handleOpen = () => {
-        setUnitData({
+        setBrandData({
             id: rowData.id,
-            unitName: rowData.unitName,
-            unitSymbology: rowData.unitSymbology,
+            name: rowData.name,
+            contact: rowData.contact,
+            website: rowData.website,
+            address: rowData.address,
             description: rowData.description
         });
         setOpen(true);
@@ -53,21 +59,21 @@ export default function UnitModal({ rowData, onUpdateUnit }: UnitModalProps) {
 
     const handleClose = () => setOpen(false);
 
-    const handleUnitChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleBrandChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setUnitData(prevState => ({
+        setBrandData(prevState => ({
             ...prevState,
             [name]: value
         }));
     };
 
-    const handleUnitSaveEvent = async () => {
-        const isSuccess = await unitAPIController.saveUnit(unitData); // Update the API call
+    const handleBrandSaveEvent = async () => {
+        const isSuccess = await brandAPIController.saveBrand(brandData); // Update the API call
         if (isSuccess) {
-            onUpdateUnit(unitData); // Call the update function passed from the parent
-            alert("Unit updated successfully!");
+            onUpdateBrand(brandData); // Call the update function passed from the parent
+            alert("Brand updated successfully!");
         } else {
-            alert("Failed to update unit.");
+            alert("Failed to update brand.");
         }
         handleClose();
     };
@@ -87,42 +93,55 @@ export default function UnitModal({ rowData, onUpdateUnit }: UnitModalProps) {
                         <FontAwesomeIcon icon={faTimes} size="lg" />
                     </button>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Unit Update
+                        Brand Update
                     </Typography>
-                    <section
-                        className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+                    <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                             <TextField
-                                name="unitName"
-                                placeholder={'Kilogram'}
-                                label={'Unit Name'}
+                                name="name"
+                                placeholder={'Brand name'}
+                                label={'Brand name'}
                                 important={"*"}
-                                value={unitData.unitName}
-                                onChange={handleUnitChange}
+                                value={brandData.name}
+                                onChange={handleBrandChange}
                             />
                             <TextField
-                                name="unitSymbology"
-                                placeholder={'kg'}
-                                label={'Unit Symbology'}
+                                name="contact"
+                                placeholder={'077 752 0000'}
+                                label={'Contact'}
                                 important={"*"}
-                                value={unitData.unitSymbology}
-                                onChange={handleUnitChange}
+                                value={brandData.contact}
+                                onChange={handleBrandChange}
+                            />
+                            <TextField
+                                name="website"
+                                placeholder={'brand.com'}
+                                label={'Website'}
+                                value={brandData.website}
+                                onChange={handleBrandChange}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                             <TextArea
+                                name="address"
+                                placeholder={'Address'}
+                                label={'Address'}
+                                value={brandData.address}
+                                onChange={handleBrandChange}
+                            />
+                            <TextArea
                                 name="description"
                                 placeholder={'Description'}
                                 label={'Description'}
-                                value={unitData.description}
-                                onChange={handleUnitChange}
+                                value={brandData.description}
+                                onChange={handleBrandChange}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-end w-full'>
                             <Button
                                 name={'Save'}
                                 color={'bg-[#2FEB00]'}
-                                onClick={handleUnitSaveEvent}
+                                onClick={handleBrandSaveEvent}
                             />
                         </div>
                     </section>

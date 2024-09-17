@@ -7,10 +7,10 @@ import {FooterSpace} from "../FooterSpace/FooterSpace";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import {Tooltip} from "@mui/material";
-import BasicModal from "../../component/Modal/Modal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import UnitModal from "../../component/UnitModal/UnitModal";
+import BrandModal from "../../component/BrandModal/BrandModal";
 
 
 interface Brand {
@@ -111,12 +111,7 @@ export const Brands = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}
-                    >
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                    <BrandModal rowData={params.row} onUpdateBrand={handleUpdateBrand}/>
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
@@ -151,8 +146,16 @@ export const Brands = () => {
         });
     };
 
+    const handleUpdateBrand = (updatedBrand: {id: number; name: string; contact: string; website: string; address: string; description: string;}) => {
+        setBrands(prevBrands =>
+            prevBrands.map(brand =>
+                brand.id === updatedBrand.id ? updatedBrand : brand
+            )
+        );
+    };
+
     const handleBrandSaveEvent = async () => {
-        const isSuccess = await brandAPIController.saveUnit(
+        const isSuccess = await brandAPIController.saveBrand(
             brandData);
         if (isSuccess) {
             alert("Data saved successfully!");

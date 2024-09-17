@@ -2,7 +2,7 @@ import axios from 'axios';
 import {base_url} from "../config/apiConfig";
 
 const brandAPIController = {
-    saveUnit: async (brand: any) => {
+    saveBrand: async (brand: any) => {
         try {
             const response = await axios.post(
                 `${base_url}/brand`,
