@@ -120,7 +120,7 @@ export default function UnitModal({ rowData, onUpdateUnit }: UnitModalProps) {
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-end w-full'>
                             <Button
-                                name={'Save'}
+                                name={'Update'}
                                 color={'bg-[#2FEB00]'}
                                 onClick={handleUnitSaveEvent}
                             />

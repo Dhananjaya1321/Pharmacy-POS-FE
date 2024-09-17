@@ -10,10 +10,12 @@ import {Footer} from "../Footer/Footer";
 import Paper from "@mui/material/Paper";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import supplierAPIController from "../../controller/SupplierAPIController";
-import {Tooltip} from "@mui/material";
+import {CardMedia, Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import itemAPIController from "../../controller/ItemAPIController";
+import UnitModal from "../../component/UnitModal/UnitModal";
+import CustomerModal from "../../component/CustomerModal/CustomerModal";
 
 interface Customer {
     id: number;
@@ -22,7 +24,6 @@ interface Customer {
     email: string;
     nic: string;
     address: string;
-    actions: string;
 }
 
 export const Customer = () => {
@@ -103,11 +104,7 @@ export const Customer = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}>
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                    <CustomerModal rowData={params.row} onUpdateCustomer={handleUpdateCustomer}/>
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}>
@@ -138,6 +135,14 @@ export const Customer = () => {
             ...customerData,
             [typedName]: value,
         });
+    };
+
+    const handleUpdateCustomer = (updatedCustomer: { id: number; name: string; contact: string; email: string; nic: string; address: string;}) => {
+        setCustomers(prevCustomers =>
+            prevCustomers.map(customer =>
+                customer.id === updatedCustomer.id ? updatedCustomer : customer
+            )
+        );
     };
 
     const handleCustomerSaveEvent = async () => {
