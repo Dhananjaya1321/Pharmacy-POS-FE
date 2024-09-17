@@ -9,7 +9,7 @@ import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
-import CategoryModal from "../../component/CategoryModal/CategoryModal";
+import CategoryModal from "../../modals/CategoryModal/CategoryModal";
 
 
 interface Unit {

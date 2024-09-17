@@ -2,13 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import {TextField} from "../TextField/TextFild";
-import {TextArea} from "../TextArea/TextArea";
-import {Button} from "../Button/Button";
+import {TextField} from "../../component/TextField/TextFild";
+import {TextArea} from "../../component/TextArea/TextArea";
+import {Button} from "../../component/Button/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
 import customerAPIController from "../../controller/CustomerAPIController";
-import {HiddenTextField} from "../HiddenTextField/HiddenTextField";
+import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 
 const style = {
     position: 'absolute' as 'absolute',

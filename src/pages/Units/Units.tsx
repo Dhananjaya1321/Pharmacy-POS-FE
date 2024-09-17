@@ -9,7 +9,7 @@ import {Tooltip} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
-import UnitModal from "../../component/UnitModal/UnitModal";
+import UnitModal from "../../modals/UnitModal/UnitModal";
 
 interface Unit {
     id: number;

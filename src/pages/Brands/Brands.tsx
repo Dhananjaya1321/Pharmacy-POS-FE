@@ -9,8 +9,8 @@ import Paper from "@mui/material/Paper";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import UnitModal from "../../component/UnitModal/UnitModal";
-import BrandModal from "../../component/BrandModal/BrandModal";
+import UnitModal from "../../modals/UnitModal/UnitModal";
+import BrandModal from "../../modals/BrandModal/BrandModal";
 
 
 interface Brand {

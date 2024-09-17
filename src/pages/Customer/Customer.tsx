@@ -14,8 +14,8 @@ import {CardMedia, Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import itemAPIController from "../../controller/ItemAPIController";
-import UnitModal from "../../component/UnitModal/UnitModal";
-import CustomerModal from "../../component/CustomerModal/CustomerModal";
+import UnitModal from "../../modals/UnitModal/UnitModal";
+import CustomerModal from "../../modals/CustomerModal/CustomerModal";
 
 interface Customer {
     id: number;
