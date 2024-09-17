@@ -10,8 +10,9 @@ import Paper from "@mui/material/Paper";
 import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
-    
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import SupplierModal from "../../modals/SupplierModal/SupplierModal";
+
 
 interface Supplier {
     id: number;
@@ -21,7 +22,6 @@ interface Supplier {
     nic: string;
     email: string;
     description: string;
-    actions: string;
 }
 
 export const Supplier = () => {
@@ -117,11 +117,7 @@ export const Supplier = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}>
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                    <SupplierModal rowData={params.row} onUpdateSupplier={handleUpdateSupplier}/>
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}>
@@ -154,6 +150,14 @@ export const Supplier = () => {
             ...supplierData,
             [typedName]: value,
         });
+    };
+
+    const handleUpdateSupplier = (updatedSupplier: {id: number; name: string; contact: string; website: string; nic: string; email: string; description: string;}) => {
+        setSuppliers(prevSuppliers =>
+            prevSuppliers.map(supplier =>
+                supplier.id === updatedSupplier.id ? updatedSupplier : supplier
+            )
+        );
     };
 
     const handleSupplierSaveEvent = async () => {
