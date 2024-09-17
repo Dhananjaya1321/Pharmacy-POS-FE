@@ -30,6 +30,18 @@ const categoryAPIController = {
             return [];
         }
     },
+    getCategoryCount: async () => {
+        try {
+            const response = await axios.get(`${base_url}/category/count`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
     deleteCategory:async (id: number) => {
         try {
             const response = await axios.delete(`${base_url}/category/${id}`);

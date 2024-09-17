@@ -12,12 +12,18 @@ import user from "../../assets/icons/profile.png";
 import categories from "../../assets/icons/categories.png";
 import {DashboardSummeryBox} from "../../component/DashboardSummeryBox/DashboardSummeryBox";
 import userAPIController from "../../controller/UserAPIController";
+import categoryAPIController from "../../controller/CategoryAPIController";
+import brandAPIController from "../../controller/BrandAPIController";
 
 export const Dashboard = () => {
     const [userCount, setUserCount] = useState(0);
+    const [categoryCount, setCategoryCount] = useState(0);
+    const [brandCount, setBrandCount] = useState(0);
 
     useEffect(() => {
         fetchUserCount();
+        fetchCategoryCount();
+        fetchBrandCount();
     }, []);
 
     const fetchUserCount = async () => {
@@ -25,6 +31,28 @@ export const Dashboard = () => {
             const response = await userAPIController.getUserCount();
             if (response) {
                 setUserCount(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching shop data:", error);
+        }
+    };
+
+    const fetchCategoryCount = async () => {
+        try {
+            const response = await categoryAPIController.getCategoryCount();
+            if (response) {
+                setCategoryCount(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching shop data:", error);
+        }
+    };
+
+    const fetchBrandCount = async () => {
+        try {
+            const response = await brandAPIController.getBrandCount();
+            if (response) {
+                setBrandCount(response.data);
             }
         } catch (error) {
             console.error("Error fetching shop data:", error);
@@ -43,8 +71,8 @@ export const Dashboard = () => {
                 <DashboardSummeryBox image={inStock} count={50} bgColor={"bg-[#2DE100]"} borderColor={"border-[#2DE100]"} textColor={"text-[#2DE100]"} label={"Medicine in stock"}/>
                 <DashboardSummeryBox image={customer} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Customers"}/>
                 <DashboardSummeryBox image={supplier} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Suppliers"}/>
-                <DashboardSummeryBox image={brand} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Brands"}/>
-                <DashboardSummeryBox image={categories} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Categories"}/>
+                <DashboardSummeryBox image={brand} count={brandCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Brands"}/>
+                <DashboardSummeryBox image={categories} count={categoryCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Categories"}/>
                 <DashboardSummeryBox image={user} count={userCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Users"}/>
             </section>
             <Footer/>

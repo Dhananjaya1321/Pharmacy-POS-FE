@@ -15,7 +15,7 @@ const brandAPIController = {
     },
     getAllBrands: async (page?: number, size?: number) => {
         try {
-            const response = await axios.get(`${base_url}/brand`,{
+            const response = await axios.get(`${base_url}/brand`, {
                 params: {
                     page: page,
                     size: size,
@@ -30,12 +30,24 @@ const brandAPIController = {
             return [];
         }
     },
-    deleteBrand:async (id: number) => {
+    getBrandCount: async () => {
+        try {
+            const response = await axios.get(`${base_url}/brand/count`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
+    deleteBrand: async (id: number) => {
         try {
             const response = await axios.delete(`${base_url}/brand/${id}`);
             if (response.status === 200) {
                 return response.data;
-            } else  {
+            } else {
                 return null;
             }
         } catch (error) {
