@@ -30,6 +30,18 @@ const customerAPIController = {
             return [];
         }
     },
+    getCustomersCount: async () => {
+        try {
+            const response = await axios.get(`${base_url}/customer/count`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
     deleteCustomer:async (id: number) => {
         try {
             const response = await axios.delete(`${base_url}/customer/${id}`);

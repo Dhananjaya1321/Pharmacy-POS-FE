@@ -14,16 +14,25 @@ import {DashboardSummeryBox} from "../../component/DashboardSummeryBox/Dashboard
 import userAPIController from "../../controller/UserAPIController";
 import categoryAPIController from "../../controller/CategoryAPIController";
 import brandAPIController from "../../controller/BrandAPIController";
+import customerAPIController from "../../controller/CustomerAPIController";
+import supplierAPIController from "../../controller/SupplierAPIController";
+import itemAPIController from "../../controller/ItemAPIController";
 
 export const Dashboard = () => {
     const [userCount, setUserCount] = useState(0);
     const [categoryCount, setCategoryCount] = useState(0);
     const [brandCount, setBrandCount] = useState(0);
+    const [customerCount, setCustomerCount] = useState(0);
+    const [supplierCount, setSupplierCount] = useState(0);
+    const [itemsCountInStock, setItemsCountInStock] = useState(0);
 
     useEffect(() => {
         fetchUserCount();
         fetchCategoryCount();
         fetchBrandCount();
+        fetchSuppliersCount();
+        fetchCustomersCount();
+        fetchItemsCountInStock();
     }, []);
 
     const fetchUserCount = async () => {
@@ -33,7 +42,6 @@ export const Dashboard = () => {
                 setUserCount(response.data);
             }
         } catch (error) {
-            console.error("Error fetching shop data:", error);
         }
     };
 
@@ -44,7 +52,6 @@ export const Dashboard = () => {
                 setCategoryCount(response.data);
             }
         } catch (error) {
-            console.error("Error fetching shop data:", error);
         }
     };
 
@@ -55,7 +62,35 @@ export const Dashboard = () => {
                 setBrandCount(response.data);
             }
         } catch (error) {
-            console.error("Error fetching shop data:", error);
+        }
+    };
+
+    const fetchSuppliersCount = async () => {
+        try {
+            const response = await supplierAPIController.getSuppliersCount();
+            if (response) {
+                setSupplierCount(response.data);
+            }
+        } catch (error) {
+        }
+    };
+
+    const fetchCustomersCount = async () => {
+        try {
+            const response = await customerAPIController.getCustomersCount();
+            if (response) {
+                setCustomerCount(response.data);
+            }
+        } catch (error) {
+        }
+    };
+    const fetchItemsCountInStock = async () => {
+        try {
+            const response = await itemAPIController.getItemsCountInStock();
+            if (response) {
+                setItemsCountInStock(response.data);
+            }
+        } catch (error) {
         }
     };
 
@@ -68,9 +103,9 @@ export const Dashboard = () => {
                 <DashboardSummeryBox image={expired} count={50} bgColor={"bg-[#FB0004]"} borderColor={"border-[#FB0004]"} textColor={"text-[#FB0004]"} label={"Expired medicines"}/>
                 <DashboardSummeryBox image={outOfStockWarning} count={50} bgColor={"bg-[#FFA600]"} borderColor={"border-[#FFA600]"} textColor={"text-[#FFA600]"} label={"The medicine is about to run out"}/>
                 <DashboardSummeryBox image={outOfStock} count={50} bgColor={"bg-[#FB0004]"} borderColor={"border-[#FB0004]"} textColor={"text-[#FB0004]"} label={"Medicine out of stock"}/>
-                <DashboardSummeryBox image={inStock} count={50} bgColor={"bg-[#2DE100]"} borderColor={"border-[#2DE100]"} textColor={"text-[#2DE100]"} label={"Medicine in stock"}/>
-                <DashboardSummeryBox image={customer} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Customers"}/>
-                <DashboardSummeryBox image={supplier} count={50} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Suppliers"}/>
+                <DashboardSummeryBox image={inStock} count={itemsCountInStock} bgColor={"bg-[#2DE100]"} borderColor={"border-[#2DE100]"} textColor={"text-[#2DE100]"} label={"Medicine in stock"}/>
+                <DashboardSummeryBox image={customer} count={customerCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Customers"}/>
+                <DashboardSummeryBox image={supplier} count={supplierCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Suppliers"}/>
                 <DashboardSummeryBox image={brand} count={brandCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Brands"}/>
                 <DashboardSummeryBox image={categories} count={categoryCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Categories"}/>
                 <DashboardSummeryBox image={user} count={userCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Users"}/>
