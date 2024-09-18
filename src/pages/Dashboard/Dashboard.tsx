@@ -26,6 +26,7 @@ export const Dashboard = () => {
     const [supplierCount, setSupplierCount] = useState(0);
     const [itemsCountInStock, setItemsCountInStock] = useState(0);
     const [itemsCountOutOfStock, setItemsCountOutOfStock] = useState(0);
+    const [itemsCountRunOutOfStock, setItemsCountRunOutOfStock] = useState(0);
 
     useEffect(() => {
         fetchUserCount();
@@ -35,6 +36,7 @@ export const Dashboard = () => {
         fetchCustomersCount();
         fetchItemsCountInStock();
         fetchItemsCountOutOfStock();
+        fetchItemsCountRunOutOfStock();
     }, []);
 
     const fetchUserCount = async () => {
@@ -106,22 +108,99 @@ export const Dashboard = () => {
         } catch (error) {
         }
     };
-
+    const fetchItemsCountRunOutOfStock = async () => {
+        try {
+            const response = await itemAPIController.getItemsCountRunOutOfStock();
+            if (response) {
+                setItemsCountRunOutOfStock(response.data);
+            }
+        } catch (error) {
+        }
+    };
 
 
     return (
         <section className='w-full h-max flex items-center flex-col'>
             <section className="relative flex flex-wrap w-[98%] items-center justify-center gap-4 mt-5">
-                <DashboardSummeryBox image={expiredWarning} count={50} bgColor={"bg-[#FFA600]"} borderColor={"border-[#FFA600]"} textColor={"text-[#FFA600]"} label={"The medicine is about to expire"}/>
-                <DashboardSummeryBox image={expired} count={50} bgColor={"bg-[#FB0004]"} borderColor={"border-[#FB0004]"} textColor={"text-[#FB0004]"} label={"Expired medicines"}/>
-                <DashboardSummeryBox image={outOfStockWarning} count={50} bgColor={"bg-[#FFA600]"} borderColor={"border-[#FFA600]"} textColor={"text-[#FFA600]"} label={"The medicine is about to run out"}/>
-                <DashboardSummeryBox image={outOfStock} count={itemsCountOutOfStock} bgColor={"bg-[#FB0004]"} borderColor={"border-[#FB0004]"} textColor={"text-[#FB0004]"} label={"Medicine out of stock"}/>
-                <DashboardSummeryBox image={inStock} count={itemsCountInStock} bgColor={"bg-[#2DE100]"} borderColor={"border-[#2DE100]"} textColor={"text-[#2DE100]"} label={"Medicine in stock"}/>
-                <DashboardSummeryBox image={customer} count={customerCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Customers"}/>
-                <DashboardSummeryBox image={supplier} count={supplierCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Suppliers"}/>
-                <DashboardSummeryBox image={brand} count={brandCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Brands"}/>
-                <DashboardSummeryBox image={categories} count={categoryCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Categories"}/>
-                <DashboardSummeryBox image={user} count={userCount} bgColor={"bg-[#00609C]"} borderColor={"border-[#00609C]"} textColor={"text-[#00609C]"} label={"Users"}/>
+                <DashboardSummeryBox
+                    image={expiredWarning}
+                    count={50}
+                    bgColor={"bg-[#FFA600]"}
+                    borderColor={"border-[#FFA600]"}
+                    textColor={"text-[#FFA600]"}
+                    label={"The medicine is about to expire"}
+                />
+                <DashboardSummeryBox
+                    image={expired}
+                    count={50}
+                    bgColor={"bg-[#FB0004]"}
+                    borderColor={"border-[#FB0004]"}
+                    textColor={"text-[#FB0004]"}
+                    label={"Expired medicines"}
+                />
+                <DashboardSummeryBox
+                    image={outOfStockWarning}
+                    count={itemsCountRunOutOfStock}
+                    bgColor={"bg-[#FFA600]"}
+                    borderColor={"border-[#FFA600]"}
+                    textColor={"text-[#FFA600]"}
+                    label={"The medicine is about to run out"}
+                />
+                <DashboardSummeryBox
+                    image={outOfStock}
+                    count={itemsCountOutOfStock}
+                    bgColor={"bg-[#FB0004]"}
+                    borderColor={"border-[#FB0004]"}
+                    textColor={"text-[#FB0004]"}
+                    label={"Medicine out of stock"}
+                />
+                <DashboardSummeryBox
+                    image={inStock}
+                    count={itemsCountInStock}
+                    bgColor={"bg-[#2DE100]"}
+                    borderColor={"border-[#2DE100]"}
+                    textColor={"text-[#2DE100]"}
+                    label={"Medicine in stock"}
+                />
+                <DashboardSummeryBox
+                    image={customer}
+                    count={customerCount}
+                    bgColor={"bg-[#00609C]"}
+                    borderColor={"border-[#00609C]"}
+                    textColor={"text-[#00609C]"}
+                    label={"Customers"}
+                />
+                <DashboardSummeryBox
+                    image={supplier}
+                    count={supplierCount} bgColor={"bg-[#00609C]"}
+                    borderColor={"border-[#00609C]"}
+                    textColor={"text-[#00609C]"}
+                    label={"Suppliers"}
+                />
+                <DashboardSummeryBox
+                    image={brand}
+                    count={brandCount}
+                    bgColor={"bg-[#00609C]"}
+                    borderColor={"border-[#00609C]"}
+                    textColor={"text-[#00609C]"}
+                    label={"Brands"}
+                />
+                <DashboardSummeryBox
+                    image={categories}
+                    count={categoryCount}
+                    bgColor={"bg-[#00609C]"}
+                    borderColor={"border-[#00609C]"}
+                    textColor={"text-[#00609C]"}
+                    label={"Categories"}
+                />
+                <DashboardSummeryBox
+                    image={user}
+                    count={userCount}
+                    bgColor={"bg-[#00609C]"}
+                    borderColor={"border-[#00609C]"}
+                    textColor={"text-[#00609C]"}
+                    label={"Users"}
+                />
             </section>
             <Footer/>
         </section>

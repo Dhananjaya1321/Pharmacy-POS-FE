@@ -54,6 +54,18 @@ const itemAPIController = {
             return null;
         }
     },
+    getItemsCountRunOutOfStock: async () => {
+        try {
+            const response = await axios.get(`${base_url}/item/run-out-stock/count`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
     deleteItem:async (id: number) => {
         try {
             const response = await axios.delete(`${base_url}/item/${id}`);
