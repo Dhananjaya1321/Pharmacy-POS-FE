@@ -27,6 +27,7 @@ export const Dashboard = () => {
     const [itemsCountInStock, setItemsCountInStock] = useState(0);
     const [itemsCountOutOfStock, setItemsCountOutOfStock] = useState(0);
     const [itemsCountRunOutOfStock, setItemsCountRunOutOfStock] = useState(0);
+    const [expiredItemCount, setExpiredItemCount] = useState(0);
 
     useEffect(() => {
         fetchUserCount();
@@ -37,6 +38,7 @@ export const Dashboard = () => {
         fetchItemsCountInStock();
         fetchItemsCountOutOfStock();
         fetchItemsCountRunOutOfStock();
+        fetchExpiredItemCount();
     }, []);
 
     const fetchUserCount = async () => {
@@ -117,6 +119,15 @@ export const Dashboard = () => {
         } catch (error) {
         }
     };
+    const fetchExpiredItemCount = async () => {
+        try {
+            const response = await itemAPIController.getExpiredItems();
+            if (response) {
+                setExpiredItemCount(response.data);
+            }
+        } catch (error) {
+        }
+    };
 
 
     return (
@@ -132,7 +143,7 @@ export const Dashboard = () => {
                 />
                 <DashboardSummeryBox
                     image={expired}
-                    count={50}
+                    count={expiredItemCount}
                     bgColor={"bg-[#FB0004]"}
                     borderColor={"border-[#FB0004]"}
                     textColor={"text-[#FB0004]"}
