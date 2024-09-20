@@ -9,15 +9,8 @@ import {DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import itemAPIController from "../../controller/ItemAPIController";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
-import unitAPIController from "../../controller/UnitAPIController";
-
-
-
-
-const handleUpdate = async () => {
-    console.log("update")
-}
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import StockModal from "../../modals/StockModal/StockModal";
 
 interface Stock {
     id: number;
@@ -29,17 +22,19 @@ interface Stock {
     description: string;
     item: {
         id: number;
-        name: string
+        name: string;
+        category: { name: string };
+        brand: { name: string };
+        unit: { unitName: string; unitSymbology:string };
     };
 }
 
 interface Item {
     id: number;
     name: string;
-    categoryName: string;
-    brandName: string;
-    unitName: string;
-    unitSymbology: string;
+    category: { name: string };
+    brand: { name: string };
+    unit: { unitName: string; unitSymbology:string };
 }
 
 export const Stock = () => {
@@ -165,12 +160,7 @@ export const Stock = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}
-                    >
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                    <StockModal stockData={params.row} onUpdateStock={handleUpdateStock} items={items} />
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
@@ -220,10 +210,9 @@ export const Stock = () => {
             }) => ({
                 id: item.id,
                 name: item.name,
-                categoryName: item.category.name,
-                brandName: item.brand.name,
-                unitName: item.unit.unitName,
-                unitSymbology: item.unit.unitSymbology,
+                category: { name: item.category.name },
+                brand: { name: item.brand.name },
+                unit: { unitName: item.unit.unitName, unitSymbology: item.unit.unitSymbology }
             }));
 
             setItems(items); // Set fetched items to state
@@ -248,6 +237,29 @@ export const Stock = () => {
             ...prevData,
             item: item,
         }));
+    };
+
+    const handleUpdateStock = (updatedStock: {
+        id: number;
+        purchasedAmount: number;
+        purchasedQty: number;
+        purchasedDiscount: number;
+        availableQty: number;
+        expiryDate: string;
+        description: string;
+        item: {
+            id: number;
+            name: string;
+            category: { name: string };
+            brand: { name: string };
+            unit: { unitName: string; unitSymbology:string };
+        };
+    }) => {
+        setStocks(prevStocks =>
+            prevStocks.map(stock =>
+                stock.id === updatedStock.id ? updatedStock : stock
+            )
+        );
     };
 
     const handleStockSaveEvent = async () => {
@@ -329,7 +341,7 @@ export const Stock = () => {
                             <option value="-1">Select an item</option>
                             {items.map((option) => (
                                 <option key={option.id} value={option.id}>
-                                    {option.name+'-'+option.brandName+'-'+option.categoryName+'-'+option.unitSymbology+'('+option.unitName+')'}
+                                    {option.name+'-'+option.brand.name+'-'+option.category.name+'-'+option.unit.unitSymbology+'('+option.unit.unitName+')'}
                                 </option>
                             ))}
                         </select>

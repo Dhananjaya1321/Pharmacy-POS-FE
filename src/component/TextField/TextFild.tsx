@@ -31,7 +31,7 @@ type props = {
     msg?: string,
     important?: string,
     name?: string,
-    value?: string; // Added value prop
+    value?: any; // Added value prop
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Added onChange prop
 }
 
