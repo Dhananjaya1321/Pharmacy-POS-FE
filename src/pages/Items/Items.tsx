@@ -13,26 +13,44 @@ import unitAPIController from "../../controller/UnitAPIController";
 import categoryAPIController from "../../controller/CategoryAPIController";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import StockModal from "../../modals/StockModal/StockModal";
+import ItemModal from "../../modals/ItemModal/ItemModal";
 
 interface Item {
     id: number;
     name: string;
     description: string;
     reOrderLevel: number;
-    category: { name: string };
-    brand: { name: string };
+    category: {
+        id: number;
+        name: string
+    };
+    brand: {
+        id: number;
+        name: string
+    };
     unit: {
+        id: number;
         unitName: string;
         unitSymbology: string;
     };
-    actions: string;
 }
 
 interface Unit {
     id: number;
     unitName: string;
     unitSymbology: string;
+}
+
+interface Category {
+    id: number;
+    name: string
+}
+
+interface Brand {
+    id: number;
+    name: string
 }
 
 export const Items = () => {
@@ -136,11 +154,13 @@ export const Items = () => {
             width: 400,
             renderCell: (params) => (
                 <>
-                    <button
-                        className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100"
-                        onClick={() => handleDelete(params.row.id)}>
-                        <FontAwesomeIcon icon={faPen}/>
-                    </button>
+                    <ItemModal
+                        itemData={params.row}
+                        onUpdateItem={handleUpdateItem}
+                        units={units}
+                        categories={categories}
+                        brands={brands}
+                    />
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}>
@@ -165,6 +185,8 @@ export const Items = () => {
     const [selectedBrand, setSelectedBrand] = useState<string | undefined>(undefined);
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
     const [items, setItems] = useState<Item[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
@@ -196,10 +218,10 @@ export const Items = () => {
             setUnit(units);
         };
 
-        loadUnits().then(r => {
-        });
-        fetchAllItems(0, 5).then(r => {
-        });
+        loadUnits().then(r => {});
+        fetchBrands().then(r => {});
+        fetchCategories().then(r => {});
+        fetchAllItems(0, 5).then(r => {});
     }, []);
 
     const handleItemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -226,20 +248,21 @@ export const Items = () => {
             id: brand.id,
             name: brand.name,
         }));
-        console.log(brands)
-        return brands;
+
+        setBrands(brands);
     };
 
     const fetchCategories = async () => {
         const response = await categoryAPIController.getAllCategories();
-
-        const categories = response.data.content.map((category: { id: number; name: string }) => ({
+        const categories = response.data.content.map((category: {
+            id: number;
+            name: string
+        }) => ({
             id: category.id,
             name: category.name,
         }));
-        console.log(categories)
 
-        return categories;
+        setCategories(categories);
     };
 
     const handleBrandChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -258,6 +281,32 @@ export const Items = () => {
             ...prevData,
             category: category,
         }));
+    };
+
+    const handleUpdateItem = (updatedItems: {
+        id: number;
+        name: string;
+        description: string;
+        reOrderLevel: number;
+        category: {
+            id: number;
+            name: string
+        };
+        brand: {
+            id: number;
+            name: string
+        };
+        unit: {
+            id: number;
+            unitName: string;
+            unitSymbology: string;
+        };
+    }) => {
+        setItems(prevItems =>
+            prevItems.map(item =>
+                item.id === updatedItems.id ? updatedItems : item
+            )
+        );
     };
 
     const handleItemSaveEvent = async () => {
@@ -338,22 +387,50 @@ export const Items = () => {
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <TextFieldWithButton
-                        name="brand"
-                        label={'Brand'}
-                        important={"*"}
-                        value={selectedBrand}
-                        onChange={handleBrandChange}
-                        fetchOptions={fetchBrands}
-                    />
-                    <TextFieldWithButton
-                        name="category"
-                        label={'Category'}
-                        important={"*"}
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        fetchOptions={fetchCategories}
-                    />
+                    <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
+                        <div className='flex flex-row'>
+                            <label className='text-black flex justify-start'>Brand</label>
+                            <small className={`text-red-600 text-[16px]`}>*</small>
+                        </div>
+                        <select
+                            value={selectedBrand}
+                            name={"brand"}
+                            onChange={handleBrandChange}
+                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
+                        >
+                            <option value="-1">Select an brand</option>
+                            {brands.map((option) => (
+                                <option key={option.id} value={option.id}>
+                                    {option.name}
+                                </option>
+                            ))}
+                        </select>
+                        <div className={`h-[5px]`}>
+                            <small className={`text-start text-red-600 block`}></small>
+                        </div>
+                    </div>
+                    <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
+                        <div className='flex flex-row'>
+                            <label className='text-black flex justify-start'>Category</label>
+                            <small className={`text-red-600 text-[16px]`}>*</small>
+                        </div>
+                        <select
+                            value={selectedCategory}
+                            name={"category"}
+                            onChange={handleCategoryChange}
+                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
+                        >
+                            <option value="-1">Select an category</option>
+                            {categories.map((option) => (
+                                <option key={option.id} value={option.id}>
+                                    {option.name}
+                                </option>
+                            ))}
+                        </select>
+                        <div className={`h-[5px]`}>
+                            <small className={`text-start text-red-600 block`}></small>
+                        </div>
+                    </div>
                     <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>

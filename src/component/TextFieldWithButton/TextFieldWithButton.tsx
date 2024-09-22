@@ -50,7 +50,7 @@ type props = {
     label: string,
     msg?: string,
     important?: string,
-    value?: string;
+    value?: any;
     name?: string;
     fetchOptions?: () => Promise<OptionType[]>, // Function to fetch the options
     onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;

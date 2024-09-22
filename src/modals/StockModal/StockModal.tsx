@@ -8,7 +8,6 @@ import {Button} from "../../component/Button/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {useState, ChangeEvent} from "react";
-import userAPIController from "../../controller/UserAPIController";
 import stockAPIController from "../../controller/StockAPIController";
 
 const style = {
@@ -205,7 +204,7 @@ export default function StockModal({stockData, onUpdateStock, items}: StockModal
                             />
                         </div>
                         <div className="flex flex-row flex-wrap items-center justify-end w-full">
-                            <Button name="Save" color="bg-[#2FEB00]" onClick={handleStockSaveEvent}/>
+                            <Button name="Update" color="bg-[#2FEB00]" onClick={handleStockSaveEvent}/>
                         </div>
                     </section>
                 </Box>
