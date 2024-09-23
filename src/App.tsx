@@ -16,6 +16,8 @@ import {Categories} from "./pages/Categories/Categories";
 import {CreateAccount} from "./pages/CreateAccount/CreateAccount";
 import {Login} from "./pages/Login/Login";
 import {ForgotPassword} from "./pages/ForgotPassword/ForgotPassword";
+import {VerifyCode} from "./pages/VerifyCode/VerifyCode";
+import {ChangePassword} from "./pages/ChangePassword/ChangePassword";
 
 function App() {
     return (
@@ -24,6 +26,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/verify-code" element={<VerifyCode />} />
+                    <Route path="/change-password" element={<ChangePassword />} />
                     {/*<Route path="/" element={<Home/>}>*/}
                     {/*    <Route index element={<Dashboard/>}/>*/}
                     {/*    <Route  path="order" element={<Order/>}/>*/}
