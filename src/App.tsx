@@ -14,13 +14,16 @@ import {Brands} from "./pages/Brands/Brands";
 import {Units} from "./pages/Units/Units";
 import {Categories} from "./pages/Categories/Categories";
 import {CreateAccount} from "./pages/CreateAccount/CreateAccount";
+import {Login} from "./pages/Login/Login";
+import {ForgotPassword} from "./pages/ForgotPassword/ForgotPassword";
 
 function App() {
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<CreateAccount />} />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
                     {/*<Route path="/" element={<Home/>}>*/}
                     {/*    <Route index element={<Dashboard/>}/>*/}
                     {/*    <Route  path="order" element={<Order/>}/>*/}
