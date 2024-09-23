@@ -21,10 +21,15 @@ export const ForgotPassword = () => {
 
                     <button
                         className={`mt-7 bg-[#006CAF] px-6 w-{100%} py-3 rounded-md text-white font-medium`}
-                    >Reset Password</button>
-                    <button
-                        className={`mt-7 border-[1px] border-solid border-[#006CAF] px-6 w-{100%} py-3 rounded-md text-[#006CAF] font-medium`}
-                    >Back to Login</button>
+                    >Reset Password
+                    </button>
+                    <Link to={'/'}
+                          className={`w-{100%}`}>
+                        <button
+                            className={`mt-7 border-[1px] border-solid border-[#006CAF] px-6 w-full py-3 rounded-md text-[#006CAF] font-medium`}
+                        >Back to Login
+                        </button>
+                    </Link>
                 </div>
             </article>
         </section>

@@ -22,34 +22,34 @@ export const SideNavBar = () => {
     useEffect(() => {
         // Map the location.pathname to the button name
         switch (location.pathname) {
-            case "/order":
+            case "/home/order":
                 setActiveButton("Order");
                 break;
-            case "/stock-and-items":
+            case "/home/stock-and-items":
                 setActiveButton("Manage Stock and Items");
                 break;
-            case "/stock-and-items/items":
+            case "/home/stock-and-items/items":
                 setActiveButton("Manage Stock and Items");
                 break;
-            case "/stock-and-items/stock":
+            case "/home/stock-and-items/stock":
                 setActiveButton("Manage Stock and Items");
                 break;
-            case "/stock-and-items/brands":
+            case "/home/stock-and-items/brands":
                 setActiveButton("Manage Stock and Items");
                 break;
-            case "/stock-and-items/units":
+            case "/home/stock-and-items/units":
                 setActiveButton("Manage Stock and Items");
                 break;
-            case "/stock-and-items/categories":
+            case "/home/stock-and-items/categories":
                 setActiveButton("Manage Stock and Items");
                 break;
-            case "/customer":
+            case "/home/customer":
                 setActiveButton("Customer");
                 break;
-            case "/supplier":
+            case "/home/supplier":
                 setActiveButton("Supplier");
                 break;
-            case "/shop-and-user":
+            case "/home/shop-and-user":
                 setActiveButton("Manage Shop and Users");
                 break;
             default:
@@ -65,7 +65,7 @@ export const SideNavBar = () => {
     return (
         <nav className='bg-white h-screen w-[10%] p-2 top-0 left-0 right-0 fixed shadow z-50 flex flex-col'>
             <SideNavBarButton
-                path={''}
+                path={'/home'}
                 name={'Dashboard'}
                 image={dashboard}
                 activeImage={activeDashboard}
@@ -73,7 +73,7 @@ export const SideNavBar = () => {
                 onClick={() => handleButtonClick('Dashboard')}
             />
             <SideNavBarButton
-                path={'/order'}
+                path={'/home/order'}
                 name={'Order'}
                 image={order}
                 activeImage={activeOrder}
@@ -81,7 +81,7 @@ export const SideNavBar = () => {
                 onClick={() => handleButtonClick('Order')}
             />
             <SideNavBarButton
-                path={'/stock-and-items'}
+                path={'/home/stock-and-items'}
                 name={'Manage Stock and Items'}
                 image={stock}
                 activeImage={activeStock}
@@ -89,7 +89,7 @@ export const SideNavBar = () => {
                 onClick={() => handleButtonClick('Manage Stock and Items')}
             />
             <SideNavBarButton
-                path={'/customer'}
+                path={'/home/customer'}
                 name={'Customer'}
                 image={customer}
                 activeImage={activeCustomer}
@@ -97,7 +97,7 @@ export const SideNavBar = () => {
                 onClick={() => handleButtonClick('Customer')}
             />
             <SideNavBarButton
-                path={'/supplier'}
+                path={'/home/supplier'}
                 name={'Supplier'}
                 image={supplier}
                 activeImage={activeSupplier}
@@ -105,7 +105,7 @@ export const SideNavBar = () => {
                 onClick={() => handleButtonClick('Supplier')}
             />
             <SideNavBarButton
-                path={'/shop-and-user'}
+                path={'/home/shop-and-user'}
                 name={'Manage Shop and Users'}
                 image={shop}
                 activeImage={activeShop}
