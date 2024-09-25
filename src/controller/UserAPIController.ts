@@ -64,19 +64,35 @@ const userAPIController = {
     },
     checkLogin: async (emailOrUsername: string, password: string) => {
         try {
+            // Sending a GET request with the params
             const response = await axios.get(`${base_url}/user/check-login`, {
                 params: {
                     emailOrUsername: emailOrUsername,
                     password: password,
                 },
             });
+
+            // Check if the response status is 200 OK
             if (response.status === 200) {
-                return response.data;
+                // Check if the response contains a valid 'OK' state
+                if (response.data && response.data.state === "OK") {
+                    return response.data;
+                } else {
+                    // Return the error message when the state is not "OK"
+                    return { error: response.data.message };
+                }
             } else {
-                return null;
+                return { error: "Unexpected response status: " + response.status };
             }
-        } catch (error) {
-            return null;
+        } catch (err) {
+            // Type guard to safely access error response data
+            if (axios.isAxiosError(err)) {
+                // The request was made, but the server responded with a status code not in the range of 2xx
+                return { error: err.response?.data.message || "Login failed. Please try again." };
+            } else {
+                // Any other type of error
+                return { error: "An unexpected error occurred during login." };
+            }
         }
     },
     deleteUser: async (id: number) => {
