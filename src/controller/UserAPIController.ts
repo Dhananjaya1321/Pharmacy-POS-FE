@@ -114,6 +114,38 @@ const userAPIController = {
             return null;
         }
     },
+    checkEmailAndSendOTP: async (emailOrUsername: string) => {
+        try {
+            // Sending a GET request with the params
+            const response = await axios.get(`${base_url}/user/check-email-and-send-otp`, {
+                params: {
+                    emailOrUsername: emailOrUsername
+                },
+            });
+
+            // Check if the response status is 200 OK
+            if (response.status === 200) {
+                // Check if the response contains a valid 'OK' state
+                if (response.data && response.data.state === "OK") {
+                    return response.data;
+                } else {
+                    // Return the error message when the state is not "OK"
+                    return { error: response.data.message };
+                }
+            } else {
+                return { error: "Unexpected response status: " + response.status };
+            }
+        } catch (err) {
+            // Type guard to safely access error response data
+            if (axios.isAxiosError(err)) {
+                // The request was made, but the server responded with a status code not in the range of 2xx
+                return { error: err.response?.data.message || "OTP send failed. Please try again." };
+            } else {
+                // Any other type of error
+                return { error: "An unexpected error occurred during OTP send." };
+            }
+        }
+    }
 };
 
 export default userAPIController;
