@@ -145,7 +145,19 @@ const userAPIController = {
                 return { error: "An unexpected error occurred during OTP send." };
             }
         }
-    }
+    },
+    updatePassword: async (newPassword:string, email:string) => {
+        try {
+            const response = await axios.post(
+                `${base_url}/user/update-password`,
+                null, // No body needed, since using query parameters
+                { params: { email: email, newPassword: newPassword } }
+            );
+            return response.status === 200;
+        } catch (error) {
+            return false;
+        }
+    },
 };
 
 export default userAPIController;
