@@ -6,7 +6,7 @@ export const TextField = ({label, placeholder, type, disabled, msg, important, n
                 <small className={`text-red-600 text-[16px] ${important==null?'hidden':'block'}`}>*</small>
             </div>
             <input
-                className='min-w-[220px] border-[1px] border-[#9F9F9F]  border-solid rounded-lg w-[100%] h-[46px] pl-3'
+                className='text-input'
                 type={type == null ? "text" : type}
                 placeholder={placeholder}
                 disabled={disabled == null ? false : true}

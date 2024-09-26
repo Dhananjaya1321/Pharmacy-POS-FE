@@ -25,17 +25,20 @@ export const TextFieldWithButton = ({label, msg, important, name, value, fetchOp
                     <label className='text-black flex justify-start'>{label}</label>
                     <small className={`text-red-600 text-[16px] ${important == null ? 'hidden' : 'block'}`}>*</small>
                 </div>
-                <select
+                <div className="custom-select-wrapper"><select
                     value={value}
                     name={name}
                     defaultValue={10}
                     onChange={onChange}
-                    className='min-w-[220px] border-[1px] border-[#9F9F9F]  border-solid rounded-lg w-[100%] h-[46px] pl-3'>
+                    className='custom-select'
+                >
                     <option value="-1">Select a {name}</option>
                     {options.map((option, index) => (
                         <option key={index} value={option.id}>{option.name}</option>
                     ))}
                 </select>
+                    <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                </div>
                 <div className={`h-[5px]`}>
                     <small
                         className={`text-start text-red-600 block`}>

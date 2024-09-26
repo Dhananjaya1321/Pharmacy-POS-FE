@@ -11,7 +11,7 @@ export const CreateAccount = () => {
                 <img src={image} className='h-[450px] z-10'/>
             </aside>
             <article className='flex flex-col justify-center w-[40%] h-[600px] bg-white px-8'>
-                <div className='flex flex-col text-start mb-5'>
+                <div className='flex mt-10 flex-col text-start mb-5'>
                     <h1 className='text-3xl poppins-semibold'>Welcome to Smart Pharmacy!</h1>
                     <p>Please create an account for your pharmacy first</p>
                 </div>

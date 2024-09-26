@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import image from "../../assets/character/3d-cartoon-style-character 1.png";
 import background from "../../assets/background/Rectangle 6.png";
 import {TextFieldForLoginPages} from "../../component/TextFieldForLoginPages/TextFieldForLoginPages";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import userAPIController from "../../controller/UserAPIController";
 
 export const ChangePassword = () => {

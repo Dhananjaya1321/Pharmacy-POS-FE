@@ -1,8 +1,6 @@
 import {TextField} from "../../component/TextField/TextFild";
-import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextArea} from "../../component/TextArea/TextArea";
 import {Button} from "../../component/Button/Button";
-import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
 import {FooterSpace} from "../FooterSpace/FooterSpace";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import itemAPIController from "../../controller/ItemAPIController";
@@ -14,7 +12,6 @@ import categoryAPIController from "../../controller/CategoryAPIController";
 import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
-import StockModal from "../../modals/StockModal/StockModal";
 import ItemModal from "../../modals/ItemModal/ItemModal";
 
 interface Item {
@@ -218,10 +215,14 @@ export const Items = () => {
             setUnit(units);
         };
 
-        loadUnits().then(r => {});
-        fetchBrands().then(r => {});
-        fetchCategories().then(r => {});
-        fetchAllItems(0, 5).then(r => {});
+        loadUnits().then(r => {
+        });
+        fetchBrands().then(r => {
+        });
+        fetchCategories().then(r => {
+        });
+        fetchAllItems(0, 5).then(r => {
+        });
     }, []);
 
     const handleItemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -359,19 +360,22 @@ export const Items = () => {
                             <label className='text-black flex justify-start'>Unit</label>
                             <small className={`text-red-600 text-[16px]`}>*</small>
                         </div>
-                        <select
-                            value={selectedUnit}
-                            name={"unit"}
-                            onChange={handleUnitChange}
-                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                        >
-                            <option value="-1">Select an unit</option>
-                            {units.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.unitSymbology + ' (' + option.unitName + ')'}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="custom-select-wrapper">
+                            <select
+                                value={selectedUnit}
+                                name={"unit"}
+                                onChange={handleUnitChange}
+                                className='custom-select min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
+                            >
+                                <option value="-1">Select an unit</option>
+                                {units.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.unitSymbology + ' (' + option.unitName + ')'}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                        </div>
                         <div className={`h-[5px]`}>
                             <small className={`text-start text-red-600 block`}></small>
                         </div>
@@ -392,19 +396,22 @@ export const Items = () => {
                             <label className='text-black flex justify-start'>Brand</label>
                             <small className={`text-red-600 text-[16px]`}>*</small>
                         </div>
-                        <select
-                            value={selectedBrand}
-                            name={"brand"}
-                            onChange={handleBrandChange}
-                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                        >
-                            <option value="-1">Select an brand</option>
-                            {brands.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="custom-select-wrapper">
+                            <select
+                                value={selectedBrand}
+                                name={"brand"}
+                                onChange={handleBrandChange}
+                                className='custom-select'
+                            >
+                                <option value="-1">Select an brand</option>
+                                {brands.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                        </div>
                         <div className={`h-[5px]`}>
                             <small className={`text-start text-red-600 block`}></small>
                         </div>
@@ -414,24 +421,26 @@ export const Items = () => {
                             <label className='text-black flex justify-start'>Category</label>
                             <small className={`text-red-600 text-[16px]`}>*</small>
                         </div>
-                        <select
-                            value={selectedCategory}
-                            name={"category"}
-                            onChange={handleCategoryChange}
-                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                        >
-                            <option value="-1">Select an category</option>
-                            {categories.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="custom-select-wrapper">
+                            <select
+                                value={selectedCategory}
+                                name="category"
+                                onChange={handleCategoryChange}
+                                className='custom-select'
+                            >
+                                <option value="-1">Select a category</option>
+                                {categories.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                        </div>
                         <div className={`h-[5px]`}>
                             <small className={`text-start text-red-600 block`}></small>
                         </div>
                     </div>
-                    <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextArea

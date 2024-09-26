@@ -62,6 +62,7 @@ export const ShopAndUser = () => {
         address: '',
     });
     const [users, setUsers] = useState<User[]>([]);
+    const [userRoles, setUserRoles] = useState<User[]>([]);
 
     // State for managing the selected role
     const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
@@ -158,7 +159,7 @@ export const ShopAndUser = () => {
             name: role.name,
         }));
 
-        return roles;
+        setUserRoles(roles);
     };
 
     useEffect(() => {
@@ -191,6 +192,7 @@ export const ShopAndUser = () => {
             }
         };
 
+        fetchUserRoles();
         fetchShopData();
         fetchAllUsers();
     }, []);
@@ -289,14 +291,29 @@ export const ShopAndUser = () => {
                         value={userData.contact}
                         onChange={handleUsersChange}
                     />
-                    <TextFieldWithButton
-                        name="role"
-                        label={'Role'}
-                        important={"*"}
-                        value={selectedRole}  // Add this line if you're managing the selected role value in state
-                        onChange={handleRoleChange}  // Add this line for handling role changes
-                        fetchOptions={fetchUserRoles}  // Fetch options dynamically
-                    />
+                    <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
+                        <div className='flex flex-row'>
+                            <label className='text-black flex justify-start'>Role</label>
+                            <small className={`text-red-600 text-[16px]`}>*</small>
+                        </div>
+                        <div className="custom-select-wrapper">
+                            <select
+                                value={selectedRole}
+                                name={"role"}
+                                onChange={handleRoleChange}
+                                className='text-input'
+                            >
+                                <option value="-1">Select an item</option>
+                                {userRoles.map((option, index) => (
+                                    <option key={index} value={option.id}>{option.name}</option>
+                                ))}
+                            </select>
+                            <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                        </div>
+                        <div className={`h-[5px]`}>
+                            <small className={`text-start text-red-600 block`}></small>
+                        </div>
+                    </div>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
@@ -381,7 +398,7 @@ export const ShopAndUser = () => {
                                         <TableCell>{row.address || '-'}</TableCell>
                                         <TableCell>{row.contact || '-'}</TableCell>
                                         <TableCell>{row.role.name || '-'}</TableCell>
-                                        <TableCell sx={{ display: 'flex', flexDirection: 'row' }}>
+                                        <TableCell sx={{display: 'flex', flexDirection: 'row'}}>
                                             <UserModal rowData={row} onUpdateUser={handleUpdateUser}/>
                                             <button
                                                 className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"

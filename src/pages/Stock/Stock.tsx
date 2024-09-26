@@ -25,7 +25,7 @@ interface Stock {
         name: string;
         category: { name: string };
         brand: { name: string };
-        unit: { unitName: string; unitSymbology:string };
+        unit: { unitName: string; unitSymbology: string };
     };
 }
 
@@ -34,7 +34,7 @@ interface Item {
     name: string;
     category: { name: string };
     brand: { name: string };
-    unit: { unitName: string; unitSymbology:string };
+    unit: { unitName: string; unitSymbology: string };
 }
 
 export const Stock = () => {
@@ -43,14 +43,14 @@ export const Stock = () => {
             field: 'item',
             headerName: 'Item',
             width: 200,
-            valueGetter: (params) => params.row.item?.name || 'N/A',renderCell: (params) => (
+            valueGetter: (params) => params.row.item?.name || 'N/A', renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
@@ -58,62 +58,78 @@ export const Stock = () => {
                 </Tooltip>
             ),
         },
-        {field: 'purchasedAmount', headerName: 'Purchased Amount',type:"number", width: 200,renderCell: (params) => (
+        {
+            field: 'purchasedAmount',
+            headerName: 'Purchased Amount',
+            type: "number",
+            width: 200,
+            renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'purchasedQty', headerName: 'Purchased Qty',type:"number", width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'purchasedQty', headerName: 'Purchased Qty', type: "number", width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'availableQty', headerName: 'Available Qty',type:"number", width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'availableQty', headerName: 'Available Qty', type: "number", width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'purchasedDiscount', headerName: 'Purchased Discount',type:"number", width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'purchasedDiscount',
+            headerName: 'Purchased Discount',
+            type: "number",
+            width: 200,
+            renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
+            ),
+        },
         {
             field: 'expiryDate',
             headerName: 'Expiry Date',
@@ -140,27 +156,29 @@ export const Stock = () => {
                 </Tooltip>
             ),
         },
-        {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
+        {
+            field: 'description', headerName: 'Description', width: 300, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',
             width: 400,
             renderCell: (params) => (
                 <>
-                    <StockModal stockData={params.row} onUpdateStock={handleUpdateStock} items={items} />
+                    <StockModal stockData={params.row} onUpdateStock={handleUpdateStock} items={items}/>
                     <button
                         className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
                         onClick={() => handleDelete(params.row.id)}
@@ -183,7 +201,7 @@ export const Stock = () => {
     const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
     const [items, setItems] = useState<Item[]>([]);  // <--- Typed the items state
     const [stocks, setStocks] = useState<Stock[]>([]);
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
     const fetchAllSuppliers = async (page: number, pageSize: number) => {
@@ -206,20 +224,22 @@ export const Stock = () => {
                 name: string;
                 category: { name: string };
                 brand: { name: string };
-                unit: { unitName: string; unitSymbology:string };
+                unit: { unitName: string; unitSymbology: string };
             }) => ({
                 id: item.id,
                 name: item.name,
-                category: { name: item.category.name },
-                brand: { name: item.brand.name },
-                unit: { unitName: item.unit.unitName, unitSymbology: item.unit.unitSymbology }
+                category: {name: item.category.name},
+                brand: {name: item.brand.name},
+                unit: {unitName: item.unit.unitName, unitSymbology: item.unit.unitSymbology}
             }));
 
             setItems(items); // Set fetched items to state
         };
 
-        loadItems().then(r => {});
-        fetchAllSuppliers(0, 5).then(r => {});
+        loadItems().then(r => {
+        });
+        fetchAllSuppliers(0, 5).then(r => {
+        });
     }, []);
 
     const handleStockChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -252,7 +272,7 @@ export const Stock = () => {
             name: string;
             category: { name: string };
             brand: { name: string };
-            unit: { unitName: string; unitSymbology:string };
+            unit: { unitName: string; unitSymbology: string };
         };
     }) => {
         setStocks(prevStocks =>
@@ -296,7 +316,8 @@ export const Stock = () => {
                 <h3>Manage Stock and Items &gt; Stock</h3>
             </section>
             {/* Form section */}
-            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="purchasedQty"
@@ -332,19 +353,22 @@ export const Stock = () => {
                             <label className='text-black flex justify-start'>Item</label>
                             <small className={`text-red-600 text-[16px]`}>*</small>
                         </div>
-                        <select
-                            value={selectedItem}
-                            name={"item"}
-                            onChange={handleItemChange}
-                            className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                        >
-                            <option value="-1">Select an item</option>
-                            {items.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.name+'-'+option.brand.name+'-'+option.category.name+'-'+option.unit.unitSymbology+'('+option.unit.unitName+')'}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="custom-select-wrapper">
+                            <select
+                                value={selectedItem}
+                                name={"item"}
+                                onChange={handleItemChange}
+                                className='custom-select'
+                            >
+                                <option value="-1">Select an item</option>
+                                {items.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.name + '-' + option.brand.name + '-' + option.category.name + '-' + option.unit.unitSymbology + '(' + option.unit.unitName + ')'}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                        </div>
                         <div className={`h-[5px]`}>
                             <small className={`text-start text-red-600 block`}></small>
                         </div>
@@ -404,7 +428,8 @@ export const Stock = () => {
                         paginationMode="server" // Use server-side pagination
                         onPaginationModelChange={(newPagination) => {
                             setPaginationModel(newPagination);
-                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r =>  {});
+                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r => {
+                            });
                         }}
                     />
                 </Paper>
