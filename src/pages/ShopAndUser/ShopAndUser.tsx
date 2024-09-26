@@ -34,6 +34,10 @@ interface User {
     username: string;
     address: string;
 }
+interface Role {
+    id: number;
+    name: string;
+}
 
 export const ShopAndUser = () => {
     // State to manage form data
@@ -62,7 +66,7 @@ export const ShopAndUser = () => {
         address: '',
     });
     const [users, setUsers] = useState<User[]>([]);
-    const [userRoles, setUserRoles] = useState<User[]>([]);
+    const [userRoles, setUserRoles] = useState<Role[]>([]);
 
     // State for managing the selected role
     const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);

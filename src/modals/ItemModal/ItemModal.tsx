@@ -2,15 +2,15 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { TextField } from "../../component/TextField/TextFild";
-import { TextArea } from "../../component/TextArea/TextArea";
-import { Button } from "../../component/Button/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useState, ChangeEvent } from "react";
+import {TextField} from "../../component/TextField/TextFild";
+import {TextArea} from "../../component/TextArea/TextArea";
+import {Button} from "../../component/Button/Button";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {useState, ChangeEvent} from "react";
 import itemAPIController from "../../controller/ItemAPIController"; // Assuming you have an API controller for items
-import { TextFieldWithButton } from "../../component/TextFieldWithButton/TextFieldWithButton";
-import { HiddenTextField } from "../../component/HiddenTextField/HiddenTextField";
+import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
+import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -71,7 +71,7 @@ interface ItemModalProps {
     brands: { id: number; name: string }[];
 }
 
-export default function ItemModal({ itemData, onUpdateItem, units, categories, brands }: ItemModalProps) {
+export default function ItemModal({itemData, onUpdateItem, units, categories, brands}: ItemModalProps) {
     const [open, setOpen] = useState(false);
     const [itemDetails, setItemDetails] = useState(itemData);
     const [selectedUnit, setSelectedUnit] = useState<number | undefined>(itemData.unit.id);
@@ -82,7 +82,7 @@ export default function ItemModal({ itemData, onUpdateItem, units, categories, b
     const handleClose = () => setOpen(false);
 
     const handleItemChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setItemDetails(prevState => ({
             ...prevState,
             [name]: value
@@ -145,7 +145,7 @@ export default function ItemModal({ itemData, onUpdateItem, units, categories, b
     return (
         <div>
             <button className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100" onClick={handleOpen}>
-                <FontAwesomeIcon icon={faPen} />
+                <FontAwesomeIcon icon={faPen}/>
             </button>
             <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
@@ -153,12 +153,13 @@ export default function ItemModal({ itemData, onUpdateItem, units, categories, b
                         className="absolute top-[15px] right-[15px] text-red-500 hover:text-gray-700 p-2 w-[40px] h-[40px] bg-white shadow-lg rounded-lg flex justify-center items-center"
                         onClick={handleClose}
                     >
-                        <FontAwesomeIcon icon={faTimes} size="lg" />
+                        <FontAwesomeIcon icon={faTimes} size="lg"/>
                     </button>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Update Item
                     </Typography>
-                    <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+                    <section
+                        className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                             <TextField
                                 name="name"
@@ -173,19 +174,25 @@ export default function ItemModal({ itemData, onUpdateItem, units, categories, b
                                     <label className='text-black flex justify-start'>Unit</label>
                                     <small className='text-red-600 text-[16px]'>*</small>
                                 </div>
-                                <select
-                                    value={selectedUnit}
-                                    name="unit"
-                                    onChange={handleUnitChange}
-                                    className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                                >
-                                    <option value="-1">Select a unit</option>
-                                    {units.map((unit) => (
-                                        <option key={unit.id} value={unit.id}>
-                                            {unit.unitSymbology + ' (' + unit.unitName + ')'}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="custom-select-wrapper">
+                                    <select
+                                        value={selectedUnit}
+                                        name="unit"
+                                        onChange={handleUnitChange}
+                                        className='text-input'
+                                    >
+                                        <option value="-1">Select a unit</option>
+                                        {units.map((unit) => (
+                                            <option key={unit.id} value={unit.id}>
+                                                {unit.unitSymbology + ' (' + unit.unitName + ')'}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                                </div>
+                                <div className={`h-[5px]`}>
+                                    <small className={`text-start text-red-600 block`}></small>
+                                </div>
                             </div>
                             <TextField
                                 name="reOrderLevel"
@@ -203,19 +210,22 @@ export default function ItemModal({ itemData, onUpdateItem, units, categories, b
                                     <label className='text-black flex justify-start'>Brand</label>
                                     <small className={`text-red-600 text-[16px]`}>*</small>
                                 </div>
-                                <select
-                                    value={selectedBrand}
-                                    name={"brand"}
-                                    onChange={handleBrandChange}
-                                    className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                                >
-                                    <option value="-1">Select an brand</option>
-                                    {brands.map((option) => (
-                                        <option key={option.id} value={option.id}>
-                                            {option.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="custom-select-wrapper">
+                                    <select
+                                        value={selectedBrand}
+                                        name={"brand"}
+                                        onChange={handleBrandChange}
+                                        className='text-input'
+                                    >
+                                        <option value="-1">Select an brand</option>
+                                        {brands.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {option.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                                </div>
                                 <div className={`h-[5px]`}>
                                     <small className={`text-start text-red-600 block`}></small>
                                 </div>
@@ -225,24 +235,26 @@ export default function ItemModal({ itemData, onUpdateItem, units, categories, b
                                     <label className='text-black flex justify-start'>Category</label>
                                     <small className={`text-red-600 text-[16px]`}>*</small>
                                 </div>
-                                <select
-                                    value={selectedCategory}
-                                    name={"category"}
-                                    onChange={handleCategoryChange}
-                                    className='min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
-                                >
-                                    <option value="-1">Select an category</option>
-                                    {categories.map((option) => (
-                                        <option key={option.id} value={option.id}>
-                                            {option.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="custom-select-wrapper">
+                                    <select
+                                        value={selectedCategory}
+                                        name={"category"}
+                                        onChange={handleCategoryChange}
+                                        className='text-input'
+                                    >
+                                        <option value="-1">Select an category</option>
+                                        {categories.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {option.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                                </div>
                                 <div className={`h-[5px]`}>
                                     <small className={`text-start text-red-600 block`}></small>
                                 </div>
                             </div>
-                            <HiddenTextField/>
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                             <TextArea

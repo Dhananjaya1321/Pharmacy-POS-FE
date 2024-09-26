@@ -10,7 +10,8 @@ import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
 import userAPIController from "../../controller/UserAPIController";
 import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 import {TextFieldWithButton} from "../../component/TextFieldWithButton/TextFieldWithButton";
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
+import shopAPIController from "../../controller/ShopAPIController";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -49,7 +50,10 @@ interface UserModalProps {
         address: string;
     }) => void;
 }
-
+interface Role {
+    id: number;
+    name: string;
+}
 export default function UserModal({rowData, onUpdateUser}: UserModalProps) {
     const [open, setOpen] = React.useState(false);
     const [userData, setUserData] = React.useState({
@@ -63,6 +67,7 @@ export default function UserModal({rowData, onUpdateUser}: UserModalProps) {
         address: rowData?.address || ''
     });
     const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
+    const [userRoles, setUserRoles] = useState<Role[]>([]);
 
     const handleOpen = () => {
         setUserData({
@@ -97,8 +102,12 @@ export default function UserModal({rowData, onUpdateUser}: UserModalProps) {
             name: role.name,
         }));
 
-        return roles;
+        setUserRoles(roles);
     };
+
+    useEffect(() => {
+        fetchUserRoles();
+    }, []);
 
     const handleRoleChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const roleId = event.target.value;
@@ -166,14 +175,29 @@ export default function UserModal({rowData, onUpdateUser}: UserModalProps) {
                                 value={userData.contact}
                                 onChange={handleUsersChange}
                             />
-                            <TextFieldWithButton
-                                name="role"
-                                label={'Role'}
-                                important={"*"}
-                                value={userData.role}
-                                onChange={handleRoleChange}
-                                fetchOptions={fetchUserRoles}
-                            />
+                            <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
+                                <div className='flex flex-row'>
+                                    <label className='text-black flex justify-start'>Role</label>
+                                    <small className={`text-red-600 text-[16px]`}>*</small>
+                                </div>
+                                <div className="custom-select-wrapper">
+                                    <select
+                                        value={selectedRole}
+                                        name={"role"}
+                                        onChange={handleRoleChange}
+                                        className='text-input'
+                                    >
+                                        <option value="-1">Select an item</option>
+                                        {userRoles.map((option, index) => (
+                                            <option key={index} value={option.id}>{option.name}</option>
+                                        ))}
+                                    </select>
+                                    <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                                </div>
+                                <div className={`h-[5px]`}>
+                                    <small className={`text-start text-red-600 block`}></small>
+                                </div>
+                            </div>
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                             <TextField

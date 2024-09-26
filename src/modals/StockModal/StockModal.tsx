@@ -171,19 +171,25 @@ export default function StockModal({stockData, onUpdateStock, items}: StockModal
                                     <label className="text-black flex justify-start">Item</label>
                                     <small className="text-red-600 text-[16px]">*</small>
                                 </div>
-                                <select
-                                    value={selectedItem}
-                                    name="item"
-                                    onChange={handleItemChange}
-                                    className="min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3"
-                                >
-                                    <option value="-1">Select an item</option>
-                                    {items.map((option) => (
-                                        <option key={option.id} value={option.id}>
-                                            {option.name+'-'+option.brand.name+'-'+option.category.name+'-'+option.unit.unitSymbology+'('+option.unit.unitName+')'}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="custom-select-wrapper">
+                                    <select
+                                        value={selectedItem}
+                                        name="item"
+                                        onChange={handleItemChange}
+                                        className='text-input'
+                                    >
+                                        <option value="-1">Select an item</option>
+                                        {items.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {option.name + '-' + option.brand.name + '-' + option.category.name + '-' + option.unit.unitSymbology + '(' + option.unit.unitName + ')'}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
+                                </div>
+                                <div className={`h-[5px]`}>
+                                    <small className={`text-start text-red-600 block`}></small>
+                                </div>
                             </div>
                             <TextField
                                 name="expiryDate"
