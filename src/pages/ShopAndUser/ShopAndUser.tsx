@@ -23,6 +23,13 @@ import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import itemAPIController from "../../controller/ItemAPIController";
 import SupplierModal from "../../modals/SupplierModal/SupplierModal";
 import UserModal from "../../modals/UserModal/UserModal";
+import {
+    emailRegex,
+    nameRegex,
+    sriLankaMobileNumberRegex,
+    sriLankaNicRegex,
+    websiteRegex
+} from "../../validasion/validations";
 
 interface User {
     id: number;
@@ -65,6 +72,16 @@ export const ShopAndUser = () => {
         username: '',
         address: '',
     });
+    const [userErrors, setUserErrors] = useState({
+        name: '',
+        contact: '',
+        role: '',
+        nic: '',
+        email: '',
+        password: '',
+        username: '',
+        address: '',
+    });
     const [users, setUsers] = useState<User[]>([]);
     const [userRoles, setUserRoles] = useState<Role[]>([]);
 
@@ -96,12 +113,12 @@ export const ShopAndUser = () => {
             case 'contact':
                 if (value.trim() === '') {
                     error = 'Contact number is required';
-                } else if (!/^(?:\+94|94|0)7\d{8}$/.test(value)) {
+                } else if (!sriLankaMobileNumberRegex.test(value)) {
                     error = 'Invalid number contact number';
                 }
                 break;
             case 'website':
-                if (value && !/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+                if (value && !websiteRegex.test(value)) {
                     error = 'Invalid website URL';
                 }
                 break;
@@ -129,6 +146,17 @@ export const ShopAndUser = () => {
             ...prevData,
             role: role,  // Update userData with the selected role
         }));
+
+        // Validate role selection
+        let error = '';
+        if (role === '-1' || role.trim() === '') {
+            error = 'Role is required';
+        }
+
+        setUserErrors(prevErrors => ({
+            ...prevErrors,
+            role: error,
+        }));
     };
 
     const handleUsersChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -137,12 +165,70 @@ export const ShopAndUser = () => {
             ...prevData,
             [name]: value,
         }));
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim() === '') {
+                    error = 'Name is required';
+                } else if (!nameRegex.test(value)) {
+                    error = 'Invalid name';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value)) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'role':
+                if (value === '-1' || value.trim() === '') {
+                    error = 'Role is required';
+                }
+                break;
+            case 'nic':
+                if (value.trim() === '') {
+                    error = 'NIC is required';
+                } else if (!sriLankaNicRegex.test(value)) {
+                    error = 'Invalid NIC number';
+                }
+                break;
+            case 'email':
+                if (value.trim() === '') {
+                    error = 'Email is required';
+                } else if (!emailRegex.test(value)) {
+                    error = 'Invalid email address';
+                }
+                break;
+            case 'password':
+                if (value.trim() === '') {
+                    error = 'Password is required';
+                }
+                break;
+            case 'username':
+                if (value.trim() === '') {
+                    error = 'Username is required';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the userErrors state
+        setUserErrors({
+            ...userErrors,
+            [name]: error,
+        });
     };
 
     // Handle form submission
     const handleSubmit = async () => {
         let isValid = true;
-        let newErrors = { ...errors };
+        let newErrors = {...errors};
 
         // Iterate through each field in shopData to validate
         for (const key in shopData) {
@@ -159,13 +245,13 @@ export const ShopAndUser = () => {
                     if (value === '') {
                         newErrors[key] = 'Contact number is required';
                         isValid = false;
-                    } else if (!/^(?:\+94|94|0)7\d{8}$/.test(value)) {
+                    } else if (!sriLankaMobileNumberRegex.test(value)) {
                         newErrors[key] = 'Invalid number contact number';
                         isValid = false;
                     }
                     break;
                 case 'website':
-                    if (value && !/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+                    if (value && !websiteRegex.test(value)) {
                         newErrors[key] = 'Invalid website URL';
                         isValid = false;
                     }
@@ -215,11 +301,99 @@ export const ShopAndUser = () => {
     };
 
     const handleUserSave = async () => {
+        let isValid = true;
+        let newUserErrors = {...userErrors};
+
+        // Validate each field
+        if (userData.name.trim() === '') {
+            newUserErrors.name = 'Name is required';
+            isValid = false;
+        } else if (nameRegex.test(userData.name)) {
+            newUserErrors.name = 'Invalid name';
+            isValid = false;
+        }
+        if (userData.contact.trim() === '') {
+            newUserErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(userData.contact)) {
+            newUserErrors.contact = 'Invalid contact number';
+            isValid = false;
+        }
+        if (selectedRole === "-1" || selectedRole === undefined) {
+            newUserErrors.role = 'Role is required';
+            isValid = false;
+        }
+        if (userData.nic.trim() === '') {
+            newUserErrors.nic = 'NIC is required';
+            isValid = false;
+        } else if (!sriLankaNicRegex.test(userData.nic)) {
+            newUserErrors.nic = 'Invalid NIC number';
+            isValid = false;
+        }
+        if (userData.email.trim() === '') {
+            newUserErrors.email = 'Email is required';
+            isValid = false;
+        } else if (!emailRegex.test(userData.email)) {
+            newUserErrors.email = 'Invalid email';
+            isValid = false;
+        }
+        if (userData.password.trim() === '') {
+            newUserErrors.password = 'Password is required';
+            isValid = false;
+        }
+        if (userData.username.trim() === '') {
+            newUserErrors.username = 'Username is required';
+            isValid = false;
+        }
+
+
+        // Update the userErrors state
+        setUserErrors(newUserErrors);
+
+        // Prevent saving if the form is invalid
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
         const isSuccess = await userAPIController.saveUser(userData);
         if (isSuccess) {
-            alert("Data saved successfully!");
+            // @ts-ignore
+            const roleName = userRoles.find(role => role.id === parseInt(selectedRole)).name;
+
+            // Add the saved user to the users table
+            const formattedUser = {
+                ...userData,
+                id: isSuccess.id,
+                role: {name: roleName},  // Convert role to object with 'name'
+            };
+            setUsers([...users, formattedUser]);
+
+            // Clear the form fields after successful save
+            setUserData({
+                name: '',
+                contact: '',
+                role: '',
+                nic: '',
+                email: '',
+                password: '',
+                username: '',
+                address: '',
+            });
+            setUserErrors({
+                name: '',
+                contact: '',
+                role: '',
+                nic: '',
+                email: '',
+                password: '',
+                username: '',
+                address: '',
+            });
+
+            alert("User saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save user.");
         }
     };
 
@@ -355,6 +529,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.name}
                         onChange={handleUsersChange}
+                        msg={userErrors.name}
                     />
                     <TextField
                         name="contact"
@@ -363,6 +538,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.contact}
                         onChange={handleUsersChange}
+                        msg={userErrors.contact}
                     />
                     <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
                         <div className='flex flex-row'>
@@ -384,7 +560,7 @@ export const ShopAndUser = () => {
                             <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
                         </div>
                         <div className={`h-[5px]`}>
-                            <small className={`text-start text-red-600 block`}></small>
+                            <small className={`text-start text-red-600 block`}>{userErrors.role}</small>
                         </div>
                     </div>
                 </div>
@@ -396,6 +572,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.nic}
                         onChange={handleUsersChange}
+                        msg={userErrors.nic}
                     />
                     <TextField
                         name={'email'}
@@ -404,6 +581,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.email}
                         onChange={handleUsersChange}
+                        msg={userErrors.email}
                     />
                     <HiddenTextField/>
                 </div>
@@ -416,6 +594,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.password}
                         onChange={handleUsersChange}
+                        msg={userErrors.password}
                     />
                     <TextField
                         name={'username'}
@@ -424,6 +603,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.username}
                         onChange={handleUsersChange}
+                        msg={userErrors.username}
                     />
                     <HiddenTextField/>
                 </div>
@@ -435,6 +615,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={userData.address}
                         onChange={handleUsersChange}
+                        msg={userErrors.address}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>

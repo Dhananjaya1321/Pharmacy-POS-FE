@@ -33,9 +33,11 @@ const userAPIController = {
                 `${base_url}/user`,
                 userData
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            }
         } catch (error) {
-            return false;
+            return null;
         }
     },
     getAllUserById: async (id: number) => {
