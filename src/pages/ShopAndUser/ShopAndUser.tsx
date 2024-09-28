@@ -34,6 +34,7 @@ interface User {
     username: string;
     address: string;
 }
+
 interface Role {
     id: number;
     name: string;
@@ -49,7 +50,6 @@ export const ShopAndUser = () => {
         address: '',
     });
     const [errors, setErrors] = useState({
-        pharmacyId: '',
         pharmacyName: '',
         contact: '',
         website: '',
@@ -83,18 +83,38 @@ export const ShopAndUser = () => {
             [typedName]: value,
         });
 
-
-        // Validation logic
+        // Initialize error message
         let error = '';
-        if (value.trim() === '') {
-            error = `${name} is required`;
-        } else if (name === 'email' && !/^\S+@\S+\.\S+$/.test(value)) {
-            error = 'Invalid email format';
-        } else if (name === 'contact' && !/^\d+$/.test(value)) {
-            error = 'Contact number should only contain digits';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'pharmacyName':
+                if (value.trim() === '') {
+                    error = 'Pharmacy name is required';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!/^(?:\+94|94|0)7\d{8}$/.test(value)) {
+                    error = 'Invalid number contact number';
+                }
+                break;
+            case 'website':
+                if (value && !/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+                    error = 'Invalid website URL';
+                }
+                break;
+            case 'address':
+                if (value.trim() === '') {
+                    error = 'Address is required';
+                }
+                break;
+            default:
+                break;
         }
 
-        // Set error state
+        // Update the errors state
         setErrors({
             ...errors,
             [name]: error,
@@ -121,6 +141,54 @@ export const ShopAndUser = () => {
 
     // Handle form submission
     const handleSubmit = async () => {
+        let isValid = true;
+        let newErrors = { ...errors };
+
+        // Iterate through each field in shopData to validate
+        for (const key in shopData) {
+            const value = shopData[key as ShopDataKey].trim();
+
+            switch (key) {
+                case 'pharmacyName':
+                    if (value === '') {
+                        newErrors[key] = 'Pharmacy name is required';
+                        isValid = false;
+                    }
+                    break;
+                case 'contact':
+                    if (value === '') {
+                        newErrors[key] = 'Contact number is required';
+                        isValid = false;
+                    } else if (!/^(?:\+94|94|0)7\d{8}$/.test(value)) {
+                        newErrors[key] = 'Invalid number contact number';
+                        isValid = false;
+                    }
+                    break;
+                case 'website':
+                    if (value && !/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+                        newErrors[key] = 'Invalid website URL';
+                        isValid = false;
+                    }
+                    break;
+                case 'address':
+                    if (value === '') {
+                        newErrors[key] = 'Address is required';
+                        isValid = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Update the errors state
+        setErrors(newErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
         const isSuccess = await shopAPIController.updateShopData(shopData);
         if (isSuccess) {
             alert("Data saved successfully!");
@@ -173,7 +241,7 @@ export const ShopAndUser = () => {
                 if (response) {
                     // Map response.name to pharmacyName
                     setShopData({
-                        pharmacyId: response.data.pharmacyId,
+                        pharmacyId: String(response.data.pharmacyId),
                         pharmacyName: response.data.pharmacyName,
                         contact: response.data.contact,
                         website: response.data.website,
@@ -263,6 +331,7 @@ export const ShopAndUser = () => {
                         important={"*"}
                         value={shopData.address}
                         onChange={handleShopChange}
+                        msg={errors.address}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
