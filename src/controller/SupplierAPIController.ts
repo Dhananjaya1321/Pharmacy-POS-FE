@@ -8,7 +8,11 @@ const supplierAPIController = {
                 `${base_url}/supplier`,
                 supplier
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            }else {
+                return null;
+            }
         } catch (error) {
             return false;
         }

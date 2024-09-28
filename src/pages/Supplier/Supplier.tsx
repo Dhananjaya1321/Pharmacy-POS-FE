@@ -12,6 +12,13 @@ import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import SupplierModal from "../../modals/SupplierModal/SupplierModal";
+import {
+    emailRegex,
+    nameRegex,
+    sriLankaMobileNumberRegex,
+    sriLankaNicRegex,
+    websiteRegex
+} from "../../validasion/validations";
 
 
 interface Supplier {
@@ -27,90 +34,102 @@ interface Supplier {
 export const Supplier = () => {
 
     const columns: GridColDef[] = [
-        {field: 'name', headerName: 'Name', width: 200,renderCell: (params) => (
+        {
+            field: 'name', headerName: 'Name', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'contact', headerName: 'Contact', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'contact', headerName: 'Contact', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'website', headerName: 'Website', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'website', headerName: 'Website', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'nic', headerName: 'NIC', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'nic', headerName: 'NIC', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'email', headerName: 'Email', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'email', headerName: 'Email', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'description', headerName: 'Description', width: 300,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'description', headerName: 'Description', width: 300, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',
@@ -135,6 +154,15 @@ export const Supplier = () => {
         email: '',
         description: '',
     });
+    // State to manage form errors
+    const [supplierErrors, setSupplierErrors] = useState({
+        name: '',
+        contact: '',
+        website: '',
+        nic: '',
+        email: '',
+        description: '',
+    });
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
@@ -150,9 +178,69 @@ export const Supplier = () => {
             ...supplierData,
             [typedName]: value,
         });
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length < 2) {
+                    error = 'Name must be at least 2 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value.trim())) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'website':
+                if (value.trim() !== '' && !websiteRegex.test(value.trim())) {
+                    error = 'Invalid website URL';
+                }
+                break;
+            case 'nic':
+                if (value.trim() === '') {
+                    error = 'NIC is required';
+                } else if (!sriLankaNicRegex.test(value.trim())) {
+                    error = 'Invalid NIC number';
+                }
+                break;
+            case 'email':
+                if (value.trim() === '') {
+                    error = 'Email is required';
+                } else if (!emailRegex.test(value.trim())) {
+                    error = 'Invalid email address';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the supplierErrors state
+        setSupplierErrors({
+            ...supplierErrors,
+            [name]: error,
+        });
     };
 
-    const handleUpdateSupplier = (updatedSupplier: {id: number; name: string; contact: string; website: string; nic: string; email: string; description: string;}) => {
+    const handleUpdateSupplier = (updatedSupplier: {
+        id: number;
+        name: string;
+        contact: string;
+        website: string;
+        nic: string;
+        email: string;
+        description: string;
+    }) => {
         setSuppliers(prevSuppliers =>
             prevSuppliers.map(supplier =>
                 supplier.id === updatedSupplier.id ? updatedSupplier : supplier
@@ -161,12 +249,101 @@ export const Supplier = () => {
     };
 
     const handleSupplierSaveEvent = async () => {
-        const isSuccess = await supplierAPIController.saveSupplier(
+        // Perform final validation before submission
+        const validationErrors = {
+            name: '',
+            contact: '',
+            website: '',
+            nic: '',
+            email: '',
+            description: '',
+        };
+        let isValid = true;
+
+        // Validate each field
+        if (supplierData.name.trim().length < 2) {
+            validationErrors.name = 'Name must be at least 2 characters';
+            isValid = false;
+        } else if (!nameRegex.test(supplierData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (supplierData.contact.trim() === '') {
+            validationErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(supplierData.contact.trim())) {
+            validationErrors.contact = 'Invalid Sri Lankan phone number';
+            isValid = false;
+        }
+
+        if (supplierData.website.trim() !== '' && !websiteRegex.test(supplierData.website.trim())) {
+            validationErrors.website = 'Invalid website URL';
+            isValid = false;
+        }
+
+        if (supplierData.nic.trim() === '') {
+            validationErrors.nic = 'NIC is required';
+            isValid = false;
+        } else if (!sriLankaNicRegex.test(supplierData.nic.trim())) {
+            validationErrors.nic = 'Invalid NIC number';
+            isValid = false;
+        }
+
+        if (supplierData.email.trim() === '') {
+            validationErrors.email = 'Email is required';
+            isValid = false;
+        } else if (!emailRegex.test(supplierData.email.trim())) {
+            validationErrors.email = 'Invalid email address';
+            isValid = false;
+        }
+
+        if (supplierData.description.trim().length > 500) { // Example constraint
+            validationErrors.description = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        // Update the supplierErrors state
+        setSupplierErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
+        const savedSupplier = await supplierAPIController.saveSupplier(
             supplierData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        if (savedSupplier) {
+            const formattedSupplier = {
+                ...supplierData,
+                id: savedSupplier.data.id,
+            };
+
+            setSuppliers([...suppliers, formattedSupplier]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            // Clear the form fields after successful save
+            setSupplierData({
+                name: '',
+                contact: '',
+                website: '',
+                nic: '',
+                email: '',
+                description: '',
+            });
+
+            // Clear supplierErrors
+            setSupplierErrors({
+                name: '',
+                contact: '',
+                website: '',
+                nic: '',
+                email: '',
+                description: '',
+            });
+            alert("Supplier saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save supplier.");
         }
     };
     const fetchAllSuppliers = async (page: number, pageSize: number) => {
@@ -220,6 +397,7 @@ export const Supplier = () => {
                         important={"*"}
                         value={supplierData.name}
                         onChange={handleSupplerChange}
+                        msg={supplierErrors.name}
                     />
                     <TextField
                         name="contact"
@@ -228,6 +406,7 @@ export const Supplier = () => {
                         important={"*"}
                         value={supplierData.contact}
                         onChange={handleSupplerChange}
+                        msg={supplierErrors.contact}
                     />
                     <TextField
                         name="website"
@@ -235,6 +414,7 @@ export const Supplier = () => {
                         label={'Website'}
                         value={supplierData.website}
                         onChange={handleSupplerChange}
+                        msg={supplierErrors.website}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -245,6 +425,7 @@ export const Supplier = () => {
                         important={"*"}
                         value={supplierData.nic}
                         onChange={handleSupplerChange}
+                          msg={supplierErrors.nic}
                     />
                     <TextField
                         name="email"
@@ -253,6 +434,7 @@ export const Supplier = () => {
                         important={"*"}
                         value={supplierData.email}
                         onChange={handleSupplerChange}
+                          msg={supplierErrors.email}
                     />
                     <HiddenTextField/>
                 </div>
@@ -263,6 +445,7 @@ export const Supplier = () => {
                         label={'Description'}
                         value={supplierData.description}
                         onChange={handleSupplerChange}
+                        msg={supplierErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
@@ -302,7 +485,8 @@ export const Supplier = () => {
                         paginationMode="server" // Use server-side pagination
                         onPaginationModelChange={(newPagination) => {
                             setPaginationModel(newPagination);
-                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r =>  {});
+                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r => {
+                            });
                         }}
                     />
                 </Paper>
