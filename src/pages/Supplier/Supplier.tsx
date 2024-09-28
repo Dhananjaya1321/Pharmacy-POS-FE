@@ -311,8 +311,7 @@ export const Supplier = () => {
             return;
         }
 
-        const savedSupplier = await supplierAPIController.saveSupplier(
-            supplierData);
+        const savedSupplier = await supplierAPIController.saveSupplier(supplierData);
         if (savedSupplier) {
             const formattedSupplier = {
                 ...supplierData,

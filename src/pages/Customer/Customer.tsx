@@ -16,6 +16,13 @@ import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import itemAPIController from "../../controller/ItemAPIController";
 import UnitModal from "../../modals/UnitModal/UnitModal";
 import CustomerModal from "../../modals/CustomerModal/CustomerModal";
+import {
+    emailRegex,
+    nameRegex,
+    sriLankaMobileNumberRegex,
+    sriLankaNicRegex,
+    websiteRegex
+} from "../../validasion/validations";
 
 interface Customer {
     id: number;
@@ -28,76 +35,86 @@ interface Customer {
 
 export const Customer = () => {
     const columns: GridColDef[] = [
-        {field: 'name', headerName: 'Name', width: 200,renderCell: (params) => (
+        {
+            field: 'name', headerName: 'Name', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'contact', headerName: 'Contact', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'contact', headerName: 'Contact', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'nic', headerName: 'NIC', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'nic', headerName: 'NIC', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'email', headerName: 'Email', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'email', headerName: 'Email', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'address', headerName: 'Address', width: 400,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'address', headerName: 'Address', width: 400, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',
@@ -121,6 +138,13 @@ export const Customer = () => {
         nic: '',
         address: '',
     });
+    const [customerErrors, setCustomerErrors] = useState({
+        name: '',
+        contact: '',
+        email: '',
+        nic: '',
+        address: '',
+    });
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
@@ -135,9 +159,61 @@ export const Customer = () => {
             ...customerData,
             [typedName]: value,
         });
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length < 2) {
+                    error = 'Name must be at least 2 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value.trim())) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'nic':
+                if (value.trim() === '') {
+                    error = 'NIC is required';
+                } else if (!sriLankaNicRegex.test(value.trim())) {
+                    error = 'Invalid NIC number';
+                }
+                break;
+            case 'email':
+                if (!emailRegex.test(value.trim())) {
+                    error = 'Invalid email address';
+                }
+                break;
+            case 'address':
+                if (value.trim().length > 500) {
+                    error = 'Address cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        setCustomerErrors({
+            ...customerErrors,
+            [name]: error,
+        });
     };
 
-    const handleUpdateCustomer = (updatedCustomer: { id: number; name: string; contact: string; email: string; nic: string; address: string;}) => {
+    const handleUpdateCustomer = (updatedCustomer: {
+        id: number;
+        name: string;
+        contact: string;
+        email: string;
+        nic: string;
+        address: string;
+    }) => {
         setCustomers(prevCustomers =>
             prevCustomers.map(customer =>
                 customer.id === updatedCustomer.id ? updatedCustomer : customer
@@ -146,11 +222,86 @@ export const Customer = () => {
     };
 
     const handleCustomerSaveEvent = async () => {
-        const isSuccess = await customerAPIController.saveCustomer(customerData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        const validationErrors = {
+            name: '',
+            contact: '',
+            nic: '',
+            email: '',
+            address: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (customerData.name.trim().length < 2) {
+            validationErrors.name = 'Name must be at least 2 characters';
+            isValid = false;
+        } else if (!nameRegex.test(customerData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (customerData.contact.trim() === '') {
+            validationErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(customerData.contact.trim())) {
+            validationErrors.contact = 'Invalid Sri Lankan phone number';
+            isValid = false;
+        }
+
+        if (customerData.nic.trim() === '') {
+            validationErrors.nic = 'NIC is required';
+            isValid = false;
+        } else if (!sriLankaNicRegex.test(customerData.nic.trim())) {
+            validationErrors.nic = 'Invalid NIC number';
+            isValid = false;
+        }
+
+        if (customerData.email.trim()!=='' && !emailRegex.test(customerData.email.trim())) {
+            validationErrors.email = 'Invalid email address';
+            isValid = false;
+        }
+
+        if (customerData.address.trim().length > 500) { // Example constraint
+            validationErrors.address = 'Address cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setCustomerErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
+        const savedCustomer = await customerAPIController.saveCustomer(customerData);
+        if (savedCustomer) {
+            const formattedCustomer = {
+                ...customerData,
+                id: savedCustomer.data.id,
+            };
+
+            setCustomers([...customers, formattedCustomer]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            setCustomerData({
+                name: '',
+                contact: '',
+                email: '',
+                nic: '',
+                address: '',
+            });
+
+            setCustomerErrors({
+                name: '',
+                contact: '',
+                email: '',
+                nic: '',
+                address: '',
+            });
+            alert("Customer saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save customer.");
         }
     };
 
@@ -196,7 +347,8 @@ export const Customer = () => {
                 <h3>Customer</h3>
             </section>
             {/*url display section*/}
-            <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+            <section
+                className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="name"
@@ -205,6 +357,7 @@ export const Customer = () => {
                         important={"*"}
                         value={customerData.name}
                         onChange={handleCustomerChange}
+                        msg={customerErrors.name}
                     />
                     <TextField
                         name="contact"
@@ -213,6 +366,7 @@ export const Customer = () => {
                         important={"*"}
                         value={customerData.contact}
                         onChange={handleCustomerChange}
+                        msg={customerErrors.contact}
                     />
                     <TextField
                         name="email"
@@ -220,6 +374,7 @@ export const Customer = () => {
                         label={'Email'}
                         value={customerData.email}
                         onChange={handleCustomerChange}
+                        msg={customerErrors.email}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -229,6 +384,7 @@ export const Customer = () => {
                         label={'NIC'}
                         value={customerData.nic}
                         onChange={handleCustomerChange}
+                        msg={customerErrors.nic}
                     />
                     <HiddenTextField/>
                     <HiddenTextField/>
@@ -240,6 +396,7 @@ export const Customer = () => {
                         label={'Address'}
                         value={customerData.address}
                         onChange={handleCustomerChange}
+                        msg={customerErrors.address}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
@@ -279,7 +436,8 @@ export const Customer = () => {
                         paginationMode="server" // Use server-side pagination
                         onPaginationModelChange={(newPagination) => {
                             setPaginationModel(newPagination);
-                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r =>  {});
+                            fetchAllSuppliers(newPagination.page, newPagination.pageSize).then(r => {
+                            });
                         }}
                     />
                 </Paper>

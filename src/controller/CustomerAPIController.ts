@@ -8,9 +8,13 @@ const customerAPIController = {
                 `${base_url}/customer`,
                 customer
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
         } catch (error) {
-            return false;
+            return null;
         }
     },
     getAllCustomers: async (page?: number, size?: number) => {
