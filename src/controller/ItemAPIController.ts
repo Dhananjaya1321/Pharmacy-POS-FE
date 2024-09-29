@@ -8,14 +8,18 @@ const itemAPIController = {
                 `${base_url}/item`,
                 stock
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
         } catch (error) {
-            return false;
+            return null;
         }
     },
     getAllItems: async (page?: number, size?: number) => {
         try {
-            const response = await axios.get(`${base_url}/item`,{
+            const response = await axios.get(`${base_url}/item`, {
                 params: {
                     page: page,
                     size: size,
@@ -90,12 +94,12 @@ const itemAPIController = {
             return null;
         }
     },
-    deleteItem:async (id: number) => {
+    deleteItem: async (id: number) => {
         try {
             const response = await axios.delete(`${base_url}/item/${id}`);
             if (response.status === 200) {
                 return response.data;
-            } else  {
+            } else {
                 return null;
             }
         } catch (error) {

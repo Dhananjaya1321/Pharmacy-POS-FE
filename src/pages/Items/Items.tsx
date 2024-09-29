@@ -170,6 +170,14 @@ export const Items = () => {
     const [itemData, setItemData] = useState({
         name: '',
         description: '',
+        reOrderLevel: 0,
+        category: '',
+        brand: '',
+        unit: '',
+    });
+    const [itemErrors, setItemErrors] = useState({
+        name: '',
+        description: '',
         reOrderLevel: '',
         category: '',
         brand: '',
@@ -231,6 +239,52 @@ export const Items = () => {
             ...itemData,
             [name]: value,
         });
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length === 0) {
+                    error = 'Name is required';
+                }
+                break;
+            case 'reOrderLevel':
+                if (Number(value) < 0) {
+                    error = 'The reorder level cannot be less than zero';
+                } else if (Number(value) >= 90) {
+                    error = 'The reorder level cannot exceed 90%';
+                }
+                break;
+            case 'brand':
+                if (value === '-1' || value.trim() === '') {
+                    error = 'Brand is required';
+                }
+                break;
+            case 'unit':
+                if (value === '-1' || value.trim() === '') {
+                    error = 'Unit is required';
+                }
+                break;
+            case 'category':
+                if (value === '-1' || value.trim() === '') {
+                    error = 'Category is required';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        setItemErrors({
+            ...itemErrors,
+            [name]: error,
+        });
     };
 
     const handleUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -239,6 +293,16 @@ export const Items = () => {
         setItemData(prevData => ({
             ...prevData,
             unit: unit,
+        }));
+
+        let error = '';
+        if (unit === '-1' || unit.trim() === '') {
+            error = 'Unit is required';
+        }
+
+        setItemErrors(prevErrors => ({
+            ...prevErrors,
+            unit: error,
         }));
     };
 
@@ -273,6 +337,16 @@ export const Items = () => {
             ...prevData,
             brand: brand,
         }));
+
+        let error = '';
+        if (brand === '-1' || brand.trim() === '') {
+            error = 'Brand is required';
+        }
+
+        setItemErrors(prevErrors => ({
+            ...prevErrors,
+            brand: error,
+        }));
     };
 
     const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -281,6 +355,16 @@ export const Items = () => {
         setItemData(prevData => ({
             ...prevData,
             category: category,
+        }));
+
+        let error = '';
+        if (category === '-1' || category.trim() === '') {
+            error = 'Category is required';
+        }
+
+        setItemErrors(prevErrors => ({
+            ...prevErrors,
+            category: error,
         }));
     };
 
@@ -311,11 +395,98 @@ export const Items = () => {
     };
 
     const handleItemSaveEvent = async () => {
-        const isSuccess = await itemAPIController.saveItem(itemData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        const validationErrors = {
+            name: '',
+            description: '',
+            reOrderLevel: '',
+            category: '',
+            brand: '',
+            unit: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (itemData.name.trim().length === 0) {
+            validationErrors.name = 'Name is required';
+            isValid = false;
+        }
+
+        if (itemData.reOrderLevel < 0) {
+            validationErrors.reOrderLevel = 'The reorder level cannot be less than zero';
+            isValid = false;
+        } else if (itemData.reOrderLevel >= 90) {
+            validationErrors.reOrderLevel = 'The reorder level cannot exceed 90%';
+            isValid = false;
+        }
+
+        if (itemData.brand.trim() === '-1' || itemData.brand.trim() === '') {
+            validationErrors.brand = 'Brand is required';
+        }
+
+        if (itemData.category.trim() === '-1' || itemData.category.trim() === '') {
+            validationErrors.category = 'Category is required';
+        }
+
+        if (itemData.unit.trim() === '-1' || itemData.unit.trim() === '') {
+            validationErrors.unit = 'Unit is required';
+        }
+
+        if (itemData.description.trim().length > 500) {
+            validationErrors.description = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setItemErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
+        const savedItem = await itemAPIController.saveItem(itemData);
+        if (savedItem) {
+            // @ts-ignore
+            const unit = units.find(unit => unit.id === parseInt(selectedUnit)) || { id: 0, unitName: '', unitSymbology: '' };
+            // @ts-ignore
+            const category = categories.find(category => category.id === parseInt(selectedCategory)) || { id: 0, name: '' };
+            // @ts-ignore
+            const brand = brands.find(brand => brand.id === parseInt(selectedBrand)) || { id: 0, name: '' };
+
+            const formattedItem: Item = {
+                id: savedItem.data.id,
+                name: itemData.name,
+                description: itemData.description,
+                reOrderLevel: itemData.reOrderLevel,
+                unit: unit,
+                category: category,
+                brand: brand,
+            };
+
+
+            setItems([...items, formattedItem]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            setItemData({
+                name: '',
+                description: '',
+                reOrderLevel: 0,
+                category: '',
+                brand: '',
+                unit: '',
+            });
+
+            setItemErrors({
+                name: '',
+                description: '',
+                reOrderLevel: '',
+                category: '',
+                brand: '',
+                unit: '',
+            });
+            alert("Item saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save item.");
         }
     };
 
@@ -354,6 +525,7 @@ export const Items = () => {
                         important={"*"}
                         value={itemData.name}
                         onChange={handleItemChange}
+                        msg={itemErrors.name}
                     />
                     <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
                         <div className='flex flex-row'>
@@ -366,6 +538,7 @@ export const Items = () => {
                                 name={"unit"}
                                 onChange={handleUnitChange}
                                 className='custom-select min-w-[220px] border-[1px] border-[#9F9F9F] border-solid rounded-lg w-[100%] h-[46px] pl-3'
+
                             >
                                 <option value="-1">Select an unit</option>
                                 {units.map((option) => (
@@ -377,17 +550,18 @@ export const Items = () => {
                             <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
                         </div>
                         <div className={`h-[5px]`}>
-                            <small className={`text-start text-red-600 block`}></small>
+                            <small className={`text-start text-red-600 block`}>{itemErrors.unit}</small>
                         </div>
                     </div>
                     <TextField
                         name="reOrderLevel"
-
                         placeholder={'0.00'}
                         label={'Re-order level'}
                         important={"*"}
+                        type={"number"}
                         value={itemData.reOrderLevel}
                         onChange={handleItemChange}
+                        msg={itemErrors.reOrderLevel}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -413,7 +587,7 @@ export const Items = () => {
                             <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
                         </div>
                         <div className={`h-[5px]`}>
-                            <small className={`text-start text-red-600 block`}></small>
+                            <small className={`text-start text-red-600 block`}>{itemErrors.brand}</small>
                         </div>
                     </div>
                     <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
@@ -438,7 +612,7 @@ export const Items = () => {
                             <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
                         </div>
                         <div className={`h-[5px]`}>
-                            <small className={`text-start text-red-600 block`}></small>
+                            <small className={`text-start text-red-600 block`}>{itemErrors.category}</small>
                         </div>
                     </div>
                 </div>
@@ -449,6 +623,7 @@ export const Items = () => {
                         label={'Description'}
                         value={itemData.description}
                         onChange={handleItemChange}
+                        msg={itemErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
