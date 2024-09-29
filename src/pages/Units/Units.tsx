@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import UnitModal from "../../modals/UnitModal/UnitModal";
+import {nameRegex, sriLankaMobileNumberRegex, websiteRegex} from "../../validasion/validations";
 
 interface Unit {
     id: number;
@@ -20,35 +21,40 @@ interface Unit {
 
 export const Units = () => {
     const columns: GridColDef[] = [
-        {field: 'unitName', headerName: 'Unit Name', width: 300,renderCell: (params) => (
+        {
+            field: 'unitName', headerName: 'Unit Name', width: 300, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'unitSymbology', headerName: 'UnitSymbology', width: 200,renderCell: (params) => (
+            ),
+        },
+        {
+            field: 'unitSymbology', headerName: 'UnitSymbology', width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
                     </div>
                 </Tooltip>
-            ),},
-        {field: 'description', headerName: 'Description', width: 300,
+            ),
+        },
+        {
+            field: 'description', headerName: 'Description', width: 300,
             renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
@@ -56,7 +62,7 @@ export const Units = () => {
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
-                            textAlign:'start',
+                            textAlign: 'start',
                         }}
                     >
                         {params.value}
@@ -87,8 +93,14 @@ export const Units = () => {
         unitSymbology: '',
         description: '',
     });
+
+    const [unitErrors, setUnitErrors] = useState({
+        unitName: '',
+        unitSymbology: '',
+        description: '',
+    });
     const [units, setUnits] = useState<Unit[]>([]);
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 5 });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
 
     type UnitDataKey = keyof typeof unitData;
@@ -101,9 +113,50 @@ export const Units = () => {
             ...unitData,
             [typedName]: value,
         });
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim() === '') {
+                    error = 'Name is required';
+                } else if (value.trim().length <= 1) {
+                    error = 'Name must be at least 1 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'unitSymbology':
+                if (value.trim() === '') {
+                    error = 'Unit symbology is required';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Unit symbology can contain only letters';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the errors state
+        setUnitErrors({
+            ...unitErrors,
+            [name]: error,
+        });
     };
 
-    const handleUpdateUnit = (updatedUnit: { id: number; unitName: string; unitSymbology: string; description: string; }) => {
+    const handleUpdateUnit = (updatedUnit: {
+        id: number;
+        unitName: string;
+        unitSymbology: string;
+        description: string;
+    }) => {
         setUnits(prevUnits =>
             prevUnits.map(unit =>
                 unit.id === updatedUnit.id ? updatedUnit : unit
@@ -112,12 +165,69 @@ export const Units = () => {
     };
 
     const handleUnitSaveEvent = async () => {
-        const isSuccess = await unitAPIController.saveUnit(
-            unitData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        const validationErrors = {
+            unitName: '',
+            unitSymbology: '',
+            description: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (unitData.unitName.trim() === '') {
+            validationErrors.unitName = 'Name is required';
+            isValid = false;
+        } else if (unitData.unitName.trim().length <= 1) {
+            validationErrors.unitName = 'Name must be at least 1 characters';
+            isValid = false;
+        } else if (!nameRegex.test(unitData.unitName.trim())) {
+            validationErrors.unitName = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (unitData.unitSymbology.trim() === '') {
+            validationErrors.unitSymbology = 'Unit symbology is required';
+            isValid = false;
+        } else if (!nameRegex.test(unitData.unitSymbology.trim())) {
+            validationErrors.unitSymbology = 'Unit symbology can contain only letters';
+            isValid = false;
+        }
+
+        if (unitData.description.trim().length > 500) { // Example constraint
+            validationErrors.description = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setUnitErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+        const savedUnit = await unitAPIController.saveUnit(unitData);
+        if (savedUnit) {
+            const formattedBrand = {
+                ...unitData,
+                id: savedUnit.data.id,
+            };
+
+            setUnits([...units, formattedBrand]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            setUnitData({
+                unitName: '',
+                unitSymbology: '',
+                description: '',
+            });
+
+            setUnitErrors({
+                unitName: '',
+                unitSymbology: '',
+                description: '',
+            });
+            alert("Unit saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save unit.");
         }
     };
 
@@ -153,7 +263,8 @@ export const Units = () => {
     };
 
     useEffect(() => {
-        fetchAllUnits(0, 5).then(r => {});
+        fetchAllUnits(0, 5).then(r => {
+        });
     }, []);
 
     return (
@@ -172,6 +283,7 @@ export const Units = () => {
                         important={"*"}
                         value={unitData.unitName}
                         onChange={handleUnitChange}
+                          msg={unitErrors.unitName}
                     />
                     <TextField
                         name="unitSymbology"
@@ -180,6 +292,7 @@ export const Units = () => {
                         important={"*"}
                         value={unitData.unitSymbology}
                         onChange={handleUnitChange}
+                          msg={unitErrors.unitSymbology}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -189,6 +302,7 @@ export const Units = () => {
                         label={'Description'}
                         value={unitData.description}
                         onChange={handleUnitChange}
+                          msg={unitErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>

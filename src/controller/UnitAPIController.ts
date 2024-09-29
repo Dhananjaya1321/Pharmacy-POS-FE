@@ -8,9 +8,13 @@ const unitAPIController = {
                 `${base_url}/unit`,
                 unit
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
         } catch (error) {
-            return false;
+            return null;
         }
     },
     getAllUnits: async (page?: number, size?: number) => {

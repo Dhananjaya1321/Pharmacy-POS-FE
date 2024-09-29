@@ -357,7 +357,7 @@ export const Brands = () => {
                         important={"*"}
                         value={brandData.name}
                         onChange={handleBrandChange}
-                         msg={brandErrors.name}
+                        msg={brandErrors.name}
                     />
                     <TextField
                         name="contact"
@@ -366,7 +366,7 @@ export const Brands = () => {
                         important={"*"}
                         value={brandData.contact}
                         onChange={handleBrandChange}
-                         msg={brandErrors.contact}
+                        msg={brandErrors.contact}
                     />
                     <TextField
                         name="website"
@@ -374,7 +374,7 @@ export const Brands = () => {
                         label={'Website'}
                         value={brandData.website}
                         onChange={handleBrandChange}
-                         msg={brandErrors.website}
+                        msg={brandErrors.website}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -384,7 +384,7 @@ export const Brands = () => {
                         label={'Address'}
                         value={brandData.address}
                         onChange={handleBrandChange}
-                         msg={brandErrors.address}
+                        msg={brandErrors.address}
                     />
                     <TextArea
                         name="description"
@@ -392,7 +392,7 @@ export const Brands = () => {
                         label={'Description'}
                         value={brandData.description}
                         onChange={handleBrandChange}
-                         msg={brandErrors.description}
+                        msg={brandErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
