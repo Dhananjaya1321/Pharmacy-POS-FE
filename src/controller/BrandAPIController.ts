@@ -8,9 +8,13 @@ const brandAPIController = {
                 `${base_url}/brand`,
                 brand
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
         } catch (error) {
-            return false;
+            return null;
         }
     },
     getAllBrands: async (page?: number, size?: number) => {

@@ -11,6 +11,13 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import UnitModal from "../../modals/UnitModal/UnitModal";
 import BrandModal from "../../modals/BrandModal/BrandModal";
+import {
+    emailRegex,
+    nameRegex,
+    sriLankaMobileNumberRegex,
+    sriLankaNicRegex,
+    websiteRegex
+} from "../../validasion/validations";
 
 
 interface Brand {
@@ -130,6 +137,13 @@ export const Brands = () => {
         address: '',
         description: '',
     });
+    const [brandErrors, setBrandErrors] = useState({
+        name: '',
+        contact: '',
+        website: '',
+        address: '',
+        description: '',
+    });
     const [brands, setBrands] = useState<Brand[]>([]);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
@@ -144,9 +158,60 @@ export const Brands = () => {
             ...brandData,
             [typedName]: value,
         });
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length <= 1) {
+                    error = 'Name must be at least 1 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value.trim())) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'website':
+                if (value && !websiteRegex.test(value)) {
+                    error = 'Invalid website URL';
+                }
+                break;
+            case 'address':
+                if (value.trim().length > 500) {
+                    error = 'Address cannot exceed 500 characters';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the errors state
+        setBrandErrors({
+            ...brandErrors,
+            [name]: error,
+        });
     };
 
-    const handleUpdateBrand = (updatedBrand: {id: number; name: string; contact: string; website: string; address: string; description: string;}) => {
+    const handleUpdateBrand = (updatedBrand: {
+        id: number;
+        name: string;
+        contact: string;
+        website: string;
+        address: string;
+        description: string;
+    }) => {
         setBrands(prevBrands =>
             prevBrands.map(brand =>
                 brand.id === updatedBrand.id ? updatedBrand : brand
@@ -155,12 +220,82 @@ export const Brands = () => {
     };
 
     const handleBrandSaveEvent = async () => {
-        const isSuccess = await brandAPIController.saveBrand(
-            brandData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        const validationErrors = {
+            name: '',
+            contact: '',
+            website: '',
+            address: '',
+            description: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (brandData.name.trim().length <= 1) {
+            validationErrors.name = 'Name must be at least 1 characters';
+            isValid = false;
+        } else if (!nameRegex.test(brandData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (brandData.contact.trim() === '') {
+            validationErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(brandData.contact.trim())) {
+            validationErrors.contact = 'Invalid Sri Lankan phone number';
+            isValid = false;
+        }
+
+        if (brandData.website && !websiteRegex.test(brandData.website)) {
+            validationErrors.address = 'Invalid website URL';
+            isValid = false;
+        }
+
+        if (brandData.address.trim().length > 500) { // Example constraint
+            validationErrors.address = 'Address cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        if (brandData.description.trim().length > 500) { // Example constraint
+            validationErrors.address = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setBrandErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+        const savedBrand = await brandAPIController.saveBrand(brandData);
+        if (savedBrand) {
+            const formattedBrand = {
+                ...brandData,
+                id: savedBrand.data.id,
+            };
+
+            setBrands([...brands, formattedBrand]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            setBrandData({
+                name: '',
+                contact: '',
+                website: '',
+                address: '',
+                description: '',
+            });
+
+            setBrandErrors({
+                name: '',
+                contact: '',
+                website: '',
+                address: '',
+                description: '',
+            });
+            alert("Brand saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save brand.");
         }
     };
 
@@ -176,9 +311,6 @@ export const Brands = () => {
         }
     };
 
-    const handleUpdate = async () => {
-        console.log("update")
-    };
 
     const handleDelete = async (id: number) => {
         const confirmed = window.confirm("Are you sure you want to delete this brand?");
@@ -225,6 +357,7 @@ export const Brands = () => {
                         important={"*"}
                         value={brandData.name}
                         onChange={handleBrandChange}
+                         msg={brandErrors.name}
                     />
                     <TextField
                         name="contact"
@@ -233,6 +366,7 @@ export const Brands = () => {
                         important={"*"}
                         value={brandData.contact}
                         onChange={handleBrandChange}
+                         msg={brandErrors.contact}
                     />
                     <TextField
                         name="website"
@@ -240,6 +374,7 @@ export const Brands = () => {
                         label={'Website'}
                         value={brandData.website}
                         onChange={handleBrandChange}
+                         msg={brandErrors.website}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -249,6 +384,7 @@ export const Brands = () => {
                         label={'Address'}
                         value={brandData.address}
                         onChange={handleBrandChange}
+                         msg={brandErrors.address}
                     />
                     <TextArea
                         name="description"
@@ -256,6 +392,7 @@ export const Brands = () => {
                         label={'Description'}
                         value={brandData.description}
                         onChange={handleBrandChange}
+                         msg={brandErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>
