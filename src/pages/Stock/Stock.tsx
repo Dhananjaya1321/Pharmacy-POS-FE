@@ -11,6 +11,7 @@ import {Tooltip} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import StockModal from "../../modals/StockModal/StockModal";
+import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 
 interface Stock {
     id: number;
@@ -18,6 +19,12 @@ interface Stock {
     purchasedQty: number;
     purchasedDiscount: number;
     availableQty: number;
+
+    purchasePricePerUnit: number;
+    sellingPricePerUnit: number;
+    sellingDiscountPerUnit: number;
+    totalAmount: number;
+
     expiryDate: string;
     description: string;
     item: {
@@ -95,6 +102,22 @@ export const Stock = () => {
             ),
         },
         {
+            field: 'purchasePricePerUnit', headerName: 'Purchased Price Per Unit', type: "number", width: 200, renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
             field: 'availableQty', headerName: 'Available Qty', type: "number", width: 200, renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
@@ -113,6 +136,66 @@ export const Stock = () => {
         {
             field: 'purchasedDiscount',
             headerName: 'Purchased Discount',
+            type: "number",
+            width: 200,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'totalAmount',
+            headerName: 'Total Amount',
+            type: "number",
+            width: 200,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'sellingPricePerUnit',
+            headerName: 'Selling Price Per Unit',
+            type: "number",
+            width: 200,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'start',
+                        }}
+                    >
+                        {params.value}
+                    </div>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'sellingDiscountPerUnit',
+            headerName: 'Selling Discount Per Unit',
             type: "number",
             width: 200,
             renderCell: (params) => (
@@ -194,6 +277,10 @@ export const Stock = () => {
         purchasedAmount: '',
         purchasedQty: '',
         purchasedDiscount: '',
+        purchasePricePerUnit: '',
+        sellingPricePerUnit: '',
+        sellingDiscountPerUnit: '',
+        totalAmount: '',
         expiryDate: '',
         description: '',
         item: '',
@@ -242,6 +329,27 @@ export const Stock = () => {
         });
     }, []);
 
+    useEffect(() => {
+        const purchasedQty = parseFloat(stockData.purchasedQty) || 0;
+        const purchasePricePerUnit = parseFloat(stockData.purchasePricePerUnit) || 0;
+        const purchasedDiscount = parseFloat(stockData.purchasedDiscount) || 0;
+
+        // Calculate totalAmount based on the formula
+        const calculatedTotal = (purchasedQty * purchasePricePerUnit) - ((purchasedQty * purchasePricePerUnit)*(purchasedDiscount/100));
+        const calculatedAmount = purchasedQty * purchasePricePerUnit;
+
+        // Update totalAmount in state
+        setStockData(prevData => ({
+            ...prevData,
+            purchasedAmount: calculatedAmount.toFixed(2), // Formats to 2 decimal places
+            totalAmount: calculatedTotal.toFixed(2), // Formats to 2 decimal places
+        }));
+    }, [
+        stockData.purchasedQty,
+        stockData.purchasePricePerUnit,
+        stockData.purchasedDiscount
+    ]);
+
     const handleStockChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
         setStockData({
@@ -265,6 +373,10 @@ export const Stock = () => {
         purchasedQty: number;
         purchasedDiscount: number;
         availableQty: number;
+        purchasePricePerUnit: number;
+        sellingPricePerUnit: number;
+        sellingDiscountPerUnit: number;
+        totalAmount: number;
         expiryDate: string;
         description: string;
         item: {
@@ -329,6 +441,15 @@ export const Stock = () => {
                         onChange={handleStockChange}
                     />
                     <TextField
+                        name="purchasePricePerUnit"
+                        placeholder={'0.00'}
+                        label={'Purchased Price Per Unit'}
+                        type={'number'}
+                        important={"*"}
+                        value={stockData.purchasePricePerUnit}
+                        onChange={handleStockChange}
+                    />
+                    <TextField
                         name="purchasedAmount"
                         placeholder={'0.00'}
                         label={'Purchased Amount'}
@@ -337,6 +458,8 @@ export const Stock = () => {
                         value={stockData.purchasedAmount}
                         onChange={handleStockChange}
                     />
+                </div>
+                <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                     <TextField
                         name="purchasedDiscount"
                         placeholder={'0.00'}
@@ -346,9 +469,40 @@ export const Stock = () => {
                         value={stockData.purchasedDiscount}
                         onChange={handleStockChange}
                     />
+                    <TextField
+                        name="totalAmount"
+                        placeholder={'0.00'}
+                        label={'Total Amount'}
+                        type={'number'}
+                        important={"*"}
+                        value={stockData.totalAmount}
+                        onChange={handleStockChange}
+                    />
+                    <HiddenTextField/>
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
-                    <div className='grow mx-3 my-3 gap-1 flex flex-col justify-start'>
+                    <TextField
+                        name="sellingPricePerUnit"
+                        placeholder={'0.00'}
+                        label={'Selling Price Per Unit'}
+                        type={'number'}
+                        important={"*"}
+                        value={stockData.sellingPricePerUnit}
+                        onChange={handleStockChange}
+                    />
+                    <TextField
+                        name="sellingDiscountPerUnit"
+                        placeholder={'0.00'}
+                        label={'Selling Discount Per Unit'}
+                        type={'number'}
+                        important={"*"}
+                        value={stockData.sellingDiscountPerUnit}
+                        onChange={handleStockChange}
+                    />
+                    <HiddenTextField/>
+                </div>
+                <div className='flex flex-row flex-wrap items-center justify-center w-full'>
+                    <div className='flex-grow-[2.3] mx-3 my-3 gap-1 flex flex-col justify-start'>
                         <div className='flex flex-row'>
                             <label className='text-black flex justify-start'>Item</label>
                             <small className={`text-red-600 text-[16px]`}>*</small>

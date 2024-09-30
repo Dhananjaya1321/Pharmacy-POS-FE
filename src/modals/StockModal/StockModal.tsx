@@ -9,6 +9,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {useState, ChangeEvent} from "react";
 import stockAPIController from "../../controller/StockAPIController";
+import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -32,6 +33,10 @@ interface StockModalProps {
         purchasedQty: number;
         purchasedDiscount: number;
         availableQty: number;
+        purchasePricePerUnit: number;
+        sellingPricePerUnit: number;
+        sellingDiscountPerUnit: number;
+        totalAmount: number;
         expiryDate: string;
         description: string;
         item: {
@@ -48,6 +53,10 @@ interface StockModalProps {
         purchasedQty: number;
         purchasedDiscount: number;
         availableQty: number;
+        purchasePricePerUnit: number;
+        sellingPricePerUnit: number;
+        sellingDiscountPerUnit: number;
+        totalAmount: number;
         expiryDate: string;
         description: string;
         item: {
@@ -99,6 +108,10 @@ export default function StockModal({stockData, onUpdateStock, items}: StockModal
             purchasedQty: stockDetails.purchasedQty,
             purchasedDiscount: stockDetails.purchasedDiscount,
             availableQty: stockDetails.availableQty,
+            purchasePricePerUnit: stockDetails.purchasePricePerUnit,
+            sellingPricePerUnit: stockDetails.sellingPricePerUnit,
+            sellingDiscountPerUnit: stockDetails.sellingDiscountPerUnit,
+            totalAmount: stockDetails.totalAmount,
             expiryDate: stockDetails.expiryDate,
             description: stockDetails.description,
             item: selectedItem
@@ -139,34 +152,76 @@ export default function StockModal({stockData, onUpdateStock, items}: StockModal
                         <div className="flex flex-row flex-wrap items-center justify-center w-full">
                             <TextField
                                 name="purchasedQty"
-                                placeholder="0.00"
-                                label="Purchased Qty"
-                                type="number"
-                                important="*"
+                                placeholder={'0.00'}
+                                label={'Purchased Qty'}
+                                type={'number'}
+                                important={"*"}
                                 value={stockDetails.purchasedQty}
                                 onChange={handleStockChange}
                             />
                             <TextField
-                                name="purchasedAmount"
-                                placeholder="0.00"
-                                label="Purchased Amount"
-                                type="number"
-                                important="*"
-                                value={stockDetails.purchasedAmount}
+                                name="purchasePricePerUnit"
+                                placeholder={'0.00'}
+                                label={'Purchased Price Per Unit'}
+                                type={'number'}
+                                important={"*"}
+                                value={stockDetails.purchasePricePerUnit}
                                 onChange={handleStockChange}
                             />
                             <TextField
+                                name="purchasedAmount"
+                                placeholder={'0.00'}
+                                label={'Purchased Amount'}
+                                type={'number'}
+                                important={"*"}
+                                value={stockDetails.purchasedAmount}
+                                onChange={handleStockChange}
+                                />
+                        </div>
+                        <div className='flex flex-row flex-wrap items-center justify-center w-full'>
+                            <TextField
                                 name="purchasedDiscount"
-                                placeholder="0.00"
-                                label="Purchased Discount"
-                                type="number"
-                                important="*"
+                                placeholder={'0.00'}
+                                label={'Purchased discount'}
+                                type={'number'}
+                                important={"*"}
                                 value={stockDetails.purchasedDiscount}
                                 onChange={handleStockChange}
                             />
+                            <TextField
+                                name="totalAmount"
+                                placeholder={'0.00'}
+                                label={'Total Amount'}
+                                type={'number'}
+                                important={"*"}
+                                value={stockDetails.totalAmount}
+                                onChange={handleStockChange}
+                            />
+                            <HiddenTextField/>
+                        </div>
+                        <div className='flex flex-row flex-wrap items-center justify-center w-full'>
+                            <TextField
+                                name="sellingPricePerUnit"
+                                placeholder={'0.00'}
+                                label={'Selling Price Per Unit'}
+                                type={'number'}
+                                important={"*"}
+                                value={stockDetails.sellingPricePerUnit}
+                                onChange={handleStockChange}
+                            />
+                            <TextField
+                                name="sellingDiscountPerUnit"
+                                placeholder={'0.00'}
+                                label={'Selling Discount Per Unit'}
+                                type={'number'}
+                                important={"*"}
+                                value={stockDetails.sellingDiscountPerUnit}
+                                onChange={handleStockChange}
+                            />
+                            <HiddenTextField/>
                         </div>
                         <div className="flex flex-row flex-wrap items-center justify-center w-full">
-                            <div className="grow mx-3 my-3 gap-1 flex flex-col justify-start">
+                            <div className="flex-grow-[3.8] mx-3 my-3 gap-1 flex flex-col justify-start">
                                 <div className="flex flex-row">
                                     <label className="text-black flex justify-start">Item</label>
                                     <small className="text-red-600 text-[16px]">*</small>
@@ -200,6 +255,7 @@ export default function StockModal({stockData, onUpdateStock, items}: StockModal
                                 onChange={handleStockChange}
                             />
                         </div>
+
                         <div className="flex flex-row flex-wrap items-center justify-center w-full">
                             <TextArea
                                 name="description"
