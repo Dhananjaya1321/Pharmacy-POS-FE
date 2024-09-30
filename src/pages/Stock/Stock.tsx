@@ -19,12 +19,10 @@ interface Stock {
     purchasedQty: number;
     purchasedDiscount: number;
     availableQty: number;
-
     purchasePricePerUnit: number;
     sellingPricePerUnit: number;
     sellingDiscountPerUnit: number;
     totalAmount: number;
-
     expiryDate: string;
     description: string;
     item: {
@@ -102,7 +100,11 @@ export const Stock = () => {
             ),
         },
         {
-            field: 'purchasePricePerUnit', headerName: 'Purchased Price Per Unit', type: "number", width: 200, renderCell: (params) => (
+            field: 'purchasePricePerUnit',
+            headerName: 'Purchased Price Per Unit',
+            type: "number",
+            width: 200,
+            renderCell: (params) => (
                 <Tooltip title={params.value}>
                     <div
                         style={{
@@ -277,6 +279,20 @@ export const Stock = () => {
         purchasedAmount: '',
         purchasedQty: '',
         purchasedDiscount: '',
+        availableQty: '',
+        purchasePricePerUnit: '',
+        sellingPricePerUnit: '',
+        sellingDiscountPerUnit: '',
+        totalAmount: '',
+        expiryDate: '',
+        description: '',
+        item: '',
+    });
+    const [stockErrors, setStockErrors] = useState({
+        purchasedAmount: '',
+        purchasedQty: '',
+        purchasedDiscount: '',
+        availableQty: '',
         purchasePricePerUnit: '',
         sellingPricePerUnit: '',
         sellingDiscountPerUnit: '',
@@ -335,7 +351,7 @@ export const Stock = () => {
         const purchasedDiscount = parseFloat(stockData.purchasedDiscount) || 0;
 
         // Calculate totalAmount based on the formula
-        const calculatedTotal = (purchasedQty * purchasePricePerUnit) - ((purchasedQty * purchasePricePerUnit)*(purchasedDiscount/100));
+        const calculatedTotal = (purchasedQty * purchasePricePerUnit) - ((purchasedQty * purchasePricePerUnit) * (purchasedDiscount / 100));
         const calculatedAmount = purchasedQty * purchasePricePerUnit;
 
         // Update totalAmount in state
@@ -356,6 +372,66 @@ export const Stock = () => {
             ...stockData,
             [name]: value,
         });
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'purchasedQty':
+                if (Number(value) <= 0) {
+                    error = 'Purchased Qty cannot be 0 or less than 0';
+                }
+                break;
+            case 'purchasePricePerUnit':
+                if (Number(value) <= 0) {
+                    error = 'The purchase price cannot be 0 or less than 0 per unit';
+                }
+                break;
+            case 'purchasedDiscount':
+                if (Number(value) < 0) {
+                    error = 'The purchase discount cannot be less than 0';
+                } else if (Number(value) >= 100) {
+                    error = 'The purchase discount cannot be greater than 100';
+                }
+                break;
+            case 'sellingPricePerUnit':
+                if (Number(stockData.purchasePricePerUnit) > Number(value)) {
+                    error = 'The selling price cannot be lower than the purchase price per unit';
+                }
+                break;
+            case 'sellingDiscountPerUnit':
+                if (Number(stockData.purchasePricePerUnit) < Number(stockData.purchasePricePerUnit) - (Number(stockData.purchasePricePerUnit) * (Number(value) / 100))) {
+                    error = 'After processing the sales discount cannot be less than the price per unit';
+                }
+                break;
+            case 'item':
+                if (value === '-1' || value.trim() === '') {
+                    error = 'Item is required';
+                }
+                break;
+            case 'expiryDate':
+                const today = new Date().setHours(0, 0, 0, 0); // Current date with time set to 00:00
+                const selectedDate = new Date(value).setHours(0, 0, 0, 0); // Expiry date with time set to 00:00
+
+                if (!value) {
+                    error = 'Expiry date is required';
+                } else if (selectedDate < today) {
+                    error = 'Expiry date cannot be in the past';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        setStockErrors({
+            ...stockErrors,
+            [name]: error,
+        });
     };
 
     const handleItemChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -364,6 +440,16 @@ export const Stock = () => {
         setStockData(prevData => ({
             ...prevData,
             item: item,
+        }));
+
+        let error = '';
+        if (item === '-1' || item.trim() === '') {
+            error = 'Item is required';
+        }
+
+        setStockErrors(prevErrors => ({
+            ...prevErrors,
+            item: error,
         }));
     };
 
@@ -395,11 +481,140 @@ export const Stock = () => {
     };
 
     const handleStockSaveEvent = async () => {
-        const isSuccess = await stockAPIController.saveStock(stockData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        const validationErrors = {
+            purchasedAmount: '',
+            purchasedQty: '',
+            purchasedDiscount: '',
+            availableQty: '',
+            purchasePricePerUnit: '',
+            sellingPricePerUnit: '',
+            sellingDiscountPerUnit: '',
+            totalAmount: '',
+            expiryDate: '',
+            description: '',
+            item: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (Number(stockData.purchasedQty) <= 0) {
+            validationErrors.purchasedQty = 'Purchased Qty cannot be 0 or less than 0';
+            isValid = false;
+        }
+
+        if (Number(stockData.purchasePricePerUnit) <= 0) {
+            validationErrors.purchasePricePerUnit = 'The purchase price cannot be 0 or less than 0 per unit';
+            isValid = false;
+        }
+
+        if (Number(stockData.purchasedDiscount) <= 0) {
+            validationErrors.purchasedDiscount = 'The purchase discount cannot be less than 0';
+            isValid = false;
+        } else if (Number(stockData.purchasedDiscount) <= 0) {
+            validationErrors.purchasedDiscount = 'The purchase discount cannot be greater than 100';
+            isValid = false;
+        }
+
+        if (Number(stockData.purchasePricePerUnit) > Number(stockData.sellingPricePerUnit)) {
+            validationErrors.sellingPricePerUnit = 'The selling price cannot be lower than the purchase price per unit';
+            isValid = false;
+        }
+
+        if (Number(stockData.purchasePricePerUnit) < Number(stockData.purchasePricePerUnit) - (Number(stockData.purchasePricePerUnit) * (Number(stockData.sellingDiscountPerUnit) / 100))) {
+            validationErrors.sellingDiscountPerUnit = 'After processing the sales discount cannot be less than the price per unit';
+            isValid = false;
+        }
+
+        if (stockData.item === '-1' || stockData.item.trim() === '') {
+            validationErrors.item = 'Item is required';
+            isValid = false;
+        }
+
+
+        const today = new Date().setHours(0, 0, 0, 0); // Current date with time set to 00:00
+        const selectedDate = new Date(stockData.expiryDate).setHours(0, 0, 0, 0); // Expiry date with time set to 00:00
+
+        if (!stockData.expiryDate) {
+            validationErrors.expiryDate = 'Expiry date is required';
+            isValid = false;
+        } else if (selectedDate < today) {
+            validationErrors.expiryDate = 'Expiry date cannot be in the past';
+            isValid = false;
+        }
+
+        if (stockData.description.trim().length > 500) {
+            validationErrors.description = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setStockErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+        const savedStock = await stockAPIController.saveStock(stockData);
+        if (savedStock) {
+            // @ts-ignore
+            const item = items.find(item => item.id === parseInt(selectedItem)) ||
+                {
+                    id: 0,
+                    name: '',
+                    category: {name: ''},
+                    brand: {name: ''},
+                    unit: {unitName: '', unitSymbology: ''},
+                };
+
+            const formattedStock: Stock = {
+                id: savedStock.data.id,
+                purchasedAmount: Number(stockData.purchasedAmount),
+                purchasedQty: Number(stockData.purchasedQty),
+                purchasedDiscount: Number(stockData.purchasedDiscount),
+                availableQty: Number(stockData.availableQty),
+                purchasePricePerUnit: Number(stockData.purchasePricePerUnit),
+                sellingPricePerUnit: Number(stockData.sellingPricePerUnit),
+                sellingDiscountPerUnit: Number(stockData.sellingDiscountPerUnit),
+                totalAmount: Number(stockData.totalAmount),
+                expiryDate: stockData.expiryDate,
+                description: stockData.description,
+                item: item,
+            };
+
+
+            setStocks([...stocks, formattedStock]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            setStockData({
+                purchasedAmount: '',
+                purchasedQty: '',
+                purchasedDiscount: '',
+                availableQty: '',
+                purchasePricePerUnit: '',
+                sellingPricePerUnit: '',
+                sellingDiscountPerUnit: '',
+                totalAmount: '',
+                expiryDate: '',
+                description: '',
+                item: '',
+            });
+
+            setStockErrors({
+                purchasedAmount: '',
+                purchasedQty: '',
+                purchasedDiscount: '',
+                availableQty: '',
+                purchasePricePerUnit: '',
+                sellingPricePerUnit: '',
+                sellingDiscountPerUnit: '',
+                totalAmount: '',
+                expiryDate: '',
+                description: '',
+                item: '',
+            });
+            alert("Stock saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save stock.");
         }
     };
 
@@ -439,6 +654,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.purchasedQty}
                         onChange={handleStockChange}
+                        msg={stockErrors.purchasedQty}
                     />
                     <TextField
                         name="purchasePricePerUnit"
@@ -448,6 +664,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.purchasePricePerUnit}
                         onChange={handleStockChange}
+                        msg={stockErrors.purchasePricePerUnit}
                     />
                     <TextField
                         name="purchasedAmount"
@@ -457,6 +674,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.purchasedAmount}
                         onChange={handleStockChange}
+                        msg={stockErrors.purchasedAmount}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -468,6 +686,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.purchasedDiscount}
                         onChange={handleStockChange}
+                        msg={stockErrors.purchasedDiscount}
                     />
                     <TextField
                         name="totalAmount"
@@ -477,6 +696,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.totalAmount}
                         onChange={handleStockChange}
+                        msg={stockErrors.totalAmount}
                     />
                     <HiddenTextField/>
                 </div>
@@ -489,6 +709,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.sellingPricePerUnit}
                         onChange={handleStockChange}
+                        msg={stockErrors.sellingPricePerUnit}
                     />
                     <TextField
                         name="sellingDiscountPerUnit"
@@ -498,6 +719,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.sellingDiscountPerUnit}
                         onChange={handleStockChange}
+                        msg={stockErrors.sellingDiscountPerUnit}
                     />
                     <HiddenTextField/>
                 </div>
@@ -524,7 +746,7 @@ export const Stock = () => {
                             <span className="custom-arrow"></span> {/* Custom dropdown arrow */}
                         </div>
                         <div className={`h-[5px]`}>
-                            <small className={`text-start text-red-600 block`}></small>
+                            <small className={`text-start text-red-600 block`}>{stockErrors.item}</small>
                         </div>
                     </div>
                     <TextField
@@ -534,6 +756,7 @@ export const Stock = () => {
                         important={"*"}
                         value={stockData.expiryDate}
                         onChange={handleStockChange}
+                        msg={stockErrors.expiryDate}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -543,6 +766,7 @@ export const Stock = () => {
                         label={'Description'}
                         value={stockData.description}
                         onChange={handleStockChange}
+                        msg={stockErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>

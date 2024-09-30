@@ -422,14 +422,17 @@ export const Items = () => {
 
         if (itemData.brand.trim() === '-1' || itemData.brand.trim() === '') {
             validationErrors.brand = 'Brand is required';
+            isValid = false;
         }
 
         if (itemData.category.trim() === '-1' || itemData.category.trim() === '') {
             validationErrors.category = 'Category is required';
+            isValid = false;
         }
 
         if (itemData.unit.trim() === '-1' || itemData.unit.trim() === '') {
             validationErrors.unit = 'Unit is required';
+            isValid = false;
         }
 
         if (itemData.description.trim().length > 500) {
@@ -447,11 +450,18 @@ export const Items = () => {
         const savedItem = await itemAPIController.saveItem(itemData);
         if (savedItem) {
             // @ts-ignore
-            const unit = units.find(unit => unit.id === parseInt(selectedUnit)) || { id: 0, unitName: '', unitSymbology: '' };
+            const unit = units.find(unit => unit.id === parseInt(selectedUnit)) || {
+                id: 0,
+                unitName: '',
+                unitSymbology: ''
+            };
             // @ts-ignore
-            const category = categories.find(category => category.id === parseInt(selectedCategory)) || { id: 0, name: '' };
+            const category = categories.find(category => category.id === parseInt(selectedCategory)) || {
+                id: 0,
+                name: ''
+            };
             // @ts-ignore
-            const brand = brands.find(brand => brand.id === parseInt(selectedBrand)) || { id: 0, name: '' };
+            const brand = brands.find(brand => brand.id === parseInt(selectedBrand)) || {id: 0, name: ''};
 
             const formattedItem: Item = {
                 id: savedItem.data.id,
