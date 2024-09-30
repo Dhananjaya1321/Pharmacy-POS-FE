@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import CategoryModal from "../../modals/CategoryModal/CategoryModal";
+import {nameRegex} from "../../validasion/validations";
 
 
 interface Unit {
@@ -72,6 +73,10 @@ export const Categories = () => {
         name: '',
         description: '',
     });
+    const [categoryErrors, setCategoryErrors] = useState({
+        name: '',
+        description: '',
+    });
     const [categories, setCategories] = useState<Unit[]>([]);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
     const [totalElements, setTotalElements] = useState(0);
@@ -86,6 +91,35 @@ export const Categories = () => {
             ...categoryData,
             [typedName]: value,
         });
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim() === '') {
+                    error = 'Name is required';
+                } else if (value.trim().length <= 2) {
+                    error = 'Name must be at least 2 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the errors state
+        setCategoryErrors({
+            ...categoryErrors,
+            [name]: error,
+        });
     };
 
     const handleUpdateCategory = (updatedCategory: { id: number; name: string; description: string }) => {
@@ -97,11 +131,60 @@ export const Categories = () => {
     };
 
     const handleCategorySaveEvent = async () => {
-        const isSuccess = await categoryAPIController.saveCategory(categoryData);
-        if (isSuccess) {
-            alert("Data saved successfully!");
+        const validationErrors = {
+            name: '',
+            description: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (categoryData.name.trim() === '') {
+            validationErrors.name = 'Name is required';
+            isValid = false;
+        } else if (categoryData.name.trim().length <= 2) {
+            validationErrors.name = 'Name must be at least 2 characters';
+            isValid = false;
+        } else if (!nameRegex.test(categoryData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (categoryData.description.trim().length > 500) {
+            validationErrors.description = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setCategoryErrors(validationErrors);
+
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
+        const savedCategory = await categoryAPIController.saveCategory(categoryData);
+        if (savedCategory) {
+            const formattedCategory = {
+                ...categoryData,
+                id: savedCategory.data.id,
+            };
+
+            setCategories([...categories, formattedCategory]);
+            setTotalElements(prevTotal => prevTotal + 1);
+
+            setCategoryData({
+                name: '',
+                description: '',
+            });
+
+            setCategoryErrors({
+                name: '',
+                description: '',
+            });
+            alert("Category saved successfully!");
         } else {
-            alert("Failed to save data.");
+            alert("Failed to save category.");
         }
     };
 
@@ -156,6 +239,7 @@ export const Categories = () => {
                         important={"*"}
                         value={categoryData.name}
                         onChange={handleCategoryChange}
+                        msg={categoryErrors.name}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -165,6 +249,7 @@ export const Categories = () => {
                         label={'Description'}
                         value={categoryData.description}
                         onChange={handleCategoryChange}
+                        msg={categoryErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>

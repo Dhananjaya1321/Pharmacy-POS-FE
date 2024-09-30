@@ -204,6 +204,7 @@ export const Units = () => {
             alert("Please fix the errors in the form before submitting.");
             return;
         }
+
         const savedUnit = await unitAPIController.saveUnit(unitData);
         if (savedUnit) {
             const formattedBrand = {
@@ -283,7 +284,7 @@ export const Units = () => {
                         important={"*"}
                         value={unitData.unitName}
                         onChange={handleUnitChange}
-                          msg={unitErrors.unitName}
+                        msg={unitErrors.unitName}
                     />
                     <TextField
                         name="unitSymbology"
@@ -292,7 +293,7 @@ export const Units = () => {
                         important={"*"}
                         value={unitData.unitSymbology}
                         onChange={handleUnitChange}
-                          msg={unitErrors.unitSymbology}
+                        msg={unitErrors.unitSymbology}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -302,7 +303,7 @@ export const Units = () => {
                         label={'Description'}
                         value={unitData.description}
                         onChange={handleUnitChange}
-                          msg={unitErrors.description}
+                        msg={unitErrors.description}
                     />
                 </div>
                 <div className='flex flex-row flex-wrap items-center justify-end w-full'>

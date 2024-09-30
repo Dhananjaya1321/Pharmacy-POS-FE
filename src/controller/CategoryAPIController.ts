@@ -8,9 +8,13 @@ const categoryAPIController = {
                 `${base_url}/category`,
                 category
             );
-            return response.status === 200;
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
         } catch (error) {
-            return false;
+            return null;
         }
     },
     getAllCategories:  async (page?: number, size?: number) => {
