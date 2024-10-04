@@ -2,12 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { TextField } from "../../component/TextField/TextFild";
-import { TextArea } from "../../component/TextArea/TextArea";
-import { Button } from "../../component/Button/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons";
-import brandAPIController from "../../controller/BrandAPIController";  // Adjust this based on your API controller
+import {TextField} from "../../component/TextField/TextFild";
+import {TextArea} from "../../component/TextArea/TextArea";
+import {Button} from "../../component/Button/Button";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
+import brandAPIController from "../../controller/BrandAPIController";
+import {useState} from "react";
+import {nameRegex, sriLankaMobileNumberRegex, websiteRegex} from "../../validasion/validations";  // Adjust this based on your API controller
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -31,10 +33,17 @@ interface BrandModalProps {
         address: string;
         description: string;
     };
-    onUpdateBrand: (updatedBrand: { id: number; name: string; contact: string; website: string; address: string; description: string }) => void;
+    onUpdateBrand: (updatedBrand: {
+        id: number;
+        name: string;
+        contact: string;
+        website: string;
+        address: string;
+        description: string
+    }) => void;
 }
 
-export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) {
+export default function BrandModal({rowData, onUpdateBrand}: BrandModalProps) {
     const [open, setOpen] = React.useState(false);
     const [brandData, setBrandData] = React.useState({
         id: rowData?.id || 0,
@@ -44,7 +53,13 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
         address: rowData?.address || '',
         description: rowData?.description || ''
     });
-
+    const [brandErrors, setBrandErrors] = useState({
+        name: '',
+        contact: '',
+        website: '',
+        address: '',
+        description: '',
+    });
     const handleOpen = () => {
         setBrandData({
             id: rowData.id,
@@ -60,18 +75,111 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
     const handleClose = () => setOpen(false);
 
     const handleBrandChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setBrandData(prevState => ({
             ...prevState,
             [name]: value
         }));
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length <= 1) {
+                    error = 'Name must be at least 1 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value.trim())) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'website':
+                if (value && !websiteRegex.test(value)) {
+                    error = 'Invalid website URL';
+                }
+                break;
+            case 'address':
+                if (value.trim().length > 500) {
+                    error = 'Address cannot exceed 500 characters';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the errors state
+        setBrandErrors({
+            ...brandErrors,
+            [name]: error,
+        });
     };
 
     const handleBrandSaveEvent = async () => {
+        const validationErrors = {
+            name: '',
+            contact: '',
+            website: '',
+            address: '',
+            description: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (brandData.name.trim().length <= 1) {
+            validationErrors.name = 'Name must be at least 1 characters';
+            isValid = false;
+        } else if (!nameRegex.test(brandData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (brandData.contact.trim() === '') {
+            validationErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(brandData.contact.trim())) {
+            validationErrors.contact = 'Invalid Sri Lankan phone number';
+            isValid = false;
+        }
+
+        if (brandData.website && !websiteRegex.test(brandData.website)) {
+            validationErrors.address = 'Invalid website URL';
+            isValid = false;
+        }
+
+        if (brandData.address.trim().length > 500) { // Example constraint
+            validationErrors.address = 'Address cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        if (brandData.description.trim().length > 500) { // Example constraint
+            validationErrors.address = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setBrandErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
         const isSuccess = await brandAPIController.saveBrand(brandData); // Update the API call
         if (isSuccess) {
             onUpdateBrand(brandData); // Call the update function passed from the parent
             alert("Brand updated successfully!");
+            handleClose();
         } else {
             alert("Failed to update brand.");
         }
@@ -81,7 +189,7 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
     return (
         <div>
             <button className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100" onClick={handleOpen}>
-                <FontAwesomeIcon icon={faPen} />
+                <FontAwesomeIcon icon={faPen}/>
             </button>
             <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
@@ -90,12 +198,13 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
                         h-[40px] bg-white shadow-lg rounded-lg flex justify-center items-center"
                         onClick={handleClose}
                     >
-                        <FontAwesomeIcon icon={faTimes} size="lg" />
+                        <FontAwesomeIcon icon={faTimes} size="lg"/>
                     </button>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Brand Update
                     </Typography>
-                    <section className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
+                    <section
+                        className='bg-white flex flex-row flex-wrap items-center justify-center mt-5 p-5 rounded-xl shadow-md'>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
                             <TextField
                                 name="name"
@@ -104,6 +213,7 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
                                 important={"*"}
                                 value={brandData.name}
                                 onChange={handleBrandChange}
+                                msg={brandErrors.name}
                             />
                             <TextField
                                 name="contact"
@@ -112,6 +222,7 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
                                 important={"*"}
                                 value={brandData.contact}
                                 onChange={handleBrandChange}
+                                msg={brandErrors.contact}
                             />
                             <TextField
                                 name="website"
@@ -119,6 +230,7 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
                                 label={'Website'}
                                 value={brandData.website}
                                 onChange={handleBrandChange}
+                                msg={brandErrors.website}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -128,6 +240,7 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
                                 label={'Address'}
                                 value={brandData.address}
                                 onChange={handleBrandChange}
+                                msg={brandErrors.address}
                             />
                             <TextArea
                                 name="description"
@@ -135,6 +248,7 @@ export default function BrandModal({ rowData, onUpdateBrand }: BrandModalProps) 
                                 label={'Description'}
                                 value={brandData.description}
                                 onChange={handleBrandChange}
+                                msg={brandErrors.description}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-end w-full'>

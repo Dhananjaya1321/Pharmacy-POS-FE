@@ -10,7 +10,7 @@ import Paper from "@mui/material/Paper";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
 import UnitModal from "../../modals/UnitModal/UnitModal";
-import {nameRegex, sriLankaMobileNumberRegex, websiteRegex} from "../../validasion/validations";
+import {letterOnlyRegex, nameRegex, sriLankaMobileNumberRegex, websiteRegex} from "../../validasion/validations";
 
 interface Unit {
     id: number;
@@ -124,14 +124,14 @@ export const Units = () => {
                     error = 'Name is required';
                 } else if (value.trim().length <= 1) {
                     error = 'Name must be at least 1 characters';
-                } else if (!nameRegex.test(value.trim())) {
+                } else if (!letterOnlyRegex.test(value.trim())) {
                     error = 'Name can contain only letters and spaces';
                 }
                 break;
             case 'unitSymbology':
                 if (value.trim() === '') {
                     error = 'Unit symbology is required';
-                } else if (!nameRegex.test(value.trim())) {
+                } else if (!letterOnlyRegex.test(value.trim())) {
                     error = 'Unit symbology can contain only letters';
                 }
                 break;
@@ -180,7 +180,7 @@ export const Units = () => {
         } else if (unitData.unitName.trim().length <= 1) {
             validationErrors.unitName = 'Name must be at least 1 characters';
             isValid = false;
-        } else if (!nameRegex.test(unitData.unitName.trim())) {
+        } else if (!letterOnlyRegex.test(unitData.unitName.trim())) {
             validationErrors.unitName = 'Name can contain only letters and spaces';
             isValid = false;
         }
@@ -188,10 +188,11 @@ export const Units = () => {
         if (unitData.unitSymbology.trim() === '') {
             validationErrors.unitSymbology = 'Unit symbology is required';
             isValid = false;
-        } else if (!nameRegex.test(unitData.unitSymbology.trim())) {
+        } else if (!letterOnlyRegex.test(unitData.unitSymbology.trim())) {
             validationErrors.unitSymbology = 'Unit symbology can contain only letters';
             isValid = false;
         }
+
 
         if (unitData.description.trim().length > 500) { // Example constraint
             validationErrors.description = 'Description cannot exceed 500 characters';
