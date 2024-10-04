@@ -2,13 +2,21 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { TextField } from "../../component/TextField/TextFild";
-import { TextArea } from "../../component/TextArea/TextArea";
-import { Button } from "../../component/Button/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {TextField} from "../../component/TextField/TextFild";
+import {TextArea} from "../../component/TextArea/TextArea";
+import {Button} from "../../component/Button/Button";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
 import supplierAPIController from "../../controller/SupplierAPIController";
-import { HiddenTextField } from "../../component/HiddenTextField/HiddenTextField";
+import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
+import {useState} from "react";
+import {
+    emailRegex,
+    nameRegex,
+    sriLankaMobileNumberRegex,
+    sriLankaNicRegex,
+    websiteRegex
+} from "../../validasion/validations";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -46,7 +54,7 @@ interface SupplierModalProps {
     }) => void;
 }
 
-export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierModalProps) {
+export default function SupplierModal({rowData, onUpdateSupplier}: SupplierModalProps) {
     const [open, setOpen] = React.useState(false);
     const [supplierData, setSupplierData] = React.useState({
         id: rowData?.id || 0,
@@ -57,7 +65,14 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
         website: rowData?.website || '',
         description: rowData?.description || ''
     });
-
+    const [supplierErrors, setSupplierErrors] = useState<Record<string, string>>({
+        name: "",
+        contact: "",
+        email: "",
+        nic: "",
+        website: "",
+        description: ""
+    });
     const handleOpen = () => {
         setSupplierData({
             id: rowData.id,
@@ -74,18 +89,133 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
     const handleClose = () => setOpen(false);
 
     const handleSupplierChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setSupplierData(prevState => ({
             ...prevState,
             [name]: value
         }));
+
+        // Initialize error message
+        let error = "";
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length < 2) {
+                    error = 'Name must be at least 2 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value.trim())) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'website':
+                if (value.trim() !== '' && !websiteRegex.test(value.trim())) {
+                    error = 'Invalid website URL';
+                }
+                break;
+            case 'nic':
+                if (value.trim() === '') {
+                    error = 'NIC is required';
+                } else if (!sriLankaNicRegex.test(value.trim())) {
+                    error = 'Invalid NIC number';
+                }
+                break;
+            case 'email':
+                if (value.trim() === '') {
+                    error = 'Email is required';
+                } else if (!emailRegex.test(value.trim())) {
+                    error = 'Invalid email address';
+                }
+                break;
+            case 'description':
+                if (value.trim().length > 500) {
+                    error = 'Description cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Update the userErrors state
+        setSupplierErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: error,
+        }));
     };
 
     const handleSupplierUpdateEvent = async () => {
+        const validationErrors = {
+            name: '',
+            contact: '',
+            website: '',
+            nic: '',
+            email: '',
+            description: '',
+        };
+        let isValid = true;
+
+        // Validate each field
+        if (supplierData.name.trim().length < 2) {
+            validationErrors.name = 'Name must be at least 2 characters';
+            isValid = false;
+        } else if (!nameRegex.test(supplierData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (supplierData.contact.trim() === '') {
+            validationErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(supplierData.contact.trim())) {
+            validationErrors.contact = 'Invalid Sri Lankan phone number';
+            isValid = false;
+        }
+
+        if (supplierData.website.trim() !== '' && !websiteRegex.test(supplierData.website.trim())) {
+            validationErrors.website = 'Invalid website URL';
+            isValid = false;
+        }
+
+        if (supplierData.nic.trim() === '') {
+            validationErrors.nic = 'NIC is required';
+            isValid = false;
+        } else if (!sriLankaNicRegex.test(supplierData.nic.trim())) {
+            validationErrors.nic = 'Invalid NIC number';
+            isValid = false;
+        }
+
+        if (supplierData.email.trim() === '') {
+            validationErrors.email = 'Email is required';
+            isValid = false;
+        } else if (!emailRegex.test(supplierData.email.trim())) {
+            validationErrors.email = 'Invalid email address';
+            isValid = false;
+        }
+
+        if (supplierData.description.trim().length > 500) { // Example constraint
+            validationErrors.description = 'Description cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        // Update the supplierErrors state
+        setSupplierErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
         const isSuccess = await supplierAPIController.saveSupplier(supplierData);
         if (isSuccess) {
             onUpdateSupplier(supplierData); // Call the update function passed from the parent
             alert("Supplier updated successfully!");
+            handleClose();
         } else {
             alert("Failed to update supplier.");
         }
@@ -95,7 +225,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
     return (
         <div>
             <button className="rounded-xl w-[40px] h-[40px] text-green-600 hover:bg-green-100" onClick={handleOpen}>
-                <FontAwesomeIcon icon={faPen} />
+                <FontAwesomeIcon icon={faPen}/>
             </button>
             <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
@@ -104,7 +234,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
                         h-[40px] bg-white shadow-lg rounded-lg flex justify-center items-center"
                         onClick={handleClose}
                     >
-                        <FontAwesomeIcon icon={faTimes} size="lg" />
+                        <FontAwesomeIcon icon={faTimes} size="lg"/>
                     </button>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Supplier Update
@@ -119,6 +249,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
                                 important={"*"}
                                 value={supplierData.name}
                                 onChange={handleSupplierChange}
+                                msg={supplierErrors.name}
                             />
                             <TextField
                                 name="contact"
@@ -127,6 +258,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
                                 important={"*"}
                                 value={supplierData.contact}
                                 onChange={handleSupplierChange}
+                                msg={supplierErrors.contact}
                             />
                             <TextField
                                 name="email"
@@ -134,6 +266,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
                                 label={'Email'}
                                 value={supplierData.email}
                                 onChange={handleSupplierChange}
+                                msg={supplierErrors.email}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -143,6 +276,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
                                 label={'NIC'}
                                 value={supplierData.nic}
                                 onChange={handleSupplierChange}
+                                msg={supplierErrors.nic}
                             />
                             <TextField
                                 name="website"
@@ -150,6 +284,7 @@ export default function SupplierModal({ rowData, onUpdateSupplier }: SupplierMod
                                 label={'Website'}
                                 value={supplierData.website}
                                 onChange={handleSupplierChange}
+                                msg={supplierErrors.website}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
