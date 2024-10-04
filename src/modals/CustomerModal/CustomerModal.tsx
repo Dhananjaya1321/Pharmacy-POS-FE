@@ -9,6 +9,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faTimes} from "@fortawesome/free-solid-svg-icons";
 import customerAPIController from "../../controller/CustomerAPIController";
 import {HiddenTextField} from "../../component/HiddenTextField/HiddenTextField";
+import {useState} from "react";
+import {emailRegex, nameRegex, sriLankaMobileNumberRegex, sriLankaNicRegex} from "../../validasion/validations";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -55,7 +57,13 @@ export default function CustomerModal({rowData, onUpdateCustomer}: CustomerModal
         nic: rowData?.nic || '',
         address: rowData?.address || ''
     });
-
+    const [customerErrors, setCustomerErrors] = useState({
+        name: '',
+        contact: '',
+        email: '',
+        nic: '',
+        address: '',
+    });
     const handleOpen = () => {
         setCustomerData({
             id: rowData.id,
@@ -76,13 +84,111 @@ export default function CustomerModal({rowData, onUpdateCustomer}: CustomerModal
             ...prevState,
             [name]: value
         }));
+
+        // Initialize error message
+        let error = '';
+
+        // Validation logic based on field name
+        switch (name) {
+            case 'name':
+                if (value.trim().length < 2) {
+                    error = 'Name must be at least 2 characters';
+                } else if (!nameRegex.test(value.trim())) {
+                    error = 'Name can contain only letters and spaces';
+                }
+                break;
+            case 'contact':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!sriLankaMobileNumberRegex.test(value.trim())) {
+                    error = 'Invalid Sri Lankan phone number';
+                }
+                break;
+            case 'nic':
+                if (value.trim() === '') {
+                    error = 'NIC is required';
+                } else if (!sriLankaNicRegex.test(value.trim())) {
+                    error = 'Invalid NIC number';
+                }
+                break;
+            case 'email':
+                if (!emailRegex.test(value.trim())) {
+                    error = 'Invalid email address';
+                }
+                break;
+            case 'address':
+                if (value.trim().length > 500) {
+                    error = 'Address cannot exceed 500 characters';
+                }
+                break;
+            default:
+                break;
+        }
+
+        setCustomerErrors({
+            ...customerErrors,
+            [name]: error,
+        });
     };
 
     const handleCustomerUpdateEvent = async () => {
+        const validationErrors = {
+            name: '',
+            contact: '',
+            nic: '',
+            email: '',
+            address: '',
+        };
+
+        let isValid = true;
+
+        // Validate each field
+        if (customerData.name.trim().length < 2) {
+            validationErrors.name = 'Name must be at least 2 characters';
+            isValid = false;
+        } else if (!nameRegex.test(customerData.name.trim())) {
+            validationErrors.name = 'Name can contain only letters and spaces';
+            isValid = false;
+        }
+
+        if (customerData.contact.trim() === '') {
+            validationErrors.contact = 'Contact number is required';
+            isValid = false;
+        } else if (!sriLankaMobileNumberRegex.test(customerData.contact.trim())) {
+            validationErrors.contact = 'Invalid Sri Lankan phone number';
+            isValid = false;
+        }
+
+        if (customerData.nic.trim() === '') {
+            validationErrors.nic = 'NIC is required';
+            isValid = false;
+        } else if (!sriLankaNicRegex.test(customerData.nic.trim())) {
+            validationErrors.nic = 'Invalid NIC number';
+            isValid = false;
+        }
+
+        if (customerData.email.trim() !== '' && !emailRegex.test(customerData.email.trim())) {
+            validationErrors.email = 'Invalid email address';
+            isValid = false;
+        }
+
+        if (customerData.address.trim().length > 500) { // Example constraint
+            validationErrors.address = 'Address cannot exceed 500 characters';
+            isValid = false;
+        }
+
+        setCustomerErrors(validationErrors);
+
+        if (!isValid) {
+            alert("Please fix the errors in the form before submitting.");
+            return;
+        }
+
         const isSuccess = await customerAPIController.saveCustomer(customerData);
         if (isSuccess) {
             onUpdateCustomer(customerData); // Call the update function passed from the parent
             alert("Customer updated successfully!");
+            handleClose();
         } else {
             alert("Failed to update customer.");
         }
@@ -116,6 +222,7 @@ export default function CustomerModal({rowData, onUpdateCustomer}: CustomerModal
                                 important={"*"}
                                 value={customerData.name}
                                 onChange={handleCustomerChange}
+                                msg={customerErrors.name}
                             />
                             <TextField
                                 name="contact"
@@ -124,6 +231,7 @@ export default function CustomerModal({rowData, onUpdateCustomer}: CustomerModal
                                 important={"*"}
                                 value={customerData.contact}
                                 onChange={handleCustomerChange}
+                                msg={customerErrors.contact}
                             />
                             <TextField
                                 name="email"
@@ -131,6 +239,7 @@ export default function CustomerModal({rowData, onUpdateCustomer}: CustomerModal
                                 label={'Email'}
                                 value={customerData.email}
                                 onChange={handleCustomerChange}
+                                msg={customerErrors.email}
                             />
                         </div>
                         <div className='flex flex-row flex-wrap items-center justify-center w-full'>
@@ -140,6 +249,7 @@ export default function CustomerModal({rowData, onUpdateCustomer}: CustomerModal
                                 label={'NIC'}
                                 value={customerData.nic}
                                 onChange={handleCustomerChange}
+                                msg={customerErrors.nic}
                             />
                             <HiddenTextField/>
                             <HiddenTextField/>
