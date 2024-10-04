@@ -35,7 +35,7 @@ interface User {
     id: number;
     name: string;
     contact: string;
-    role: { name: string };
+    role: { id: number, name: string };
     nic: string;
     email: string;
     username: string;
@@ -287,7 +287,7 @@ export const ShopAndUser = () => {
         id: number;
         name: string;
         contact: string;
-        role: { name: string };
+        role: { id: number, name: string };
         nic: string;
         email: string;
         username: string;
@@ -359,13 +359,16 @@ export const ShopAndUser = () => {
         const isSuccess = await userAPIController.saveUser(userData);
         if (isSuccess) {
             // @ts-ignore
-            const roleName = userRoles.find(role => role.id === parseInt(selectedRole)).name;
+            const role = userRoles.find(role => role.id === parseInt(selectedRole));
 
             // Add the saved user to the users table
             const formattedUser = {
                 ...userData,
                 id: isSuccess.id,
-                role: {name: roleName},  // Convert role to object with 'name'
+                role: {
+                    id: role ? role.id : -1,
+                    name: role ? role.name : "Unknown",
+                },
             };
             setUsers([...users, formattedUser]);
 
