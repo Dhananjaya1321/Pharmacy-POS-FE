@@ -20,6 +20,7 @@ import { VerifyCode } from "./pages/VerifyCode/VerifyCode";
 import { ChangePassword } from "./pages/ChangePassword/ChangePassword";
 import loginAPIController from "./controller/LoginAPIController";
 import {OrderEmployeePage} from "./pages/OrderEmployeePage/OrderEmployeePage";
+import {CustomerSupport} from "./pages/CustomerSupport/CustomerSupport";
 
 function AppContent() {
     const [hasAccount, setHasAccount] = useState<boolean | null>(null);
@@ -60,6 +61,7 @@ function AppContent() {
             <Route path="/verify-code" element={<VerifyCode />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/order-employee-page" element={<OrderEmployeePage />} />
+            <Route path="/customer-support" element={<CustomerSupport />} />
             <Route path="/home" element={<Home />}>
                 <Route index element={<Dashboard />} />
                 <Route path="order" element={<Order />} />

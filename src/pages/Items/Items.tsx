@@ -477,6 +477,11 @@ export const Items = () => {
             setItems([...items, formattedItem]);
             setTotalElements(prevTotal => prevTotal + 1);
 
+            // Reset selected states
+            setSelectedUnit(undefined);
+            setSelectedBrand(undefined);
+            setSelectedCategory(undefined);
+
             setItemData({
                 name: '',
                 description: '',
@@ -494,6 +499,7 @@ export const Items = () => {
                 brand: '',
                 unit: '',
             });
+
             alert("Item saved successfully!");
         } else {
             alert("Failed to save item.");
