@@ -26,6 +26,18 @@ const brandAPIController = {
             return [];
         }
     },
+    getReferenceNumber: async () => {
+        try {
+            const response = await axios.get(`${base_url}/order/reference-number`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
 };
 
 export default brandAPIController;

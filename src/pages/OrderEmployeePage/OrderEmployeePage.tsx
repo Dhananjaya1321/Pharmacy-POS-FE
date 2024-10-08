@@ -71,6 +71,7 @@ export const OrderEmployeePage = () => {
     const [quantity, setQuantity] = useState<number>(1); // Initialize quantity with 1
     const [shopData, setShopData] = useState<ShopData | null>(null);
     const [currentDate, setCurrentDate] = useState<string>("");
+    const [referenceNumber, setreferenceNumber] = useState<string>("");
 
     // Callback function to handle new customer data
     const handleNewCustomer = (customer: Customer) => {
@@ -182,7 +183,6 @@ export const OrderEmployeePage = () => {
     useEffect(() => {
         const fetchShopData = async () => {
             const response = await shopAPIController.getShopData();
-            console.log('Fetched Shop Data:', response); // Debug log
             if (response) {
                 setShopData({
                     pharmacyId: response.data.pharmacyId,
@@ -193,6 +193,14 @@ export const OrderEmployeePage = () => {
             }
         };
         fetchShopData();
+
+     const fetchReferenceNumber = async () => {
+            const response = await orderAPIController.getReferenceNumber();
+            if (response) {
+                setreferenceNumber(response.data);
+            }
+        };
+        fetchReferenceNumber();
 
         const date = new Date();
         const formattedDate = date.toLocaleDateString("en-US", {
@@ -306,10 +314,10 @@ export const OrderEmployeePage = () => {
                                             cartItems.map((item, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell>{item.name}</TableCell>
-                                                    <TableCell>{item.stock.sellingPricePerUnit}</TableCell>
+                                                    <TableCell>Rs.{item.stock.sellingPricePerUnit}</TableCell>
                                                     <TableCell>{item.qty}</TableCell>
                                                     <TableCell>{item.stock.sellingDiscountPerUnit}%</TableCell>
-                                                    <TableCell>{item.subtotal.toFixed(2)}</TableCell>
+                                                    <TableCell>Rs.{item.subtotal.toFixed(2)}</TableCell>
                                                     <TableCell>
                                                         <button
                                                             className="rounded-xl w-[40px] h-[40px] text-red-600 hover:bg-red-100"
@@ -337,18 +345,45 @@ export const OrderEmployeePage = () => {
                         </section>
                     </div>
                     <div
-                        className="justify-between bg-white w-[27%] h-[500px] rounded-xl shadow-md flex flex-col self-start">
+                        className="justify-between bg-white w-[27%] h-max rounded-xl shadow-md flex flex-col self-start">
                         <header className="flex flex-col justify-center p-4">
-                            <h1 className="text-2xl">{shopData ? shopData.pharmacyName : "Loading..."}</h1>
-                            <p className="text-[14px] text-gray-400">{shopData ? shopData.address : "Loading..."}</p>
-                            <p className="text-[14px] text-gray-400">{shopData ? shopData.contact : "Loading..."}</p>
-                            <p className="text-[14px] mt-4 text-gray-400">
+                            <h1 className="text-xl">{shopData ? shopData.pharmacyName : "Loading..."}</h1>
+                            <p className="text-[12px] text-gray-400">{shopData ? shopData.address : "Loading..."}</p>
+                            <p className="text-[12px] text-gray-400">{shopData ? shopData.contact : "Loading..."}</p>
+                            <p className="text-[12px] mt-4 text-gray-400">
+                                {referenceNumber}
+                            </p>
+                            <p className="text-[12px] text-gray-400">
                                 {selectedCustomer ? `${selectedCustomer.name}` : "No customer selected"}
                             </p>
                             <hr/>
                         </header>
                         <main>
-
+                            <TableContainer component={Paper}>
+                                <Table aria-label="simple table" sx={{minWidth: "100%"}}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell className="poppins-bold">Name</TableCell>
+                                            <TableCell className="poppins-bold">Discount</TableCell>
+                                            <TableCell className="poppins-bold">Sub Total</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {cartItems.length > 0 ? (
+                                            cartItems.map((item, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{item.name} (Rs.{item.stock.sellingPricePerUnit}) * {item.qty}</TableCell>
+                                                    <TableCell>{item.stock.sellingDiscountPerUnit}%</TableCell>
+                                                    <TableCell>Rs.{item.subtotal.toFixed(2)}</TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow className="w-full h-[240px] flex items-center justify-center">
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </main>
                         <footer className="flex flex-col justify-center p-4">
                             <p className="text-[14px] text-gray-400">{currentDate}</p>
