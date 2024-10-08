@@ -19,10 +19,10 @@ const shopAPIController = {
             if (response.status === 200) {
                 return response.data;
             } else {
-                return [];
+                return null;
             }
         } catch (error) {
-            return false;
+            return null;
         }
     },
 };
